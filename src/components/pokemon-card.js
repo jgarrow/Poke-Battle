@@ -40,15 +40,26 @@ export default ({ pokemon, handleClick, selected }) => {
     return (
         <Card
             onClick={() => {
-                selected ? handleClick(null) : handleClick(pokemon.id);
+                selected ? handleClick(null) : handleClick(pokemon.pokemon.id);
             }}
             selected={selected}
         >
             {/* Info icon Image Name Types */}
             <h2>{pokemon.pokemon.name}</h2>
-            <HiddenInfo hidden={true}>
-                HP --> "HP ##" Move 1 --> "Name ## Type" Move 2 --> "Name ##
-                Type"
+            <HiddenInfo hidden={false}>
+                {/* <p>HP\t</p> */}
+                <p>HP: {pokemon.pokemon.hp}</p>
+                <p>Moves:</p>
+                <p>
+                    {pokemon.pokemon.moves[0].move.name}{" "}
+                    {pokemon.pokemon.moves[0].move.power}{" "}
+                    {pokemon.pokemon.moves[0].move.type.name}
+                </p>
+                <p>
+                    {pokemon.pokemon.moves[1].move.name}{" "}
+                    {pokemon.pokemon.moves[1].move.power}{" "}
+                    {pokemon.pokemon.moves[1].move.type.name}
+                </p>
             </HiddenInfo>
         </Card>
     );

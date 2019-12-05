@@ -43,6 +43,16 @@ const TrainerQuery = gql`
                     pokedex_num
                     name
                     img
+                    hp
+                    moves {
+                        move {
+                          name
+                          power
+                          type {
+                            name
+                          }
+                        }
+                      }
                 }
             }
         }

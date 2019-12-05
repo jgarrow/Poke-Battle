@@ -41,7 +41,7 @@ export default ({ partyOptions, selectedPokemon, handlePokemonSelect }) => {
             <CardWrapper>
                 {partyOptions.map(pokemon => 
                     {
-                        // console.log("Pokemon", pokemon.pokemon.name);
+                        console.log("Pokemon: ", pokemon.pokemon);
                 return (
                     <PokemonCard
                         pokemon={pokemon}
