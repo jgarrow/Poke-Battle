@@ -1,12 +1,14 @@
+/** @jsx jsx */
+import { jsx, css } from "@emotion/core";
 import React, { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { graphql, useStaticQuery } from "gatsby";
-import Img from "gatsby-image";
 import styled from "@emotion/styled";
 
-import Card from "./card";
-import TrainerCard from "./trainer-card";
+import Welcome from "./welcome";
+import TrainerSelection from "./trainer";
+import PokemonSelection from "./pokemon";
 import PokemonHpCard from "./pokemon-hp-card";
 
 require("typeface-heebo");
@@ -26,13 +28,6 @@ require("typeface-heebo");
 const Container = styled.div`
     width: 80%;
     margin: 0 auto;
-`;
-
-const CardWrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-gap: 30px;
-    text-align: center;
 `;
 
 const TrainerQuery = gql`
@@ -55,53 +50,72 @@ const TrainerQuery = gql`
 `;
 
 export default () => {
+    const [trainerName, setTrainerName] = useState("");
     const [selectedTrainer, setSelectedTrainer] = useState(null);
+    const [selectedPokemon, setSelectedPokemon] = useState(null);
     const [party, setParty] = useState([]);
-    const [trainerOptions, setTrainerOptions] = useState([]);
     const [partyOptions, setPartyOptions] = useState([]); // pokemon options for selected trainer
     const [pokemonInfo, setPokemonInfo] = useState(null); // when selecting party, clicking on a pokemon pops up a modal to display bigger image and info about pokemon's type, hp, and moves
     const [displayMoves, setDisplayMoves] = useState(false);
     const [displayParty, setDisplayParty] = useState(false);
     const { data: trainerData, loading } = useQuery(TrainerQuery); // query from my hasura database
     const trainers = !loading ? trainerData.trainer : [];
-
-    // console.log("Trainer data: ", trainerData);
-    // console.log("Trainers array: ", trainers);
-    // console.log("Loading: ", loading);
+    // const pokemonOptions = !loading && trainers !== [] ? trainerData.trainer.pokemons : [];
 
     const trainerImages = useStaticQuery(trainerImagesQuery);
 
-    const handleTrainerSelect = trainerId => {
+    console.log("Loading:  ", loading);
+    console.log("Trainers: ", trainers);
+
+    // {
+    //     trainers !== [] &&
+    //         trainers.forEach(trainer => {
+    //             console.log(
+    //                 `${trainer.name}'s pokemon options: ${trainer.pokemons[0].pokemon.name}`
+    //             );
+    //         });
+    // }
+
+    // {
+    //     trainers !== [] &&
+    //         trainers.forEach(trainer => {
+    //             console.log(`${trainer.name}'s pokemon options: `);
+    //             trainer.pokemons.forEach(pokemon => {
+    //                 console.log(pokemon.pokemon.name);
+    //             });
+    //             console.log("\n----------------------------------------\n");
+    //         });
+    // }
+
+    const handleChange = e => {
+        setTrainerName(e.target.value);
+    };
+
+    const handleTrainerSelect = (trainerId, selectedTrainer) => {
         setSelectedTrainer(trainerId);
+        setPartyOptions(selectedTrainer.pokemons);
+    };
+
+    const handlePokemonSelect = pokemonId => {
+        setSelectedPokemon(pokemonId);
+        // setParty[...selectedPokemon.image];
     };
 
     return (
         <Container>
-            <h1>Pokémon Battle</h1>
-            <CardWrapper>
-                {trainers.map(trainer => (
-                    <>
-                        <Card
-                            trainer={trainer}
-                            image={trainerImages[trainer.image]}
-                            key={trainer.id}
-                            handleClick={handleTrainerSelect}
-                            selected={selectedTrainer === trainer.id}
-                        />
-                        {/* create another card for the some trainer name if there is another image (to get both genders) */}
-                        {trainer.alt_image && (
-                            <Card
-                                trainer={trainer}
-                                image={trainerImages[trainer.alt_image]}
-                                key={trainer.id + "alt"} // "alt" makes it a unique key
-                                handleClick={handleTrainerSelect}
-                                selected={selectedTrainer === `${trainer.id}alt`}
-                                alt={true}
-                            />
-                        )}
-                    </>
-                ))}
-            </CardWrapper>
+            <Welcome handleChange={handleChange} trainerName={trainerName} />
+            <TrainerSelection
+                trainers={trainers}
+                trainerImages={trainerImages}
+                handleTrainerSelect={handleTrainerSelect}
+                selectedTrainer={selectedTrainer}
+            />
+
+            <PokemonSelection 
+                partyOptions={partyOptions}
+                selectedPokemon={setSelectedPokemon}
+                handlePokemonSelect={handlePokemonSelect}
+            />
 
             <PokemonHpCard />
             <PokemonHpCard />

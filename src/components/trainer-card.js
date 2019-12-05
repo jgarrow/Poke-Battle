@@ -1,45 +1,37 @@
-import React from "react"
+import { css } from "@emotion/core";
+import React, { useState } from "react";
+import Img from "gatsby-image";
+import styled from "@emotion/styled";
 
-export default ({ trainers }) => (
-    <div>
-        <form>
-            <label htmlFor="name">Name:</label><input type="text" name="name"/>
-            <label htmlFor="trainer-type">Trainer type:</label>
-            <select name="trainer-type">
-{trainers.map((trainer, index) => <option key={index} value={trainer.name}>{trainer.name}</option>)}
-                {/* <option value="beauty">Beauty</option>
-                <option value="biker">Biker</option>
-                <option value="birdKeeper">Bird Keeper</option>
-                <option value="blackbelt">Blackbelt</option>
-                <option value="bugCatcher">Bug Catcher</option>
-                <option value="burglar">Burglar</option>
-                <option value="channeler">Channeler</option>
-                <option value="coolTrainer">Cool Trainer</option>
-                <option value="cueBall">Cue Ball</option>
-                <option value="engineer">Engineer</option>
-                <option value="fisherman">Fisherman</option>
-                <option value="gambler">Gambler</option>
-                <option value="gentleman">Gentleman</option>
-                <option value="hiker">Hiker</option>
-                <option value="jrTrainerM">Jr. Trainer ♂</option>
-                <option value="jrTrainerF">Jr. Trainer ♀</option>
-                <option value="juggler">Juggler</option>
-                <option value="lass">Lass</option>
-                <option value="pokemaniac">PokéManiac</option>
-                <option value="psychic">Psychic</option>
-                <option value="rocker">Rocker</option>
-                <option value="sailor">Sailor</option>
-                <option value="scientist">Scientist</option>
-                <option value="superNerd">Super Nerd</option>
-                <option value="swimmer">Swimmer</option>
-                <option value="tamer">Tamer</option>
-                <option value="teamRocketGrunt">Team Rocket Grunt</option>
-                <option value="youngster">Youngster</option> */}
-            </select>
-            <label htmlFor="party">Party Pokémon:</label>
-            <select>
-                {/* <option value={props.pokemonName}>{props.pokemonName}</option> */}
-            </select>
-        </form>
-    </div>
-)
+const Card = styled.div`
+    background: ${props => (props.selected ? "#99CDFF" : "#D1E9FF")};
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
+    border-radius: 40px;
+    margin: 0 auto;
+    padding-top: 0.5rem;
+    width: 200px;
+    cursor: pointer;
+`;
+
+export default ({ trainer, image, handleClick, selected, alt=false }) => {
+
+    return (
+        <Card
+            onClick={() => {
+                const id = alt ? `${trainer.id}alt` : trainer.id;
+                selected ? handleClick(null) : handleClick(id, trainer);
+            }}
+            selected={selected}
+        >
+            <div>
+                {image ? (
+                    <Img
+                        fixed={image.childImageSharp.fixed}
+                        alt={trainer.name}
+                    />
+                ) : null}
+            </div>
+            <h3>{trainer.name}</h3>
+        </Card>
+    );
+};
