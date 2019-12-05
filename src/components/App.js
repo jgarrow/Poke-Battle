@@ -71,12 +71,9 @@ export default () => {
 
     const trainerImages = useStaticQuery(trainerImagesQuery);
 
-    // console.log("Trainer Images: ", trainerImages);
-    // console.log("# trainer images: ", Object.keys(trainerImages).length);
-
-    // split trainer name on white space and get just the first word in the name --> trainer.name.split(' ')[0]
-    // check to see if that part of the trainer name is in the image query string -->
-    // for each image that has a match, make a Card with that image and trainer name (want to have the same trainer name for male and female images)
+    const handleTrainerSelect = trainerId => {
+        setSelectedTrainer(trainerId);
+    };
 
     return (
         <Container>
@@ -85,15 +82,21 @@ export default () => {
                 {trainers.map(trainer => (
                     <>
                         <Card
+                            trainer={trainer}
                             image={trainerImages[trainer.image]}
-                            name={trainer.name}
                             key={trainer.id}
+                            handleClick={handleTrainerSelect}
+                            selected={selectedTrainer === trainer.id}
                         />
+                        {/* create another card for the some trainer name if there is another image (to get both genders) */}
                         {trainer.alt_image && (
                             <Card
+                                trainer={trainer}
                                 image={trainerImages[trainer.alt_image]}
-                                name={trainer.name}
-                                key={(trainer.id + "alt")}
+                                key={trainer.id + "alt"} // "alt" makes it a unique key
+                                handleClick={handleTrainerSelect}
+                                selected={selectedTrainer === `${trainer.id}alt`}
+                                alt={true}
                             />
                         )}
                     </>
