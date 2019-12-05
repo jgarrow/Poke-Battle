@@ -1,0 +1,1 @@
+const { createRemoteFileNode } = require("gatsby-source-filesystem")

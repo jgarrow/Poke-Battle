@@ -1,3 +1,4 @@
 import React from "react"
+import App from "../components/App";
 
-export default () => <div>Hello world!</div>
+export default () => <App />
