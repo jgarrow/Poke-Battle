@@ -2,6 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 
+import Image from "./poke-image";
 import PokemonCard from "./pokemon-card";
 
 const Header = styled.header`
@@ -12,6 +13,27 @@ const Header = styled.header`
     margin: 1rem auto;
 `;
 
+const PartyWrapper = styled.div`
+    width: 80%;
+    max-width: 530px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+`
+
+const PartyCard = styled.div`
+    background: ${props => (props.selected ? "#99CDFF" : "#D1E9FF")};
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
+    border-radius: 40px;
+    margin: 0 auto;
+    padding-top: 0.5rem;
+    width: 150px;
+    height: 150px;
+    cursor: pointer; 
+`
+
 const CardWrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -19,7 +41,10 @@ const CardWrapper = styled.div`
     text-align: center;
 `;
 
-export default ({ partyOptions, selectedPokemon, handlePokemonSelect }) => {
+export default ({ party, partyOptions, handlePokemonSelect }) => {
+    // console.log("Selected pokemon:", selectedPokemon);
+    console.log("Party: ", party);
+    
     return (
         <>
             <Header>
@@ -38,16 +63,27 @@ export default ({ partyOptions, selectedPokemon, handlePokemonSelect }) => {
                     Next →
                 </p>
             </Header>
+            <PartyWrapper>
+                <PartyCard>
+                    {/* <Image name={party[0].name}/> */}
+                </PartyCard>
+                <PartyCard>
+                    {/* <Image name={party[1].name}/> */}
+                </PartyCard>
+                <PartyCard>
+                    {/* <Image name={party[2].name}/> */}
+                </PartyCard>
+            </PartyWrapper>
             <CardWrapper>
                 {partyOptions.map(pokemon => 
                     {
-                        console.log("Pokemon: ", pokemon.pokemon);
+                        // console.log("Pokemon: ", pokemon.pokemon);
                 return (
                     <PokemonCard
                         key={pokemon.pokemon.id}
-                        pokemon={pokemon}
+                        pokemon={pokemon.pokemon}
                         handleClick={handlePokemonSelect}
-                        selected={selectedPokemon === pokemon.pokemon.id}
+                        selected={party.some(partymon => partymon.id === pokemon.pokemon.id)}
                     />
                 )}
                 )}

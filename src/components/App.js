@@ -42,6 +42,11 @@ const TrainerQuery = gql`
                     id
                     pokedex_num
                     name
+                    types {
+                        type {
+                          name
+                        }
+                      }
                     img
                     hp
                     moves {
@@ -62,10 +67,9 @@ const TrainerQuery = gql`
 export default () => {
     const [trainerName, setTrainerName] = useState("");
     const [selectedTrainer, setSelectedTrainer] = useState(null);
-    const [selectedPokemon, setSelectedPokemon] = useState(null);
+    const [partySelection, setPartySelection] = useState(0);
     const [party, setParty] = useState([]);
     const [partyOptions, setPartyOptions] = useState([]); // pokemon options for selected trainer
-    const [pokemonInfo, setPokemonInfo] = useState(null); // when selecting party, clicking on a pokemon pops up a modal to display bigger image and info about pokemon's type, hp, and moves
     const [displayMoves, setDisplayMoves] = useState(false);
     const [displayParty, setDisplayParty] = useState(false);
     const { data: trainerData, loading } = useQuery(TrainerQuery); // query from my hasura database
@@ -106,10 +110,15 @@ export default () => {
         setPartyOptions(selectedTrainer.pokemons);
     };
 
-    const handlePokemonSelect = pokemonId => {
-        setSelectedPokemon(pokemonId);
-        // setParty[...selectedPokemon.image];
+    const handlePokemonSelect = pokemon => {
+        const tempParty = [...party];
+        tempParty[partySelection] = pokemon;
+        setParty(tempParty);
+        if (partySelection < 2) {
+            setPartySelection(partySelection + 1);
+        } 
     };
+
 
     return (
         <Container>
@@ -122,8 +131,8 @@ export default () => {
             />
 
             <PokemonSelection 
+                party={party}
                 partyOptions={partyOptions}
-                selectedPokemon={selectedPokemon}
                 handlePokemonSelect={handlePokemonSelect}
             />
 
