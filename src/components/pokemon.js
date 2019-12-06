@@ -14,7 +14,7 @@ const Header = styled.header`
 
 const CardWrapper = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 30px;
     text-align: center;
 `;
@@ -44,9 +44,10 @@ export default ({ partyOptions, selectedPokemon, handlePokemonSelect }) => {
                         console.log("Pokemon: ", pokemon.pokemon);
                 return (
                     <PokemonCard
+                        key={pokemon.pokemon.id}
                         pokemon={pokemon}
                         handleClick={handlePokemonSelect}
-                        selected={selectedPokemon === pokemon.id}
+                        selected={selectedPokemon === pokemon.pokemon.id}
                     />
                 )}
                 )}

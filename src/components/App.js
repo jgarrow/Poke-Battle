@@ -123,7 +123,7 @@ export default () => {
 
             <PokemonSelection 
                 partyOptions={partyOptions}
-                selectedPokemon={setSelectedPokemon}
+                selectedPokemon={selectedPokemon}
                 handlePokemonSelect={handlePokemonSelect}
             />
 
@@ -375,3 +375,4 @@ const trainerImagesQuery = graphql`
         }
     }
 `;
+
