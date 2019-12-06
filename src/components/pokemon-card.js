@@ -12,6 +12,7 @@ const PokemonCard = styled.div`
     margin: 0 auto;
     padding-top: 0.5rem;
     width: 250px;
+    height: ${props => (props.invisible ? "285px" : "375px")};
     cursor: pointer;
     position: relative;
 `;
@@ -27,6 +28,12 @@ const Name = styled.h2`
     margin-bottom: 0;
 `
 
+const ImageWrapper = styled.div`
+    width: 150px;
+    height: 150px;
+    margin: 1rem auto 0;
+`
+
 const TypeWrapper = styled.div`
     width: 80%;
     margin: 0 auto;
@@ -37,7 +44,7 @@ const TypeWrapper = styled.div`
 `
 
 const HiddenInfo = styled.div`
-    display: ${props => (props.hidden ? "none" : "block")};
+    display: ${props => (props.invisible ? "none" : "block")};
 `;
 
 // when pokemon is clicked on, change bg color and add that pokemon to the party cards at the top of the page
@@ -52,6 +59,7 @@ export default ({ pokemon, handleClick, selected }) => {
                 selected ? handleClick(null) : handleClick(pokemon);
             }}
             selected={selected}
+            invisible={hidden}
         >
             <Icon
                 onClick={e => {
@@ -60,7 +68,9 @@ export default ({ pokemon, handleClick, selected }) => {
                     e.stopPropagation(); // stops the click event from bubbling up to PokemonCard (don't want to trigger a "select")
                 }}
             />
-            <Image name={pokemon.name} css={css`margin-top: 0.5rem;`} />
+            <ImageWrapper>
+                <Image name={pokemon.name} css={css`margin-top: 0.5rem;`} />
+            </ImageWrapper>
             <Name>{pokemon.name}</Name>
             <TypeWrapper>
                 <p>{pokemon.types[0].type.name}</p>
@@ -68,9 +78,8 @@ export default ({ pokemon, handleClick, selected }) => {
                     <p>{pokemon.types[1].type.name}</p>
                 )}
             </TypeWrapper>
-            <HiddenInfo hidden={hidden}>
+            <HiddenInfo invisible={hidden}>
                 <p>HP: {pokemon.hp}</p>
-                <p>Moves:</p>
                 <p>
                     {pokemon.moves[0].move.name}{" "}
                     {pokemon.moves[0].move.power}{" "}

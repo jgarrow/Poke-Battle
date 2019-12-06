@@ -11,8 +11,8 @@ const Image = ({ name }) => {
                         title
                         localFile {
                             childImageSharp {
-                                fixed(width: 150, height: 150) {
-                                    ...GatsbyImageSharpFixed
+                                fluid {
+                                    ...GatsbyImageSharpFluid
                                 }
                             }
                         }
@@ -29,7 +29,7 @@ const Image = ({ name }) => {
     return (
         <Img
             alt={image.node.title}
-            fixed={image.node.localFile.childImageSharp.fixed}
+            fluid={image.node.localFile.childImageSharp.fluid}
         />
     );
 };

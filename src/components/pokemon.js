@@ -28,15 +28,23 @@ const PartyCard = styled.div`
     box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
     border-radius: 40px;
     margin: 0 auto;
-    padding-top: 0.5rem;
     width: 150px;
     height: 150px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 `;
+
+const ImageWrapper = styled.div`
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+`
 
 const CardWrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-auto-rows: 375px;
     grid-gap: 30px;
     text-align: center;
 `;
@@ -68,13 +76,19 @@ export default ({ party, partyOptions, handlePokemonSelect }) => {
             </Header>
             <PartyWrapper>
                 <PartyCard>
-                    {party[0] && <Image name={party[0].name} />}
+                    <ImageWrapper>
+                        {party[0] && <Image name={party[0].name} />}
+                    </ImageWrapper>
                 </PartyCard>
                 <PartyCard>
-                    {party[1] && <Image name={party[1].name} />}
+                    <ImageWrapper>
+                        {party[1] && <Image name={party[1].name} />}
+                    </ImageWrapper>
                 </PartyCard>
                 <PartyCard>
-                    {party[2] && <Image name={party[2].name} />}
+                    <ImageWrapper>
+                        {party[2] && <Image name={party[2].name} />}
+                    </ImageWrapper>
                 </PartyCard>
             </PartyWrapper>
             <CardWrapper>
