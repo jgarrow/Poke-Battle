@@ -39,7 +39,7 @@ const ImageWrapper = styled.div`
     width: 100px;
     height: 100px;
     margin: 0 auto;
-`
+`;
 
 const CardWrapper = styled.div`
     display: grid;
@@ -49,7 +49,13 @@ const CardWrapper = styled.div`
     text-align: center;
 `;
 
-export default ({ party, partyOptions, handlePokemonSelect }) => {
+export default ({
+    party,
+    partyOptions,
+    partySelection,
+    handlePokemonSelect,
+    handlePartySelect,
+}) => {
     // console.log("Selected pokemon:", selectedPokemon);
     console.log("Party: ", party);
     party.length > 0
@@ -75,22 +81,40 @@ export default ({ party, partyOptions, handlePokemonSelect }) => {
                 </p>
             </Header>
             <PartyWrapper>
-                <PartyCard>
+                <PartyCard
+                    onClick={() => {
+                        handlePartySelect(0);
+                    }}
+                    selected={partySelection === 0}
+                >
                     <ImageWrapper>
                         {party[0] && <Image name={party[0].name} />}
                     </ImageWrapper>
                 </PartyCard>
-                <PartyCard>
+
+                <PartyCard
+                    onClick={() => {
+                        handlePartySelect(1);
+                    }}
+                    selected={partySelection === 1}
+                >
                     <ImageWrapper>
                         {party[1] && <Image name={party[1].name} />}
                     </ImageWrapper>
                 </PartyCard>
-                <PartyCard>
+
+                <PartyCard
+                    onClick={() => {
+                        handlePartySelect(2);
+                    }}
+                    selected={partySelection === 2}
+                >
                     <ImageWrapper>
                         {party[2] && <Image name={party[2].name} />}
                     </ImageWrapper>
                 </PartyCard>
             </PartyWrapper>
+
             <CardWrapper>
                 {partyOptions.map(pokemon => {
                     // console.log("Pokemon: ", pokemon.pokemon);

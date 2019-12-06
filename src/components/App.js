@@ -119,6 +119,9 @@ export default () => {
         } 
     };
 
+    const handlePartySelect = index => {
+        setPartySelection(index);
+    }
 
     return (
         <Container>
@@ -133,7 +136,9 @@ export default () => {
             <PokemonSelection 
                 party={party}
                 partyOptions={partyOptions}
+                partySelection={partySelection}
                 handlePokemonSelect={handlePokemonSelect}
+                handlePartySelect={handlePartySelect}
             />
 
             <PokemonHpCard />
