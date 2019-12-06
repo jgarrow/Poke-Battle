@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx, css } from "@emotion/core";
 import React, { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
@@ -72,34 +70,10 @@ export default () => {
     const [partyOptions, setPartyOptions] = useState([]); // pokemon options for selected trainer
     const [displayMoves, setDisplayMoves] = useState(false);
     const [displayParty, setDisplayParty] = useState(false);
+
     const { data: trainerData, loading } = useQuery(TrainerQuery); // query from my hasura database
     const trainers = !loading ? trainerData.trainer : [];
-    // const pokemonOptions = !loading && trainers !== [] ? trainerData.trainer.pokemons : [];
-
     const trainerImages = useStaticQuery(trainerImagesQuery);
-
-    console.log("Loading:  ", loading);
-    console.log("Trainers: ", trainers);
-
-    // {
-    //     trainers !== [] &&
-    //         trainers.forEach(trainer => {
-    //             console.log(
-    //                 `${trainer.name}'s pokemon options: ${trainer.pokemons[0].pokemon.name}`
-    //             );
-    //         });
-    // }
-
-    // {
-    //     trainers !== [] &&
-    //         trainers.forEach(trainer => {
-    //             console.log(`${trainer.name}'s pokemon options: `);
-    //             trainer.pokemons.forEach(pokemon => {
-    //                 console.log(pokemon.pokemon.name);
-    //             });
-    //             console.log("\n----------------------------------------\n");
-    //         });
-    // }
 
     const handleChange = e => {
         setTrainerName(e.target.value);
@@ -111,9 +85,18 @@ export default () => {
     };
 
     const handlePokemonSelect = pokemon => {
+        console.log("Pokemon: ", pokemon);
         const tempParty = [...party];
+        // if an element doesn't exist, .indexOf will return -1
+        if (party.indexOf(pokemon) !== -1) {
+            let index = party.indexOf(pokemon);
+            // shorthand for swapping --> a = 2, b = 3 but you want a = 3, b = 2 ==> [a, b] = [b, a]
+            [tempParty[index], tempParty[partySelection]] = [tempParty[partySelection], tempParty[index]];
+        }
+        
         tempParty[partySelection] = pokemon;
         setParty(tempParty);
+
         if (partySelection < 2) {
             setPartySelection(partySelection + 1);
         } 
@@ -122,6 +105,8 @@ export default () => {
     const handlePartySelect = index => {
         setPartySelection(index);
     }
+
+    console.log("Party: ", party);
 
     return (
         <Container>

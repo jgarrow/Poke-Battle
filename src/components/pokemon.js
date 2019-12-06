@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 
@@ -56,11 +56,17 @@ export default ({
     handlePokemonSelect,
     handlePartySelect,
 }) => {
-    // console.log("Selected pokemon:", selectedPokemon);
-    console.log("Party: ", party);
-    party.length > 0
-        ? console.log("Party #1: ", party[0].name)
-        : console.log("Party is empty");
+    const [openInfoId, setOpenInfoId] = useState(null);
+
+    const handleInfoClick = (pokemonId) => {
+        const monId = openInfoId === pokemonId ? null : pokemonId;
+        setOpenInfoId(monId);
+    }
+
+    // console.log("Party: ", party);
+    // party.length > 0
+    //     ? console.log("Party #1: ", party[0].name)
+    //     : console.log("Party is empty");
 
     return (
         <>
@@ -117,12 +123,13 @@ export default ({
 
             <CardWrapper>
                 {partyOptions.map(pokemon => {
-                    // console.log("Pokemon: ", pokemon.pokemon);
                     return (
                         <PokemonCard
                             key={pokemon.pokemon.id}
                             pokemon={pokemon.pokemon}
+                            openInfo={openInfoId === pokemon.pokemon.id}
                             handleClick={handlePokemonSelect}
+                            handleInfoClick={handleInfoClick}
                             selected={party.some(
                                 partymon => partymon.id === pokemon.pokemon.id
                             )}

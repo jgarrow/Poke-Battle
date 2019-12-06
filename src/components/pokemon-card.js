@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
 import { FaInfoCircle } from "react-icons/fa";
@@ -44,33 +44,34 @@ const TypeWrapper = styled.div`
 `;
 
 const HiddenInfo = styled.div`
-    max-height: ${props => props.invisible ? "0" : "80px"};
-    overflow: ${props => props.invisible ? "hidden" : "auto"};
+    max-height: ${props => (props.invisible ? "0" : "80px")};
+    overflow: ${props => (props.invisible ? "hidden" : "auto")};
     transition: all 0.2s ease-in-out;
     line-height: 1;
-    margin-bottom: ${props => props.invisible ? "0" : "1rem"};
+    margin-bottom: ${props => (props.invisible ? "0" : "1rem")};
 
     p:first-of-type {
         margin-top: 0;
     }
 `;
 
-export default ({ pokemon, handleClick, selected }) => {
-    const [hidden, setHidden] = useState(true);
-
+export default ({
+    pokemon,
+    handleClick,
+    selected,
+    openInfo,
+    handleInfoClick,
+}) => {
     return (
         <PokemonCard
             onClick={() => {
-                console.log("clicked card");
-                selected ? handleClick(null) : handleClick(pokemon);
+                handleClick(pokemon);
             }}
             selected={selected}
-            // invisible={hidden}
         >
             <Icon
                 onClick={e => {
-                    console.log("clicked hiddeninfo");
-                    setHidden(!hidden);
+                    handleInfoClick(pokemon.id);
                     e.stopPropagation(); // stops the click event from bubbling up to PokemonCard (don't want to trigger a "select")
                 }}
             />
@@ -87,7 +88,7 @@ export default ({ pokemon, handleClick, selected }) => {
                 <p>{pokemon.types[0].type.name}</p>
                 {pokemon.types[1] && <p>{pokemon.types[1].type.name}</p>}
             </TypeWrapper>
-            <HiddenInfo invisible={hidden}>
+            <HiddenInfo invisible={!openInfo}>
                 <p>HP: {pokemon.hp}</p>
                 <p>
                     {pokemon.moves[0].move.name} {pokemon.moves[0].move.power}{" "}
