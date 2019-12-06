@@ -82,6 +82,8 @@ export default () => {
     const handleTrainerSelect = (trainerId, selectedTrainer) => {
         setSelectedTrainer(trainerId);
         setPartyOptions(selectedTrainer.pokemons);
+        setParty([]);
+        setPartySelection(0);
     };
 
     const handlePokemonSelect = pokemon => {

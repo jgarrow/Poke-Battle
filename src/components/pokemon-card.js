@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
-import { FaInfoCircle } from "react-icons/fa";
+// import { FaInfoCircle } from "react-icons/fa";
+import { GoInfo } from "react-icons/go";
 
 import Image from "./poke-image";
 
@@ -17,9 +18,9 @@ const PokemonCard = styled.div`
     position: relative;
 `;
 
-const Icon = styled(FaInfoCircle)`
+const Icon = styled(GoInfo)`
     position: absolute;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     right: 1.5rem;
     top: 1rem;
 `;
@@ -94,10 +95,13 @@ export default ({
                     {pokemon.moves[0].move.name} {pokemon.moves[0].move.power}{" "}
                     {pokemon.moves[0].move.type.name}
                 </p>
-                <p>
-                    {pokemon.moves[1].move.name} {pokemon.moves[1].move.power}{" "}
-                    {pokemon.moves[1].move.type.name}
-                </p>
+                {pokemon.moves[1] && (
+                    <p>
+                        {pokemon.moves[1].move.name}{" "}
+                        {pokemon.moves[1].move.power}{" "}
+                        {pokemon.moves[1].move.type.name}
+                    </p>
+                )}
             </HiddenInfo>
         </PokemonCard>
     );
