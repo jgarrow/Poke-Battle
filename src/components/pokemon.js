@@ -53,15 +53,12 @@ export default ({
     party,
     partyOptions,
     partySelection,
+    openInfoId,
     handlePokemonSelect,
     handlePartySelect,
+    handleInfoClick
 }) => {
-    const [openInfoId, setOpenInfoId] = useState(null);
-
-    const handleInfoClick = (pokemonId) => {
-        const monId = openInfoId === pokemonId ? null : pokemonId;
-        setOpenInfoId(monId);
-    }
+    
 
     // console.log("Party: ", party);
     // party.length > 0

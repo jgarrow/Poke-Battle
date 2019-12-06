@@ -7,6 +7,7 @@ import styled from "@emotion/styled";
 import Welcome from "./welcome";
 import TrainerSelection from "./trainer";
 import PokemonSelection from "./pokemon";
+import ConfirmSelection from "./confirm-selections";
 import PokemonHpCard from "./pokemon-hp-card";
 
 require("typeface-heebo");
@@ -42,20 +43,20 @@ const TrainerQuery = gql`
                     name
                     types {
                         type {
-                          name
+                            name
                         }
-                      }
+                    }
                     img
                     hp
                     moves {
                         move {
-                          name
-                          power
-                          type {
                             name
-                          }
+                            power
+                            type {
+                                name
+                            }
                         }
-                      }
+                    }
                 }
             }
         }
@@ -70,6 +71,7 @@ export default () => {
     const [partyOptions, setPartyOptions] = useState([]); // pokemon options for selected trainer
     const [displayMoves, setDisplayMoves] = useState(false);
     const [displayParty, setDisplayParty] = useState(false);
+    const [openInfoId, setOpenInfoId] = useState(null);
 
     const { data: trainerData, loading } = useQuery(TrainerQuery); // query from my hasura database
     const trainers = !loading ? trainerData.trainer : [];
@@ -93,22 +95,73 @@ export default () => {
         if (party.indexOf(pokemon) !== -1) {
             let index = party.indexOf(pokemon);
             // shorthand for swapping --> a = 2, b = 3 but you want a = 3, b = 2 ==> [a, b] = [b, a]
-            [tempParty[index], tempParty[partySelection]] = [tempParty[partySelection], tempParty[index]];
+            [tempParty[index], tempParty[partySelection]] = [
+                tempParty[partySelection],
+                tempParty[index],
+            ];
         }
-        
+
         tempParty[partySelection] = pokemon;
         setParty(tempParty);
 
         if (partySelection < 2) {
             setPartySelection(partySelection + 1);
-        } 
+        }
     };
 
     const handlePartySelect = index => {
         setPartySelection(index);
+    };
+
+    const handleInfoClick = (pokemonId) => {
+        const monId = openInfoId === pokemonId ? null : pokemonId;
+        setOpenInfoId(monId);
     }
 
+    const selectedTrainerObject = trainerId => {
+        const tempTrainers = trainers;
+        console.log("Temp trainers array: ", tempTrainers);
+        console.log("Original trainers array: ", trainers);
+        return (trainerId === selectedTrainer) !== null
+            ? tempTrainers.find(({ id }) => id === selectedTrainer)
+            : null;
+    };
+
+    // For ConfirmationSelection --
+    // Trainer Name
+    // pass trainerName state from App.js
+    // Selected Trainer (as an object)
+    // grab trainer object from 'trainers' based on 'selectedTrainer' (selectedTrainer is an id)
+    // get image from 'trainerImages' from selectedTrainerObject.image
+    // Party
+    // pass party state from App.js
+    // Ready to Battle button
+    // Link to battle page
+
     console.log("Party: ", party);
+    console.log(
+        "Selected trainer object: ",
+        selectedTrainerObject(selectedTrainer)
+    );
+
+    // console.log("Trainer Image: ", trainerImages[selectedTrainerObject(selectedTrainer).image])
+    console.log("TrainerImages: ", trainerImages);
+
+    // This is working
+    selectedTrainer !== null
+        ? console.log(
+              "Selected trainer image: ",
+              selectedTrainerObject(selectedTrainer).image
+          )
+        : console.log("No selected trainer yet");
+
+    // This is working
+    selectedTrainer !== null
+        ? console.log(
+              "Selected trainer image from trainerImages: ",
+              trainerImages[selectedTrainerObject(selectedTrainer).image]
+          )
+        : console.log("No selected trainer image from trainerImages yet");
 
     return (
         <Container>
@@ -120,13 +173,29 @@ export default () => {
                 selectedTrainer={selectedTrainer}
             />
 
-            <PokemonSelection 
+            <PokemonSelection
                 party={party}
                 partyOptions={partyOptions}
                 partySelection={partySelection}
+                openInfoId={openInfoId}
                 handlePokemonSelect={handlePokemonSelect}
                 handlePartySelect={handlePartySelect}
+                handleInfoClick={handleInfoClick}
             />
+
+            {selectedTrainer !== null && party !== [] && (
+                <ConfirmSelection
+                    trainerName={trainerName}
+                    trainerImages={trainerImages}
+                    // need to grab all data for selectedTrainer from trainers b/c selectedTrainer is just an ID
+                    selectedTrainer={selectedTrainerObject(selectedTrainer)}
+                    // selectedTrainer={null}
+                    party={party}
+                    handlePokemonSelect={handlePokemonSelect}
+                    openInfoId={openInfoId}
+                    handleInfoClick={handleInfoClick}
+                />
+            )}
 
             <PokemonHpCard />
             <PokemonHpCard />
@@ -376,4 +445,3 @@ const trainerImagesQuery = graphql`
         }
     }
 `;
-
