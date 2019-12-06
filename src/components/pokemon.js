@@ -21,7 +21,7 @@ const PartyWrapper = styled.div`
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
-`
+`;
 
 const PartyCard = styled.div`
     background: ${props => (props.selected ? "#99CDFF" : "#D1E9FF")};
@@ -31,8 +31,8 @@ const PartyCard = styled.div`
     padding-top: 0.5rem;
     width: 150px;
     height: 150px;
-    cursor: pointer; 
-`
+    cursor: pointer;
+`;
 
 const CardWrapper = styled.div`
     display: grid;
@@ -44,7 +44,10 @@ const CardWrapper = styled.div`
 export default ({ party, partyOptions, handlePokemonSelect }) => {
     // console.log("Selected pokemon:", selectedPokemon);
     console.log("Party: ", party);
-    
+    party.length > 0
+        ? console.log("Party #1: ", party[0].name)
+        : console.log("Party is empty");
+
     return (
         <>
             <Header>
@@ -65,28 +68,29 @@ export default ({ party, partyOptions, handlePokemonSelect }) => {
             </Header>
             <PartyWrapper>
                 <PartyCard>
-                    {/* <Image name={party[0].name}/> */}
+                    {party[0] && <Image name={party[0].name} />}
                 </PartyCard>
                 <PartyCard>
-                    {/* <Image name={party[1].name}/> */}
+                    {party[1] && <Image name={party[1].name} />}
                 </PartyCard>
                 <PartyCard>
-                    {/* <Image name={party[2].name}/> */}
+                    {party[2] && <Image name={party[2].name} />}
                 </PartyCard>
             </PartyWrapper>
             <CardWrapper>
-                {partyOptions.map(pokemon => 
-                    {
-                        // console.log("Pokemon: ", pokemon.pokemon);
-                return (
-                    <PokemonCard
-                        key={pokemon.pokemon.id}
-                        pokemon={pokemon.pokemon}
-                        handleClick={handlePokemonSelect}
-                        selected={party.some(partymon => partymon.id === pokemon.pokemon.id)}
-                    />
-                )}
-                )}
+                {partyOptions.map(pokemon => {
+                    // console.log("Pokemon: ", pokemon.pokemon);
+                    return (
+                        <PokemonCard
+                            key={pokemon.pokemon.id}
+                            pokemon={pokemon.pokemon}
+                            handleClick={handlePokemonSelect}
+                            selected={party.some(
+                                partymon => partymon.id === pokemon.pokemon.id
+                            )}
+                        />
+                    );
+                })}
             </CardWrapper>
         </>
     );
