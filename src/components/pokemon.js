@@ -44,7 +44,7 @@ const ImageWrapper = styled.div`
 const CardWrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-auto-rows: 375px;
+    grid-template-rows: auto;
     grid-gap: 30px;
     text-align: center;
 `;
