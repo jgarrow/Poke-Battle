@@ -13,13 +13,13 @@ const Card = styled.div`
     cursor: pointer;
 `;
 
-export default ({ trainer, image, handleClick, selected, alt=false }) => {
+export default ({ trainer, image, handleTrainerSelect, selected, alt=false }) => {
 
     return (
         <Card
             onClick={() => {
                 const id = alt ? `${trainer.id}alt` : trainer.id;
-                selected ? handleClick(null) : handleClick(id, trainer);
+                selected ? handleTrainerSelect(null) : handleTrainerSelect(id, trainer, alt);
             }}
             selected={selected}
         >

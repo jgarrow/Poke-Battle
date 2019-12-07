@@ -70,12 +70,14 @@ export default ({
             }}
             selected={selected}
         >
-            <Icon
-                onClick={e => {
-                    handleInfoClick(pokemon.id);
-                    e.stopPropagation(); // stops the click event from bubbling up to PokemonCard (don't want to trigger a "select")
-                }}
-            />
+            {handleInfoClick && (
+                <Icon
+                    onClick={e => {
+                        handleInfoClick(pokemon.id);
+                        e.stopPropagation(); // stops the click event from bubbling up to PokemonCard (don't want to trigger a "select")
+                    }}
+                />
+            )}
             <ImageWrapper>
                 <Image
                     name={pokemon.name}

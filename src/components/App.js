@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { graphql, useStaticQuery } from "gatsby";
@@ -71,7 +71,11 @@ export default () => {
     const [partyOptions, setPartyOptions] = useState([]); // pokemon options for selected trainer
     const [displayMoves, setDisplayMoves] = useState(false);
     const [displayParty, setDisplayParty] = useState(false);
-    const [openInfoId, setOpenInfoId] = useState(null);
+    const [altImage, setAltImage] = useState(false);
+
+    const [opponent, setOpponent] = useState(null);
+    const [oppParty, setOppParty] = useState([]);
+    const [oppPartyOptions, setOppPartyOptions] = useState([]);
 
     const { data: trainerData, loading } = useQuery(TrainerQuery); // query from my hasura database
     const trainers = !loading ? trainerData.trainer : [];
@@ -81,9 +85,11 @@ export default () => {
         setTrainerName(e.target.value);
     };
 
-    const handleTrainerSelect = (trainerId, selectedTrainer) => {
+    const handleTrainerSelect = (trainerId, selectedTrainerObject, alt) => {
+        console.log("alt: ", alt);
         setSelectedTrainer(trainerId);
-        setPartyOptions(selectedTrainer.pokemons);
+        setAltImage(alt);
+        setPartyOptions(selectedTrainerObject.pokemons);
         setParty([]);
         setPartySelection(0);
     };
@@ -113,19 +119,52 @@ export default () => {
         setPartySelection(index);
     };
 
-    const handleInfoClick = (pokemonId) => {
-        const monId = openInfoId === pokemonId ? null : pokemonId;
-        setOpenInfoId(monId);
-    }
-
     const selectedTrainerObject = trainerId => {
         const tempTrainers = trainers;
-        console.log("Temp trainers array: ", tempTrainers);
-        console.log("Original trainers array: ", trainers);
-        return (trainerId === selectedTrainer) !== null
-            ? tempTrainers.find(({ id }) => id === selectedTrainer)
+        console.log("Trainer id: ", trainerId);
+        console.log("Trainer id: ", parseInt(trainerId));
+        
+        // console.log("Temp trainers array: ", tempTrainers);
+        // console.log("Original trainers array: ", trainers);
+        return trainerId !== null
+            ? tempTrainers.find(({ id }) => id === parseInt(trainerId))
             : null;
     };
+
+    const getRandomIndex = max => {
+        return Math.floor(Math.random() * Math.floor(max));
+    };
+
+    const getRandomTrainer = () => {
+        const randomNum = getRandomIndex(trainers.length);
+        console.log("Random num: ", randomNum);
+        return trainers[randomNum];
+        // setOppPartyOptions(opponent.pokemons);
+        // setOppParty([]);
+    };
+
+    const getRandomParty = max => {
+        const randomNum = Math.floor(Math.random() * Math.floor(max));
+    };
+
+    useEffect(() => {
+        let newOpponent = {};
+        if (trainers.length !== 0) {
+            newOpponent = getRandomTrainer();
+        }
+
+        setOpponent(newOpponent);
+    }, [trainers]);
+
+    opponent
+        ? console.log("Random opponent: ", opponent)
+        : console.log("No random opponent yet");
+
+    // console.log("Get random trainer #: ", getRandomIndex(trainers.length));
+    // console.log("Trainers: ", trainers);
+    // console.log("Get random trainer: ", getRandomTrainer(getRandomIndex(trainers.length)));
+    // console.log("Party options: ", partyOptions);
+    // partyOptions !== [] ? console.log("Get random pokemon #: ", getRandomIndex(partyOptions.length)) : console.log("Party options are not available yet");
 
     // For ConfirmationSelection --
     // Trainer Name
@@ -138,30 +177,30 @@ export default () => {
     // Ready to Battle button
     // Link to battle page
 
-    console.log("Party: ", party);
-    console.log(
-        "Selected trainer object: ",
-        selectedTrainerObject(selectedTrainer)
-    );
+    // console.log("Party: ", party);
+    // console.log(
+    //     "Selected trainer object: ",
+    //     selectedTrainerObject(selectedTrainer)
+    // );
 
     // console.log("Trainer Image: ", trainerImages[selectedTrainerObject(selectedTrainer).image])
-    console.log("TrainerImages: ", trainerImages);
+    // console.log("TrainerImages: ", trainerImages);
 
     // This is working
-    selectedTrainer !== null
-        ? console.log(
-              "Selected trainer image: ",
-              selectedTrainerObject(selectedTrainer).image
-          )
-        : console.log("No selected trainer yet");
+    // selectedTrainer !== null
+    //     ? console.log(
+    //           "Selected trainer image: ",
+    //           selectedTrainerObject(selectedTrainer).image
+    //       )
+    //     : console.log("No selected trainer yet");
 
     // This is working
-    selectedTrainer !== null
-        ? console.log(
-              "Selected trainer image from trainerImages: ",
-              trainerImages[selectedTrainerObject(selectedTrainer).image]
-          )
-        : console.log("No selected trainer image from trainerImages yet");
+    // selectedTrainer !== null
+    //     ? console.log(
+    //           "Selected trainer image from trainerImages: ",
+    //           trainerImages[selectedTrainerObject(selectedTrainer).image]
+    //       )
+    //     : console.log("No selected trainer image from trainerImages yet");
 
     return (
         <Container>
@@ -177,10 +216,8 @@ export default () => {
                 party={party}
                 partyOptions={partyOptions}
                 partySelection={partySelection}
-                openInfoId={openInfoId}
                 handlePokemonSelect={handlePokemonSelect}
                 handlePartySelect={handlePartySelect}
-                handleInfoClick={handleInfoClick}
             />
 
             {selectedTrainer !== null && party !== [] && (
@@ -189,30 +226,44 @@ export default () => {
                     trainerImages={trainerImages}
                     // need to grab all data for selectedTrainer from trainers b/c selectedTrainer is just an ID
                     selectedTrainer={selectedTrainerObject(selectedTrainer)}
-                    // selectedTrainer={null}
                     party={party}
                     handlePokemonSelect={handlePokemonSelect}
-                    openInfoId={openInfoId}
-                    handleInfoClick={handleInfoClick}
+                    altImage={altImage}
                 />
+            )}
+
+            {opponent && (
+                <div>
+                    <h2>Opponent: {opponent.name}</h2>
+                </div>
             )}
 
             <PokemonHpCard />
             <PokemonHpCard />
-            {displayMoves && (
-                <div>
-                    <button>Move 1</button>
-                    <button>Move 2</button>
-                </div>
-            )}
+
             <div className="battle-interface">
+                {/* Move buttons */}
+                {displayMoves && (
+                    <div>
+                        <button>{party[0].moves[0].move.name}</button>
+
+                        {party[0].moves[1] && (
+                            <button>{party[0].moves[1].move.name}</button>
+                        )}
+                    </div>
+                )}
+
                 <button
                     className="fight"
                     onClick={() => setDisplayMoves(!displayMoves)}
                 >
                     Fight
                 </button>
-                {displayParty && <div>Party</div>}
+
+                {displayParty &&
+                    party !== [] &&
+                    party.map(pokemon => <div>{pokemon.name}</div>)}
+
                 <button
                     className="party"
                     onClick={() => setDisplayParty(!displayParty)}

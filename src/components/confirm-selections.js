@@ -4,7 +4,6 @@ import { css } from "@emotion/core";
 
 import TrainerCard from "./trainer-card";
 import PokemonCard from "./pokemon-card";
-// import Image from "./poke-image";
 
 const ConfirmationWrapper = styled.div`
     margin: 1.5rem auto;
@@ -14,17 +13,6 @@ const Name = styled.h2`
     margin: 0 auto;
     text-align: center;
 `;
-
-// const PokemonCard = styled.div`
-//     background: ${props => (props.selected ? "#99CDFF" : "#D1E9FF")};
-//     box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
-//     border-radius: 40px;
-//     margin: 0 auto;
-//     padding-top: 0.5rem;
-//     width: 250px;
-//     height: fit-content;
-//     cursor: pointer;
-// `;
 
 const PokemonWrapper = styled.div`
     margin: 1rem auto;
@@ -43,43 +31,14 @@ const PokemonWrapper = styled.div`
     }
 `;
 
-const TrainCard = styled(TrainerCard)`
-    text-align: center;
-    max-height: 285px;
+// const TrainCard = styled(TrainerCard)`
+//     text-align: center;
+//     max-height: 285px;
     
-    h3 {
-        margin-bottom: 0;
-    }
-`;
-
-const PokemonName = styled.h2`
-    margin-bottom: 0;
-`;
-
-const ImageWrapper = styled.div`
-    width: 150px;
-    height: 150px;
-    margin: 1rem auto 0;
-`;
-
-const TypeWrapper = styled.div`
-    width: 80%;
-    margin: 0 auto;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
-    align-items: center;
-`;
-
-const InfoWrapper = styled.div`
-    max-height: 80px;
-    line-height: 1;
-    margin-bottom: 1rem;
-
-    p:first-of-type {
-        margin-top: 0;
-    }
-`;
+//     h3 {
+//         margin-bottom: 0;
+//     }
+// `;
 
 const Button = styled.div`
     width: 175px;
@@ -99,93 +58,83 @@ const Button = styled.div`
     }
 `;
 
-
 export default ({
     trainerName,
     trainerImages,
     selectedTrainer,
+    altImage, // boolean
     party,
-    handlePokemonSelect,
-    openInfoId,
-    handleInfoClick,
+    handlePokemonSelect
 }) => {
-    // console.log("trainerName: ", trainerName);
     console.log("selectedTrainerObject: ", selectedTrainer);
+    console.log("Alt: ", altImage);
+    // console.log("selectedTrainer.image: ", selectedTrainer.image);
+
+    const img = altImage ? trainerImages[selectedTrainer.alt_image] : trainerImages[selectedTrainer.image];
+
+    console.log("Img: ", img);
 
     return (
         <ConfirmationWrapper>
-            <Name>Trainer Name: {trainerName}</Name>
+            <Name>{selectedTrainer.name} {trainerName}</Name>
             <PokemonWrapper>
                 <TrainerCard
-                    // css={css`
-                    //     h3 {
-                    //         margin-bottom: 0;
-                    //     }
-                    // `}
                     trainer={selectedTrainer} // must be a trainer object
                     image={
                         selectedTrainer !== null
-                            ? trainerImages[selectedTrainer.image]
+                            ? img
                             : null
                     }
-                    // image={null}
                     handleClick={null} // go back to trainer select screen
-                    selected={false} // logic depends on handleClick function above
+                    selected={false}
                 />
-                {/* 3 Pokemon Cards for Party --> with all info */}
 
                 {party.map(partymon => (
                     <PokemonCard
                         key={partymon.id}
                         pokemon={partymon}
-                        openInfo={openInfoId === partymon.id}
+                        openInfo={true}
                         handleClick={handlePokemonSelect}
-                        handleInfoClick={handleInfoClick}
-                        selected={party.some(mon => mon.id === partymon.id)}
+                        
+                        // selected={party.some(mon => mon.id === partymon.id)}
+                        selected={false}
                     >
-                        {/* <ImageWrapper>
-                            <Image
-                                name={partymon.name}
-                                css={css`
-                                    margin-top: 0.5rem;
-                                `}
-                            />
-                        </ImageWrapper>
-                        <PokemonName>{partymon.name}</PokemonName>
-                        <TypeWrapper>
-                            <p>{partymon.types[0].type.name}</p>
-                            {partymon.types[1] && (
-                                <p>{partymon.types[1].type.name}</p>
-                            )}
-                        </TypeWrapper>
-                        <InfoWrapper>
-                            <p>HP: {partymon.hp}</p>
-                            <p>
-                                {partymon.moves[0].move.name}{" "}
-                                {partymon.moves[0].move.power}{" "}
-                                {partymon.moves[0].move.type.name}
-                            </p>
-                            {partymon.moves[1] && (
-                                <p>
-                                    {partymon.moves[1].move.name}{" "}
-                                    {partymon.moves[1].move.power}{" "}
-                                    {partymon.moves[1].move.type.name}
-                                </p>
-                            )}
-                        </InfoWrapper> */}
                     </PokemonCard>
                 ))}
             </PokemonWrapper>
 
-            {/* Confirmation button */}
-            <Button
-                onClick={() => {
-                    console.log("Ready to battle!");
-                    // go to battle page
-                }}
-            >
-                Ready to battle!
-            </Button>
+            <div css={css`
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+            `}>
+                <Button
+                    onClick={() => {
+                        console.log("Change trainer type");
+                        // go to trainer selection page
+                    }}
+                >
+                    Change trainer
+                </Button>
+    
+                <Button
+                    onClick={() => {
+                        console.log("Change party");
+                        // go to party selection page
+                    }}
+                >
+                    Change party
+                </Button>
+    
+                <Button
+                    onClick={() => {
+                        console.log("Ready to battle!");
+                        // go to battle page
+                    }}
+                >
+                    Ready to battle!
+                </Button>
+            </div>
         </ConfirmationWrapper>
     );
 };

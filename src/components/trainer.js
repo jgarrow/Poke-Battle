@@ -45,7 +45,7 @@ export default props => {
                             trainer={trainer}
                             image={props.trainerImages[trainer.image]}
                             key={trainer.id}
-                            handleClick={props.handleTrainerSelect}
+                            handleTrainerSelect={props.handleTrainerSelect}
                             selected={props.selectedTrainer === trainer.id}
                         />
                         {/* create another card for the some trainer name if there is another image (to get both genders) */}
@@ -54,7 +54,7 @@ export default props => {
                                 trainer={trainer}
                                 image={props.trainerImages[trainer.alt_image]}
                                 key={trainer.id + "alt"} // "alt" makes it a unique key
-                                handleClick={props.handleTrainerSelect}
+                                handleTrainerSelect={props.handleTrainerSelect}
                                 selected={
                                     props.selectedTrainer === `${trainer.id}alt`
                                 }
