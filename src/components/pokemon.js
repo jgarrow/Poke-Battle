@@ -63,11 +63,6 @@ export default ({
         setOpenInfoId(monId);
     };
 
-    // console.log("Party: ", party);
-    // party.length > 0
-    //     ? console.log("Party #1: ", party[0].name)
-    //     : console.log("Party is empty");
-
     return (
         <>
             <Header>
@@ -128,7 +123,7 @@ export default ({
                             key={pokemon.pokemon.id}
                             pokemon={pokemon.pokemon}
                             openInfo={openInfoId === pokemon.pokemon.id}
-                            handleClick={handlePokemonSelect}
+                            handlePokemonSelect={handlePokemonSelect}
                             handleInfoClick={handleInfoClick}
                             selected={party.some(
                                 partymon => partymon.id === pokemon.pokemon.id

@@ -63,16 +63,10 @@ export default ({
     trainerImages,
     selectedTrainer,
     altImage, // boolean
-    party,
-    handlePokemonSelect
+    party
 }) => {
-    console.log("selectedTrainerObject: ", selectedTrainer);
-    console.log("Alt: ", altImage);
-    // console.log("selectedTrainer.image: ", selectedTrainer.image);
 
     const img = altImage ? trainerImages[selectedTrainer.alt_image] : trainerImages[selectedTrainer.image];
-
-    console.log("Img: ", img);
 
     return (
         <ConfirmationWrapper>
@@ -85,7 +79,6 @@ export default ({
                             ? img
                             : null
                     }
-                    handleClick={null} // go back to trainer select screen
                     selected={false}
                 />
 
@@ -94,9 +87,6 @@ export default ({
                         key={partymon.id}
                         pokemon={partymon}
                         openInfo={true}
-                        handleClick={handlePokemonSelect}
-                        
-                        // selected={party.some(mon => mon.id === partymon.id)}
                         selected={false}
                     >
                     </PokemonCard>

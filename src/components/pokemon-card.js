@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
-// import { FaInfoCircle } from "react-icons/fa";
 import { GoInfo } from "react-icons/go";
 
 import Image from "./poke-image";
@@ -58,7 +57,7 @@ const HiddenInfo = styled.div`
 
 export default ({
     pokemon,
-    handleClick,
+    handlePokemonSelect,
     selected,
     openInfo,
     handleInfoClick,
@@ -66,7 +65,9 @@ export default ({
     return (
         <PokemonCard
             onClick={() => {
-                handleClick(pokemon);
+                if (handlePokemonSelect) {
+                    handlePokemonSelect(pokemon);
+                }
             }}
             selected={selected}
         >

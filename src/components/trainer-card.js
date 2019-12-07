@@ -1,5 +1,4 @@
-import { css } from "@emotion/core";
-import React, { useState } from "react";
+import React from "react";
 import Img from "gatsby-image";
 import styled from "@emotion/styled";
 
@@ -19,7 +18,9 @@ export default ({ trainer, image, handleTrainerSelect, selected, alt=false }) =>
         <Card
             onClick={() => {
                 const id = alt ? `${trainer.id}alt` : trainer.id;
-                selected ? handleTrainerSelect(null) : handleTrainerSelect(id, trainer, alt);
+                if (handleTrainerSelect) {
+                    selected ? handleTrainerSelect(null) : handleTrainerSelect(id, trainer, alt);
+                }
             }}
             selected={selected}
         >

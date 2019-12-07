@@ -121,11 +121,7 @@ export default () => {
 
     const selectedTrainerObject = trainerId => {
         const tempTrainers = trainers;
-        console.log("Trainer id: ", trainerId);
-        console.log("Trainer id: ", parseInt(trainerId));
-        
-        // console.log("Temp trainers array: ", tempTrainers);
-        // console.log("Original trainers array: ", trainers);
+
         return trainerId !== null
             ? tempTrainers.find(({ id }) => id === parseInt(trainerId))
             : null;
@@ -160,12 +156,6 @@ export default () => {
         ? console.log("Random opponent: ", opponent)
         : console.log("No random opponent yet");
 
-    // console.log("Get random trainer #: ", getRandomIndex(trainers.length));
-    // console.log("Trainers: ", trainers);
-    // console.log("Get random trainer: ", getRandomTrainer(getRandomIndex(trainers.length)));
-    // console.log("Party options: ", partyOptions);
-    // partyOptions !== [] ? console.log("Get random pokemon #: ", getRandomIndex(partyOptions.length)) : console.log("Party options are not available yet");
-
     // For ConfirmationSelection --
     // Trainer Name
     // pass trainerName state from App.js
@@ -176,31 +166,6 @@ export default () => {
     // pass party state from App.js
     // Ready to Battle button
     // Link to battle page
-
-    // console.log("Party: ", party);
-    // console.log(
-    //     "Selected trainer object: ",
-    //     selectedTrainerObject(selectedTrainer)
-    // );
-
-    // console.log("Trainer Image: ", trainerImages[selectedTrainerObject(selectedTrainer).image])
-    // console.log("TrainerImages: ", trainerImages);
-
-    // This is working
-    // selectedTrainer !== null
-    //     ? console.log(
-    //           "Selected trainer image: ",
-    //           selectedTrainerObject(selectedTrainer).image
-    //       )
-    //     : console.log("No selected trainer yet");
-
-    // This is working
-    // selectedTrainer !== null
-    //     ? console.log(
-    //           "Selected trainer image from trainerImages: ",
-    //           trainerImages[selectedTrainerObject(selectedTrainer).image]
-    //       )
-    //     : console.log("No selected trainer image from trainerImages yet");
 
     return (
         <Container>
