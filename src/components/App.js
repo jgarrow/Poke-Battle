@@ -135,21 +135,33 @@ export default () => {
         const randomNum = getRandomIndex(trainers.length);
         console.log("Random num: ", randomNum);
         return trainers[randomNum];
-        // setOppPartyOptions(opponent.pokemons);
-        // setOppParty([]);
     };
 
-    const getRandomParty = max => {
-        const randomNum = Math.floor(Math.random() * Math.floor(max));
+    const getRandomParty = partyOpts => {
+        const tempParty = [...oppParty];
+        for (let i = 0; i < partyOpts.length && i < 3; i++) {
+            let randomNum = Math.floor(Math.random() * Math.floor(partyOpts.length));
+            // check for duplicates to make sure all pokemon in party are different
+            while (tempParty.includes(partyOpts[randomNum])) {
+                randomNum = Math.floor(Math.random() * Math.floor(partyOpts.length));
+            }
+
+            tempParty.push(partyOpts[randomNum]);
+        }
+        console.log("Opponent party: ", tempParty);
     };
 
     useEffect(() => {
         let newOpponent = {};
+        let oppPokemonOptions = [];
         if (trainers.length !== 0) {
             newOpponent = getRandomTrainer();
+            oppPokemonOptions = newOpponent.pokemons;
         }
 
         setOpponent(newOpponent);
+        setOppPartyOptions(oppPokemonOptions);
+        getRandomParty(oppPokemonOptions);
     }, [trainers]);
 
     opponent
