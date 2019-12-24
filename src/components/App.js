@@ -10,6 +10,8 @@ import PokemonSelection from "./pokemon";
 import ConfirmSelection from "./confirm-selections";
 import PokemonHpCard from "./pokemon-hp-card";
 
+// import pokeball from "../images/pokeball.svg";
+
 require("typeface-heebo");
 
 // need to get the following input/info -- trainer name, trainer type, & Pokemon party (choose 3)
@@ -25,8 +27,20 @@ require("typeface-heebo");
 // randomize opponent
 
 const Container = styled.div`
-    width: 80%;
-    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+`;
+
+const Slides = styled.div`
+    position: relative;
+    height: 100%;
+    width: 100%;
+    transform: ${props => `translateX(${props.translateValue}%)`};
+    transition: transform ease-out 0.45s;
 `;
 
 const TrainerQuery = gql`
@@ -64,6 +78,8 @@ const TrainerQuery = gql`
 `;
 
 export default () => {
+    const [componentPosition, setComponentPosition] = useState(0);
+
     const [trainerName, setTrainerName] = useState("");
     const [selectedTrainer, setSelectedTrainer] = useState(null);
     const [partySelection, setPartySelection] = useState(0);
@@ -83,6 +99,15 @@ export default () => {
 
     const handleChange = e => {
         setTrainerName(e.target.value);
+    };
+
+    const handleTransition = direction => {
+        console.log("In handleTransition: ", direction);
+        if (direction === "next") {
+            setComponentPosition(componentPosition - 100);
+        } else if (direction === "previous") {
+            setComponentPosition(componentPosition + 100);
+        }
     };
 
     const handleTrainerSelect = (trainerId, selectedTrainerObject, alt) => {
@@ -140,10 +165,14 @@ export default () => {
     const getRandomParty = partyOpts => {
         const tempParty = [...oppParty];
         for (let i = 0; i < partyOpts.length && i < 3; i++) {
-            let randomNum = Math.floor(Math.random() * Math.floor(partyOpts.length));
+            let randomNum = Math.floor(
+                Math.random() * Math.floor(partyOpts.length)
+            );
             // check for duplicates to make sure all pokemon in party are different
             while (tempParty.includes(partyOpts[randomNum])) {
-                randomNum = Math.floor(Math.random() * Math.floor(partyOpts.length));
+                randomNum = Math.floor(
+                    Math.random() * Math.floor(partyOpts.length)
+                );
             }
 
             tempParty.push(partyOpts[randomNum]);
@@ -181,35 +210,44 @@ export default () => {
 
     return (
         <Container>
-            <Welcome handleChange={handleChange} trainerName={trainerName} />
-            <TrainerSelection
-                trainers={trainers}
-                trainerImages={trainerImages}
-                handleTrainerSelect={handleTrainerSelect}
-                selectedTrainer={selectedTrainer}
-            />
-
-            <PokemonSelection
-                party={party}
-                partyOptions={partyOptions}
-                partySelection={partySelection}
-                handlePokemonSelect={handlePokemonSelect}
-                handlePartySelect={handlePartySelect}
-            />
-
-            {selectedTrainer !== null && party !== [] && (
-                <ConfirmSelection
+            <Slides translateValue={componentPosition}>
+                <Welcome
+                    handleChange={handleChange}
                     trainerName={trainerName}
-                    trainerImages={trainerImages}
-                    // need to grab all data for selectedTrainer from trainers b/c selectedTrainer is just an ID
-                    selectedTrainer={selectedTrainerObject(selectedTrainer)}
-                    party={party}
-                    handlePokemonSelect={handlePokemonSelect}
-                    altImage={altImage}
+                    handleTransition={handleTransition}
                 />
-            )}
+                <TrainerSelection
+                    trainers={trainers}
+                    trainerImages={trainerImages}
+                    handleTrainerSelect={handleTrainerSelect}
+                    selectedTrainer={selectedTrainer}
+                    handleTransition={handleTransition}
+                />
 
-            {opponent && (
+                <PokemonSelection
+                    party={party}
+                    partyOptions={partyOptions}
+                    partySelection={partySelection}
+                    handlePokemonSelect={handlePokemonSelect}
+                    handlePartySelect={handlePartySelect}
+                    handleTransition={handleTransition}
+                />
+
+                {selectedTrainer !== null && party !== [] && (
+                    <ConfirmSelection
+                        trainerName={trainerName}
+                        trainerImages={trainerImages}
+                        // need to grab all data for selectedTrainer from trainers b/c selectedTrainer is just an ID
+                        selectedTrainer={selectedTrainerObject(selectedTrainer)}
+                        party={party}
+                        handlePokemonSelect={handlePokemonSelect}
+                        altImage={altImage}
+                        handleTransition={handleTransition}
+                    />
+                )}
+            </Slides>
+
+            {/* {opponent && (
                 <div>
                     <h2>Opponent: {opponent.name}</h2>
                 </div>
@@ -219,7 +257,7 @@ export default () => {
             <PokemonHpCard />
 
             <div className="battle-interface">
-                {/* Move buttons */}
+                
                 {displayMoves && (
                     <div>
                         <button>{party[0].moves[0].move.name}</button>
@@ -247,7 +285,7 @@ export default () => {
                 >
                     Pokémon
                 </button>
-            </div>
+            </div> */}
         </Container>
     );
 };

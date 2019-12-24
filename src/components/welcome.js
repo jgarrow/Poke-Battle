@@ -1,16 +1,24 @@
 import React from "react";
 import styled from "@emotion/styled";
 
-// const Container = styled.div`
-//     width: 100%;
-//     height: 100%;
-//     margin: 0;
-// `;
+const WelcomeContainer = styled.div`
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    display: inline-flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 
-export default ({ handleChange, trainerName }) => {
-    console.log(trainerName);
+    p {
+        cursor: pointer;
+    }
+`;
+
+export default ({ handleChange, trainerName, handleTransition }) => {
     return (
-        <div>
+        <WelcomeContainer>
             <h1>Welcome to Poké Battle!</h1>
             <h2>Please enter your name:</h2>
             <input
@@ -20,15 +28,15 @@ export default ({ handleChange, trainerName }) => {
                 onChange={e => handleChange(e)}
                 value={trainerName}
             />
-            <h3
+            <p
                 onClick={() => {
                     trainerName !== ""
-                        ? console.log("I'm good to move on")
-                        : console.log("No name, no game");
+                        ? handleTransition("next")
+                        : alert("No name, no game");
                 }}
             >
-                Go!
-            </h3>
-        </div>
+                Next
+            </p>
+        </WelcomeContainer>
     );
 };

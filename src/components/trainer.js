@@ -4,6 +4,19 @@ import { css } from "@emotion/core";
 
 import TrainerCard from "./trainer-card";
 
+const TrainerSelection = styled.div`
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    position: relative;
+    display: inline-block;
+`;
+
+const TrainerContainer = styled.div`
+    width: 80%;
+    margin: 0 auto;
+`;
+
 const Header = styled.header`
     display: flex;
     flex-flow: row nowrap;
@@ -21,49 +34,71 @@ const CardWrapper = styled.div`
 
 export default props => {
     return (
-        <>
-            <Header>
-                <h1
-                    css={css`
-                        margin: 0 auto;
-                    `}
-                >
-                    Choose your trainer
-                </h1>
-                <p
-                    css={css`
-                        cursor: pointer;
-                    `}
-                >
-                    Next →
-                </p>
-            </Header>
-            <CardWrapper>
-                {props.trainers.map(trainer => (
-                    <>
-                        <TrainerCard
-                            trainer={trainer}
-                            image={props.trainerImages[trainer.image]}
-                            key={trainer.id}
-                            handleTrainerSelect={props.handleTrainerSelect}
-                            selected={props.selectedTrainer === trainer.id}
-                        />
-                        {/* create another card for the some trainer name if there is another image (to get both genders) */}
-                        {trainer.alt_image && (
+        <TrainerSelection>
+            <TrainerContainer>
+                <Header>
+                    <p
+                        css={css`
+                            cursor: pointer;
+                        `}
+                        onClick={() => {
+                            props.handleTransition("previous");
+                        }}
+                    >
+                        Back →
+                    </p>
+                    <h1
+                        css={css`
+                            margin: 0 auto;
+                        `}
+                    >
+                        Choose your trainer
+                    </h1>
+                    <p
+                        css={css`
+                            cursor: pointer;
+                        `}
+                        onClick={() => {
+                            props.selectedTrainer
+                                ? props.handleTransition("next")
+                                : alert("Select a trainer");
+                        }}
+                    >
+                        Next →
+                    </p>
+                </Header>
+                <CardWrapper>
+                    {props.trainers.map(trainer => (
+                        <>
                             <TrainerCard
                                 trainer={trainer}
-                                image={props.trainerImages[trainer.alt_image]}
-                                key={trainer.id + "alt"} // "alt" makes it a unique key
+                                image={props.trainerImages[trainer.image]}
+                                key={trainer.id}
                                 handleTrainerSelect={props.handleTrainerSelect}
-                                selected={
-                                    props.selectedTrainer === `${trainer.id}alt`
-                                }
-                                alt={true}
+                                selected={props.selectedTrainer === trainer.id}
                             />
-                        )}
-                    </>
-                ))}
-            </CardWrapper>
-        </>
+                            {/* create another card for the some trainer name if there is another image (to get both genders) */}
+                            {trainer.alt_image && (
+                                <TrainerCard
+                                    trainer={trainer}
+                                    image={
+                                        props.trainerImages[trainer.alt_image]
+                                    }
+                                    key={trainer.id + "alt"} // "alt" makes it a unique key
+                                    handleTrainerSelect={
+                                        props.handleTrainerSelect
+                                    }
+                                    selected={
+                                        props.selectedTrainer ===
+                                        `${trainer.id}alt`
+                                    }
+                                    alt={true}
+                                />
+                            )}
+                        </>
+                    ))}
+                </CardWrapper>
+            </TrainerContainer>
+        </TrainerSelection>
     );
 };

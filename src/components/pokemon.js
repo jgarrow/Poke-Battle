@@ -5,6 +5,19 @@ import { css } from "@emotion/core";
 import Image from "./poke-image";
 import PokemonCard from "./pokemon-card";
 
+const PokemonSelection = styled.div`
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    position: relative;
+    display: inline-block;
+`;
+
+const PokemonContainer = styled.div`
+    width: 80%;
+    margin: 0 auto;
+`;
+
 const Header = styled.header`
     display: flex;
     flex-flow: row nowrap;
@@ -54,7 +67,8 @@ export default ({
     partyOptions,
     partySelection,
     handlePokemonSelect,
-    handlePartySelect
+    handlePartySelect,
+    handleTransition,
 }) => {
     const [openInfoId, setOpenInfoId] = useState(null);
 
@@ -64,75 +78,94 @@ export default ({
     };
 
     return (
-        <>
-            <Header>
-                <h1
-                    css={css`
-                        margin: 0 auto;
-                    `}
-                >
-                    Choose 3 Pokémon
-                </h1>
-                <p
-                    css={css`
-                        cursor: pointer;
-                    `}
-                >
-                    Next →
-                </p>
-            </Header>
-            <PartyWrapper>
-                <PartyCard
-                    onClick={() => {
-                        handlePartySelect(0);
-                    }}
-                    selected={partySelection === 0}
-                >
-                    <ImageWrapper>
-                        {party[0] && <Image name={party[0].name} />}
-                    </ImageWrapper>
-                </PartyCard>
+        <PokemonSelection>
+            <PokemonContainer>
+                <Header>
+                    <p
+                        css={css`
+                            cursor: pointer;
+                        `}
+                        onClick={() => {
+                            handleTransition("previous");
+                        }}
+                    >
+                        Back →
+                    </p>
+                    <h1
+                        css={css`
+                            margin: 0 auto;
+                        `}
+                    >
+                        Choose 3 Pokémon
+                    </h1>
+                    <p
+                        css={css`
+                            cursor: pointer;
+                        `}
+                        onClick={() => {
+                            party.length === 3 ||
+                            party.length === partyOptions.length
+                                ? handleTransition("next")
+                                : alert("Select a party");
+                        }}
+                    >
+                        Next →
+                    </p>
+                </Header>
+                <PartyWrapper>
+                    <PartyCard
+                        onClick={() => {
+                            handlePartySelect(0);
+                        }}
+                        selected={partySelection === 0}
+                    >
+                        <ImageWrapper>
+                            {party[0] && <Image name={party[0].name} />}
+                        </ImageWrapper>
+                    </PartyCard>
 
-                <PartyCard
-                    onClick={() => {
-                        handlePartySelect(1);
-                    }}
-                    selected={partySelection === 1}
-                >
-                    <ImageWrapper>
-                        {party[1] && <Image name={party[1].name} />}
-                    </ImageWrapper>
-                </PartyCard>
+                    <PartyCard
+                        onClick={() => {
+                            handlePartySelect(1);
+                        }}
+                        selected={partySelection === 1}
+                    >
+                        <ImageWrapper>
+                            {party[1] && <Image name={party[1].name} />}
+                        </ImageWrapper>
+                    </PartyCard>
 
-                <PartyCard
-                    onClick={() => {
-                        handlePartySelect(2);
-                    }}
-                    selected={partySelection === 2}
-                >
-                    <ImageWrapper>
-                        {party[2] && <Image name={party[2].name} />}
-                    </ImageWrapper>
-                </PartyCard>
-            </PartyWrapper>
+                    <PartyCard
+                        onClick={() => {
+                            handlePartySelect(2);
+                        }}
+                        selected={partySelection === 2}
+                    >
+                        <ImageWrapper>
+                            {party[2] && <Image name={party[2].name} />}
+                        </ImageWrapper>
+                    </PartyCard>
+                </PartyWrapper>
 
-            <CardWrapper>
-                {partyOptions.map(pokemon => {
-                    return (
-                        <PokemonCard
-                            key={pokemon.pokemon.id}
-                            pokemon={pokemon.pokemon}
-                            openInfo={openInfoId === pokemon.pokemon.id}
-                            handlePokemonSelect={handlePokemonSelect}
-                            handleInfoClick={handleInfoClick}
-                            selected={party.some(
-                                partymon => partymon.id === pokemon.pokemon.id
-                            )}
-                        />
-                    );
-                })}
-            </CardWrapper>
-        </>
+                <CardWrapper>
+                    {partyOptions.map(pokemon => {
+                        return (
+                            <PokemonCard
+                                key={pokemon.pokemon.id}
+                                pokemon={pokemon.pokemon}
+                                openInfo={openInfoId === pokemon.pokemon.id}
+                                handlePokemonSelect={handlePokemonSelect}
+                                handleInfoClick={handleInfoClick}
+                                selected={party.some(
+                                    partymon =>
+                                        partymon.id === pokemon.pokemon.id
+                                )}
+                            />
+                        );
+                    })}
+                </CardWrapper>
+            </PokemonContainer>
+        </PokemonSelection>
     );
 };
 

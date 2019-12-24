@@ -6,8 +6,17 @@ import TrainerCard from "./trainer-card";
 import PokemonCard from "./pokemon-card";
 
 const ConfirmationWrapper = styled.div`
+    width: 100vw;
+    height: 100%;
+    min-height: 100vh;
+    position: relative;
+    display: inline-block;
+`;
+
+const ConfirmationContainer = styled.div`
+    width: 80%;
     margin: 1.5rem auto;
-`
+`;
 
 const Name = styled.h2`
     margin: 0 auto;
@@ -34,7 +43,7 @@ const PokemonWrapper = styled.div`
 // const TrainCard = styled(TrainerCard)`
 //     text-align: center;
 //     max-height: 285px;
-    
+
 //     h3 {
 //         margin-bottom: 0;
 //     }
@@ -54,7 +63,7 @@ const Button = styled.div`
     cursor: pointer;
 
     &:hover {
-        background: #C4C4C4;
+        background: #c4c4c4;
     }
 `;
 
@@ -63,68 +72,70 @@ export default ({
     trainerImages,
     selectedTrainer,
     altImage, // boolean
-    party
+    party,
 }) => {
-
-    const img = altImage ? trainerImages[selectedTrainer.alt_image] : trainerImages[selectedTrainer.image];
+    const img = altImage
+        ? trainerImages[selectedTrainer.alt_image]
+        : trainerImages[selectedTrainer.image];
 
     return (
         <ConfirmationWrapper>
-            <Name>{selectedTrainer.name} {trainerName}</Name>
-            <PokemonWrapper>
-                <TrainerCard
-                    trainer={selectedTrainer} // must be a trainer object
-                    image={
-                        selectedTrainer !== null
-                            ? img
-                            : null
-                    }
-                    selected={false}
-                />
-
-                {party.map(partymon => (
-                    <PokemonCard
-                        key={partymon.id}
-                        pokemon={partymon}
-                        openInfo={true}
+            <ConfirmationContainer>
+                <Name>
+                    {selectedTrainer.name} {trainerName}
+                </Name>
+                <PokemonWrapper>
+                    <TrainerCard
+                        trainer={selectedTrainer} // must be a trainer object
+                        image={selectedTrainer !== null ? img : null}
                         selected={false}
-                    >
-                    </PokemonCard>
-                ))}
-            </PokemonWrapper>
+                    />
 
-            <div css={css`
-                display: flex;
-                justify-content: space-evenly;
-                align-items: center;
-            `}>
-                <Button
-                    onClick={() => {
-                        console.log("Change trainer type");
-                        // go to trainer selection page
-                    }}
+                    {party.map(partymon => (
+                        <PokemonCard
+                            key={partymon.id}
+                            pokemon={partymon}
+                            openInfo={true}
+                            selected={false}
+                        ></PokemonCard>
+                    ))}
+                </PokemonWrapper>
+
+                <div
+                    css={css`
+                        display: flex;
+                        justify-content: space-evenly;
+                        align-items: center;
+                    `}
                 >
-                    Change trainer
-                </Button>
-    
-                <Button
-                    onClick={() => {
-                        console.log("Change party");
-                        // go to party selection page
-                    }}
-                >
-                    Change party
-                </Button>
-    
-                <Button
-                    onClick={() => {
-                        console.log("Ready to battle!");
-                        // go to battle page
-                    }}
-                >
-                    Ready to battle!
-                </Button>
-            </div>
+                    <Button
+                        onClick={() => {
+                            console.log("Change trainer type");
+                            // go to trainer selection page
+                        }}
+                    >
+                        Change trainer
+                    </Button>
+
+                    <Button
+                        onClick={() => {
+                            console.log("Change party");
+                            // go to party selection page
+                        }}
+                    >
+                        Change party
+                    </Button>
+
+                    <Button
+                        onClick={() => {
+                            console.log("Ready to battle!");
+                            // go to battle page
+                        }}
+                    >
+                        Ready to battle!
+                    </Button>
+                </div>
+            </ConfirmationContainer>
         </ConfirmationWrapper>
     );
 };
