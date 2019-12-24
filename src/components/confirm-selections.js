@@ -40,15 +40,6 @@ const PokemonWrapper = styled.div`
     }
 `;
 
-// const TrainCard = styled(TrainerCard)`
-//     text-align: center;
-//     max-height: 285px;
-
-//     h3 {
-//         margin-bottom: 0;
-//     }
-// `;
-
 const Button = styled.div`
     width: 175px;
     height: 50px;
@@ -73,6 +64,7 @@ export default ({
     selectedTrainer,
     altImage, // boolean
     party,
+    handleConfirmTransitions,
 }) => {
     const img = altImage
         ? trainerImages[selectedTrainer.alt_image]
@@ -110,8 +102,7 @@ export default ({
                 >
                     <Button
                         onClick={() => {
-                            console.log("Change trainer type");
-                            // go to trainer selection page
+                            handleConfirmTransitions("trainer");
                         }}
                     >
                         Change trainer
@@ -119,8 +110,7 @@ export default ({
 
                     <Button
                         onClick={() => {
-                            console.log("Change party");
-                            // go to party selection page
+                            handleConfirmTransitions("party");
                         }}
                     >
                         Change party

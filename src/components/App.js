@@ -109,6 +109,15 @@ export default () => {
         }
     };
 
+    const handleConfirmTransitions = btn => {
+        console.log("In handleConfirmTransition: ", btn);
+        if (btn === "trainer") {
+            setComponentPosition(componentPosition + 200);
+        } else if (btn === "party") {
+            setComponentPosition(componentPosition + 100);
+        }
+    };
+
     const handleTrainerSelect = (trainerId, selectedTrainerObject, alt) => {
         console.log("alt: ", alt);
         setSelectedTrainer(trainerId);
@@ -241,7 +250,8 @@ export default () => {
                         party={party}
                         handlePokemonSelect={handlePokemonSelect}
                         altImage={altImage}
-                        handleTransition={handleTransition}
+                        handleConfirmTransitions={handleConfirmTransitions}
+                        setComponentPosition={setComponentPosition}
                     />
                 )}
             </Slides>
