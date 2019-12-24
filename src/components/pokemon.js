@@ -7,8 +7,8 @@ import PokemonCard from "./pokemon-card";
 
 const PokemonSelection = styled.div`
     width: 100vw;
-    height: 100%;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: scroll;
     position: relative;
     display: inline-block;
 `;
