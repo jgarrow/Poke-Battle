@@ -286,7 +286,7 @@ export default () => {
 
                 {displayParty &&
                     party !== [] &&
-                    party.map(pokemon => <div>{pokemon.name}</div>)}
+                    party.map((pokemon, index) => <div key={index}>{pokemon.name}</div>)}
 
                 <button
                     className="party"

@@ -8,8 +8,15 @@ const WelcomeContainer = styled.div`
     overflow: auto;
     position: relative;
 
-    p {
-        cursor: pointer;
+    h1 {
+        font-family: "Pokemon Solid";
+        color: #ffcc03;
+        text-shadow: -1px -1px 0 #356abc, 1px -1px 0 #356abc, -1px 1px 0 #356aba,
+            1px 1px 0 #356abc;
+    }
+
+    a {
+        text-underline: none;
     }
 `;
 
@@ -22,20 +29,52 @@ const WelcomeWrapper = styled.div`
     align-items: center;
 `;
 
+const Input = styled.input`
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px 0px grey;
+    border: 1px solid lightgray;
+    font-size: 1rem;
+`;
+
+const NextButton = styled.p`
+    cursor: pointer;
+    background: #356abc;
+    padding: 5px 10px;
+    color: white;
+    font-size: 1rem;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px 0px #356abc;
+    width: 75px;
+    text-align: center;
+    margin-top: 2rem;
+
+    &:hover {
+        background: #4c92ff;
+    }
+`;
+
 export default ({ handleChange, trainerName, handleTransition }) => {
     return (
         <WelcomeContainer>
             <WelcomeWrapper>
-                <h1>Welcome to Poké Battle!</h1>
-                <h2>Please enter your name:</h2>
-                <input
+                {/* <h1>Poké Battle!</h1> */}
+                <a href="https://fontmeme.com/fonts/pokmon-font/">
+                    <img
+                        src="https://fontmeme.com/permalink/191225/a204749edea003aa3378de9855458102.png"
+                        alt="pokmon-font"
+                        border="0"
+                    />
+                </a>
+                <h2>Enter your trainer name:</h2>
+                <Input
                     type="text"
                     name="trainerName"
                     placeholder="Your name"
                     onChange={e => handleChange(e)}
                     value={trainerName}
                 />
-                <p
+                <NextButton
                     onClick={() => {
                         trainerName !== ""
                             ? handleTransition("next")
@@ -43,7 +82,7 @@ export default ({ handleChange, trainerName, handleTransition }) => {
                     }}
                 >
                     Next
-                </p>
+                </NextButton>
             </WelcomeWrapper>
         </WelcomeContainer>
     );
