@@ -96,10 +96,12 @@ export default () => {
     const trainers = !loading ? trainerData.trainer : [];
     const trainerImages = useStaticQuery(trainerImagesQuery);
 
+    // for input for trainer name
     const handleChange = e => {
         setTrainerName(e.target.value);
     };
 
+    // "page" transitions
     const handleTransition = direction => {
         console.log("In handleTransition: ", direction);
         if (direction === "next") {
@@ -109,6 +111,7 @@ export default () => {
         }
     };
 
+    // "page" transitions for ConfirmSelection to go back to trainer or party selections
     const handleConfirmTransitions = btn => {
         console.log("In handleConfirmTransition: ", btn);
         if (btn === "trainer") {
@@ -121,7 +124,7 @@ export default () => {
     const handleTrainerSelect = (trainerId, selectedTrainerObject, alt) => {
         console.log("alt: ", alt);
         setSelectedTrainer(trainerId);
-        setAltImage(alt);
+        setAltImage(alt); // for trainers that have different genders with different sprites
         setPartyOptions(selectedTrainerObject.pokemons);
         setParty([]);
         setPartySelection(0);
@@ -204,17 +207,6 @@ export default () => {
     opponent
         ? console.log("Random opponent: ", opponent)
         : console.log("No random opponent yet");
-
-    // For ConfirmationSelection --
-    // Trainer Name
-    // pass trainerName state from App.js
-    // Selected Trainer (as an object)
-    // grab trainer object from 'trainers' based on 'selectedTrainer' (selectedTrainer is an id)
-    // get image from 'trainerImages' from selectedTrainerObject.image
-    // Party
-    // pass party state from App.js
-    // Ready to Battle button
-    // Link to battle page
 
     return (
         <Container>

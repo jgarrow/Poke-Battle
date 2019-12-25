@@ -62,6 +62,11 @@ const CardWrapper = styled.div`
     text-align: center;
 `;
 
+const NextButton = styled.p`
+    cursor: pointer;
+    visibility: ${props => (props.displayed ? "visible" : "hidden")};
+`;
+
 export default ({
     party,
     partyOptions,
@@ -98,10 +103,13 @@ export default ({
                     >
                         Choose 3 Pokémon
                     </h1>
-                    <p
-                        css={css`
-                            cursor: pointer;
-                        `}
+                    <NextButton
+                        displayed={
+                            party.length === 3 ||
+                            party.length === partyOptions.length
+                                ? true
+                                : false
+                        }
                         onClick={() => {
                             party.length === 3 ||
                             party.length === partyOptions.length
@@ -110,7 +118,7 @@ export default ({
                         }}
                     >
                         Next →
-                    </p>
+                    </NextButton>
                 </Header>
                 <PartyWrapper>
                     <PartyCard

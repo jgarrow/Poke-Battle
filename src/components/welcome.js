@@ -39,18 +39,22 @@ const Input = styled.input`
 
 const NextButton = styled.p`
     cursor: pointer;
-    background: #356abc;
+    background: white;
     padding: 5px 10px;
-    color: white;
+    color: black;
     font-size: 1rem;
     border-radius: 10px;
-    box-shadow: 2px 2px 5px 0px #356abc;
+    border: 1px solid lightgray;
+    box-shadow: 2px 2px 5px 0px gray;
     width: 75px;
     text-align: center;
     margin-top: 2rem;
 
     &:hover {
-        background: #4c92ff;
+        color: white;
+        background: #356abc;
+        border: 1px solid #356abc;
+        box-shadow: 2px 2px 5px 0px #356abc;
     }
 `;
 

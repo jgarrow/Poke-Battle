@@ -32,6 +32,11 @@ const CardWrapper = styled.div`
     text-align: center;
 `;
 
+const NextButton = styled.p`
+    cursor: pointer;
+    visibility: ${props => (props.displayed ? "visible" : "hidden")};
+`;
+
 export default props => {
     return (
         <TrainerSelection>
@@ -54,10 +59,9 @@ export default props => {
                     >
                         Choose your trainer
                     </h1>
-                    <p
-                        css={css`
-                            cursor: pointer;
-                        `}
+                    {/* Need to fix -- when going "back" to this page, should not be able to deselect trainer and press Next */}
+                    <NextButton
+                        displayed={props.selectedTrainer ? true : false}
                         onClick={() => {
                             props.selectedTrainer
                                 ? props.handleTransition("next")
@@ -65,7 +69,7 @@ export default props => {
                         }}
                     >
                         Next →
-                    </p>
+                    </NextButton>
                 </Header>
                 <CardWrapper>
                     {props.trainers.map(trainer => (
@@ -77,7 +81,7 @@ export default props => {
                                 handleTrainerSelect={props.handleTrainerSelect}
                                 selected={props.selectedTrainer === trainer.id}
                             />
-                            {/* create another card for the some trainer name if there is another image (to get both genders) */}
+                            {/* create another card for the same trainer name if there is another image (to get both genders) */}
                             {trainer.alt_image && (
                                 <TrainerCard
                                     trainer={trainer}
