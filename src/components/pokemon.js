@@ -11,6 +11,7 @@ const PokemonSelection = styled.div`
     overflow: scroll;
     position: relative;
     display: inline-block;
+    padding-bottom: 2rem;
 `;
 
 const PokemonContainer = styled.div`

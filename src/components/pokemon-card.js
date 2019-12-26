@@ -83,8 +83,17 @@ const HiddenInfo = styled.div`
     margin-bottom: ${props => (props.invisible ? "0" : "1rem")};
 `;
 
-const Hp = styled.p`
-    margin-top: 0;
+const HpContainer = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100px;
+    margin: 0 auto;
+
+    p {
+        margin: 0;
+    }
 `;
 
 const MoveInfoContainer = styled.div`
@@ -92,8 +101,9 @@ const MoveInfoContainer = styled.div`
     grid-template-columns: minmax(auto, 50%) 1fr 70px;
     grid-template-rows: repeat(2, 50%);
     width: 225px;
-    margin: 0 auto;
+    margin: 10px auto 0;
     justify-items: flex-start;
+    align-items: center;
 
     p {
         margin: 0.25rem 0;
@@ -144,16 +154,19 @@ export default ({
                 )}
             </TypeWrapper>
             <HiddenInfo invisible={!openInfo}>
-                <Hp>HP: {pokemon.hp}</Hp>
+                <HpContainer>
+                    <p>HP</p>
+                    <p>{pokemon.hp}</p>
+                </HpContainer>
                 <MoveInfoContainer>
+                    {/* <HpLabel>HP</HpLabel>
+                    <Hp>{pokemon.hp}</Hp> */}
                     <p>{pokemon.moves[0].move.name}</p>
                     <p>{pokemon.moves[0].move.power}</p>
                     <Type bg={pokemon.moves[0].move.type.name}>
                         {pokemon.moves[0].move.type.name}
                     </Type>
-                    {/* </MoveInfoContainer> */}
-                    {/* {pokemon.moves[1] && ( */}
-                    {/* <MoveInfoContainer> */}
+                    {/* Some pokemon only have 1 move (like metapod) */}
                     {pokemon.moves[1] && <p>{pokemon.moves[1].move.name}</p>}
                     {pokemon.moves[1] && <p>{pokemon.moves[1].move.power}</p>}
                     {pokemon.moves[1] && (
@@ -162,7 +175,6 @@ export default ({
                         </Type>
                     )}
                 </MoveInfoContainer>
-                {/* )} */}
             </HiddenInfo>
         </PokemonCard>
     );

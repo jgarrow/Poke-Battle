@@ -10,6 +10,7 @@ const TrainerSelection = styled.div`
     overflow: scroll;
     position: relative;
     display: inline-block;
+    padding-bottom: 2rem;
 `;
 
 const TrainerContainer = styled.div`
