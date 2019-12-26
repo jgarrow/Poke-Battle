@@ -4,13 +4,38 @@ import { css, keyframes } from "@emotion/core";
 
 // animation for Title
 const shine = keyframes`
-from {
-    left: 0;
-}
+    from {
+        left: 0;
+    }
 
-to {
-    left: 100%;
-}
+    to {
+        left: 100%;
+    }
+`;
+
+const titleReveal = keyframes`
+    0% {
+        opacity: 0;
+        transform: scale(1);
+    }
+    40%, 80% {
+        opacity: 1;
+        transform: scale(1.25);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+`;
+
+// animation for rest of content besides Title
+const reveal = keyframes`
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 `;
 
 const WelcomeContainer = styled.div`
@@ -41,6 +66,12 @@ const Title = styled.h1`
     display: inline-block;
     border-radius: 10px;
     z-index: 100;
+    animation: ${props =>
+        props
+            ? css`
+                  ${titleReveal} 3.25s forwards ease-in
+              `
+            : "none"};
 
     &:before {
         border-radius: inherit;
@@ -62,7 +93,7 @@ const Title = styled.h1`
         animation: ${props =>
             props
                 ? css`
-                      ${shine} forwards 0.75s ease-in-out 3s;
+                      ${shine} forwards 0.75s ease-in-out 1.8s;
                   `
                 : "none"};
     }
@@ -75,6 +106,19 @@ const WelcomeWrapper = styled.div`
     flex-flow: column;
     justify-content: center;
     align-items: center;
+`;
+
+const Content = styled.div`
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    opacity: 0;
+    animation: ${props =>
+        props
+            ? css`
+                  ${reveal} forwards 1s ease-in 3.85s
+              `
+            : "none"};
 `;
 
 const Input = styled.input`
@@ -115,30 +159,35 @@ export default ({ handleChange, trainerName, handleTransition }) => {
                         border="0"
                     />
                 </a> */}
-                <h2>Enter your trainer name:</h2>
-                <Input
-                    type="text"
-                    name="trainerName"
-                    placeholder="Your name"
-                    onChange={e => handleChange(e)}
-                    value={trainerName}
-                    onKeyPress={e => {
-                        if (e.key === "Enter" && trainerName !== "") {
-                            handleTransition("next");
-                        } else if (e.key === "Enter" && trainerName === "") {
-                            alert("No name, no game");
-                        }
-                    }}
-                />
-                <NextButton
-                    onClick={() => {
-                        trainerName !== ""
-                            ? handleTransition("next")
-                            : alert("No name, no game");
-                    }}
-                >
-                    Next
-                </NextButton>
+                <Content>
+                    <h2>Enter your trainer name:</h2>
+                    <Input
+                        type="text"
+                        name="trainerName"
+                        placeholder="Your name"
+                        onChange={e => handleChange(e)}
+                        value={trainerName}
+                        onKeyPress={e => {
+                            if (e.key === "Enter" && trainerName !== "") {
+                                handleTransition("next");
+                            } else if (
+                                e.key === "Enter" &&
+                                trainerName === ""
+                            ) {
+                                alert("No name, no game");
+                            }
+                        }}
+                    />
+                    <NextButton
+                        onClick={() => {
+                            trainerName !== ""
+                                ? handleTransition("next")
+                                : alert("No name, no game");
+                        }}
+                    >
+                        Next
+                    </NextButton>
+                </Content>
             </WelcomeWrapper>
         </WelcomeContainer>
     );
