@@ -2,10 +2,25 @@ import React, { useEffect } from "react";
 import styled from "@emotion/styled";
 import { css, keyframes } from "@emotion/core";
 
+const cardReveal = keyframes`
+    0% {
+        opacity: 0;
+        width: 532px;
+    }
+    40%, 80% {
+        opacity: 1;
+        width: 660px;
+    }
+    100% {
+        opacity: 1;
+        width: 532px;
+    }
+`;
+
 // animation for Title
 const shine = keyframes`
     from {
-        left: 0;
+        left: -6%;
     }
 
     to {
@@ -50,9 +65,28 @@ const WelcomeContainer = styled.div`
     }
 `;
 
+const ContentCard = styled.div`
+    box-sizing: border-box;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 0px gray;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    animation: ${props =>
+        props
+            ? css`
+                  ${cardReveal} 3.25s forwards ease-in
+              `
+            : "none"};
+`;
+
 const Title = styled.h1`
     font-family: "Pokemon Solid";
     font-size: 5rem;
+    margin-top: 0;
     margin-bottom: 0;
     text-stroke: 4px #356abc;
     -webkit-text-stroke: 4px #356abc;
@@ -131,7 +165,7 @@ const Input = styled.input`
 
 const NextButton = styled.p`
     cursor: pointer;
-    background: white;
+    background: #81a4db;
     padding: 5px 10px;
     color: black;
     font-size: 1rem;
@@ -140,10 +174,12 @@ const NextButton = styled.p`
     width: 75px;
     text-align: center;
     margin-top: 2rem;
+    transition: all 0.3s ease-in-out;
 
     &:hover {
         color: white;
         background: #356abc;
+        box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.25);
     }
 `;
 
@@ -151,43 +187,45 @@ export default ({ handleChange, trainerName, handleTransition }) => {
     return (
         <WelcomeContainer>
             <WelcomeWrapper>
-                <Title>Poké Battle!</Title>
-                {/* <a href="https://fontmeme.com/fonts/pokmon-font/">
-                    <img
-                        src="https://fontmeme.com/permalink/191225/a204749edea003aa3378de9855458102.png"
-                        alt="pokmon-font"
-                        border="0"
-                    />
-                </a> */}
-                <Content>
-                    <h2>Enter your trainer name:</h2>
-                    <Input
-                        type="text"
-                        name="trainerName"
-                        placeholder="Your name"
-                        onChange={e => handleChange(e)}
-                        value={trainerName}
-                        onKeyPress={e => {
-                            if (e.key === "Enter" && trainerName !== "") {
-                                handleTransition("next");
-                            } else if (
-                                e.key === "Enter" &&
-                                trainerName === ""
-                            ) {
-                                alert("No name, no game");
-                            }
-                        }}
-                    />
-                    <NextButton
-                        onClick={() => {
-                            trainerName !== ""
-                                ? handleTransition("next")
-                                : alert("No name, no game");
-                        }}
-                    >
-                        Next
-                    </NextButton>
-                </Content>
+                <ContentCard>
+                    <Title>Poké Battle!</Title>
+                    {/* <a href="https://fontmeme.com/fonts/pokmon-font/">
+                        <img
+                            src="https://fontmeme.com/permalink/191225/a204749edea003aa3378de9855458102.png"
+                            alt="pokmon-font"
+                            border="0"
+                        />
+                    </a> */}
+                    <Content>
+                        <h2>Enter your trainer name:</h2>
+                        <Input
+                            type="text"
+                            name="trainerName"
+                            placeholder="Your name"
+                            onChange={e => handleChange(e)}
+                            value={trainerName}
+                            onKeyPress={e => {
+                                if (e.key === "Enter" && trainerName !== "") {
+                                    handleTransition("next");
+                                } else if (
+                                    e.key === "Enter" &&
+                                    trainerName === ""
+                                ) {
+                                    alert("No name, no game");
+                                }
+                            }}
+                        />
+                        <NextButton
+                            onClick={() => {
+                                trainerName !== ""
+                                    ? handleTransition("next")
+                                    : alert("No name, no game");
+                            }}
+                        >
+                            Next
+                        </NextButton>
+                    </Content>
+                </ContentCard>
             </WelcomeWrapper>
         </WelcomeContainer>
     );

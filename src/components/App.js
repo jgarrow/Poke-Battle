@@ -32,6 +32,39 @@ const Container = styled.div`
     position: relative;
     overflow: hidden;
     white-space: nowrap;
+    background: repeating-linear-gradient(
+        135deg,
+        white 0%,
+        white 1%,
+        lightgray 1%,
+        lightgray 3%,
+        white 3%,
+        white 3.5%,
+        lightgray 3.5%,
+        lightgray 5%,
+        white 5%,
+        white 6%,
+        lightgray 6%,
+        lightgray 7%,
+        white 7%,
+        white 8%,
+        lightgray 8%,
+        lightgray 9%,
+        white 9%,
+        white 12%,
+        lightgray 12%,
+        lightgray 13%,
+        white 13%,
+        white 15%,
+        lightgray 15%,
+        lightgray 16%,
+        white 16%,
+        white 17%,
+        lightgray 17%,
+        lightgray 18.5%,
+        white 18.5%,
+        white 20%
+    );
 `;
 
 const Slides = styled.div`
