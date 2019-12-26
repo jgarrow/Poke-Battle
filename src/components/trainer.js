@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
+import StickyHeader from "react-sticky-header";
 
 import TrainerCard from "./trainer-card";
 
@@ -18,7 +19,7 @@ const TrainerContainer = styled.div`
     margin: 0 auto;
 `;
 
-const Header = styled.header`
+const Header = styled(StickyHeader)`
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
