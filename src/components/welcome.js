@@ -56,6 +56,14 @@ const NextButton = styled.p`
 `;
 
 export default ({ handleChange, trainerName, handleTransition }) => {
+    // const next = "next";
+    // handleKeyPress = (event, next) => {
+    //     if (event.key === "Enter") {
+    //         console.log("Pressed enter");
+    //         handleTransition(next);
+    //     }
+    // };
+
     return (
         <WelcomeContainer>
             <WelcomeWrapper>
@@ -74,6 +82,13 @@ export default ({ handleChange, trainerName, handleTransition }) => {
                     placeholder="Your name"
                     onChange={e => handleChange(e)}
                     value={trainerName}
+                    onKeyPress={e => {
+                        if (e.key === "Enter" && trainerName !== "") {
+                            handleTransition("next");
+                        } else if (e.key === "Enter" && trainerName === "") {
+                            alert("No name, no game");
+                        }
+                    }}
                 />
                 <NextButton
                     onClick={() => {
