@@ -1,5 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "@emotion/styled";
+import { css, keyframes } from "@emotion/core";
+
+// animation for Title
+const shine = keyframes`
+from {
+    left: 0;
+}
+
+to {
+    left: 100%;
+}
+`;
 
 const WelcomeContainer = styled.div`
     width: 100vw;
@@ -8,15 +20,51 @@ const WelcomeContainer = styled.div`
     overflow: auto;
     position: relative;
 
-    h1 {
-        font-family: "Pokemon Solid";
-        color: #ffcc03;
-        text-shadow: -1px -1px 0 #356abc, 1px -1px 0 #356abc, -1px 1px 0 #356aba,
-            1px 1px 0 #356abc;
-    }
-
     a {
         text-underline: none;
+    }
+`;
+
+const Title = styled.h1`
+    font-family: "Pokemon Solid";
+    font-size: 5rem;
+    margin-bottom: 0;
+    text-stroke: 4px #356abc;
+    -webkit-text-stroke: 4px #356abc;
+    text-fill-color: rgba(0, 0, 0, 0);
+    -webkit-text-fill-color: rgba(0, 0, 0, 0);
+    background: #ffcc03;
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-size: 100%;
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    z-index: 100;
+
+    &:before {
+        border-radius: inherit;
+        background: linear-gradient(
+            90deg,
+            white,
+            white 6%,
+            rgba(255, 204, 3, 0) 6%
+        );
+        content: "";
+        display: block;
+        height: 100%;
+        position: absolute;
+        left: -6%;
+        top: 0;
+        opacity: 1;
+        width: 100%;
+        z-index: -100;
+        animation: ${props =>
+            props
+                ? css`
+                      ${shine} forwards 0.75s ease-in-out 3s;
+                  `
+                : "none"};
     }
 `;
 
@@ -56,25 +104,17 @@ const NextButton = styled.p`
 `;
 
 export default ({ handleChange, trainerName, handleTransition }) => {
-    // const next = "next";
-    // handleKeyPress = (event, next) => {
-    //     if (event.key === "Enter") {
-    //         console.log("Pressed enter");
-    //         handleTransition(next);
-    //     }
-    // };
-
     return (
         <WelcomeContainer>
             <WelcomeWrapper>
-                {/* <h1>Poké Battle!</h1> */}
-                <a href="https://fontmeme.com/fonts/pokmon-font/">
+                <Title>Poké Battle!</Title>
+                {/* <a href="https://fontmeme.com/fonts/pokmon-font/">
                     <img
                         src="https://fontmeme.com/permalink/191225/a204749edea003aa3378de9855458102.png"
                         alt="pokmon-font"
                         border="0"
                     />
-                </a>
+                </a> */}
                 <h2>Enter your trainer name:</h2>
                 <Input
                     type="text"
