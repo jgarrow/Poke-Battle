@@ -40,6 +40,12 @@ const PokemonWrapper = styled.div`
     }
 `;
 
+const ButtonContainer = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+`;
+
 const Button = styled.div`
     width: 175px;
     height: 50px;
@@ -54,7 +60,8 @@ const Button = styled.div`
     cursor: pointer;
 
     &:hover {
-        background: #c4c4c4;
+        background: #356abc;
+        color: white;
     }
 `;
 
@@ -93,13 +100,7 @@ export default ({
                     ))}
                 </PokemonWrapper>
 
-                <div
-                    css={css`
-                        display: flex;
-                        justify-content: space-evenly;
-                        align-items: center;
-                    `}
-                >
+                <ButtonContainer>
                     <Button
                         onClick={() => {
                             handleConfirmTransitions("trainer");
@@ -124,7 +125,7 @@ export default ({
                     >
                         Ready to battle!
                     </Button>
-                </div>
+                </ButtonContainer>
             </ConfirmationContainer>
         </ConfirmationWrapper>
     );

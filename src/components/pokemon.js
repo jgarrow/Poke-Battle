@@ -94,7 +94,7 @@ export default ({
                             handleTransition("previous");
                         }}
                     >
-                        Back →
+                        ← Back
                     </p>
                     <h1
                         css={css`
@@ -120,6 +120,7 @@ export default ({
                         Next →
                     </NextButton>
                 </Header>
+
                 <PartyWrapper>
                     <PartyCard
                         onClick={() => {

@@ -50,7 +50,7 @@ export default props => {
                             props.handleTransition("previous");
                         }}
                     >
-                        Back →
+                        ← Back
                     </p>
                     <h1
                         css={css`

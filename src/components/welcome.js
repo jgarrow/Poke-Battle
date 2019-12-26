@@ -32,7 +32,7 @@ const WelcomeWrapper = styled.div`
 const Input = styled.input`
     padding: 10px;
     border-radius: 10px;
-    box-shadow: 2px 2px 5px 0px grey;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     border: 1px solid lightgray;
     font-size: 1rem;
 `;
@@ -44,8 +44,7 @@ const NextButton = styled.p`
     color: black;
     font-size: 1rem;
     border-radius: 10px;
-    border: 1px solid lightgray;
-    box-shadow: 2px 2px 5px 0px gray;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     width: 75px;
     text-align: center;
     margin-top: 2rem;
@@ -53,8 +52,6 @@ const NextButton = styled.p`
     &:hover {
         color: white;
         background: #356abc;
-        border: 1px solid #356abc;
-        box-shadow: 2px 2px 5px 0px #356abc;
     }
 `;
 
