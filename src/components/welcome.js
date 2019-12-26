@@ -68,6 +68,7 @@ const WelcomeContainer = styled.div`
 const ContentCard = styled.div`
     box-sizing: border-box;
     background: white;
+    width: 532px;
     padding: 30px;
     border-radius: 20px;
     box-shadow: 0px 0px 10px 0px gray;
@@ -78,7 +79,7 @@ const ContentCard = styled.div`
     animation: ${props =>
         props
             ? css`
-                  ${cardReveal} 3.25s forwards ease-in
+                  ${cardReveal} 3.25s forwards ease-in;
               `
             : "none"};
 `;
@@ -103,7 +104,7 @@ const Title = styled.h1`
     animation: ${props =>
         props
             ? css`
-                  ${titleReveal} 3.25s forwards ease-in
+                  ${titleReveal} 3.25s forwards ease-in;
               `
             : "none"};
 
@@ -150,7 +151,7 @@ const Content = styled.div`
     animation: ${props =>
         props
             ? css`
-                  ${reveal} forwards 1s ease-in 3.85s
+                  ${reveal} forwards 1s ease-in 3.85s;
               `
             : "none"};
 `;
@@ -174,7 +175,7 @@ const NextButton = styled.p`
     width: 75px;
     text-align: center;
     margin-top: 2rem;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.2s ease-in-out;
 
     &:hover {
         color: white;

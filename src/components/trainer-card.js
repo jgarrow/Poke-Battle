@@ -10,16 +10,24 @@ const Card = styled.div`
     padding-top: 0.5rem;
     width: 200px;
     cursor: pointer;
+    white-space: normal;
 `;
 
-export default ({ trainer, image, handleTrainerSelect, selected, alt=false }) => {
-
+export default ({
+    trainer,
+    image,
+    handleTrainerSelect,
+    selected,
+    alt = false,
+}) => {
     return (
         <Card
             onClick={() => {
                 const id = alt ? `${trainer.id}alt` : trainer.id;
                 if (handleTrainerSelect) {
-                    selected ? handleTrainerSelect(null) : handleTrainerSelect(id, trainer, alt);
+                    selected
+                        ? handleTrainerSelect(null)
+                        : handleTrainerSelect(id, trainer, alt);
                 }
             }}
             selected={selected}

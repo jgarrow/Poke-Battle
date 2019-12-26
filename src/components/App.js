@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { graphql, useStaticQuery } from "gatsby";
 import styled from "@emotion/styled";
+import { css } from "@emotion/core";
 
 import Welcome from "./welcome";
 import TrainerSelection from "./trainer";
@@ -71,7 +72,7 @@ const Slides = styled.div`
     position: relative;
     height: 100%;
     width: 100%;
-    transform: ${props => `translateX(${props.translateValue}%)`};
+    transform: ${props => css`translateX(${props.translateValue}%)`};
     transition: transform ease-out 0.45s;
 `;
 
