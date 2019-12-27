@@ -58,6 +58,7 @@ const WelcomeContainer = styled.div`
     height: 100vh;
     display: inline-block;
     overflow: auto;
+    overflow-x: hidden;
     position: relative;
 
     a {
