@@ -118,8 +118,9 @@ export default props => {
                         </Button>
                     </Header>
                     <CardWrapper>
-                        {props.trainers.map(trainer => (
-                            <>
+                        {props.trainers.map(trainer => {
+                            let trainerCards = [];
+                            trainerCards.push(
                                 <TrainerCard
                                     trainer={trainer}
                                     image={props.trainerImages[trainer.image]}
@@ -131,8 +132,9 @@ export default props => {
                                         props.selectedTrainer === trainer.id
                                     }
                                 />
-                                {/* create another card for the same trainer name if there is another image (to get both genders) */}
-                                {trainer.alt_image && (
+                            );
+                            if (trainer.alt_image) {
+                                trainerCards.push(
                                     <TrainerCard
                                         trainer={trainer}
                                         image={
@@ -150,9 +152,10 @@ export default props => {
                                         }
                                         alt={true}
                                     />
-                                )}
-                            </>
-                        ))}
+                                );
+                            }
+                            return trainerCards;
+                        })}
                     </CardWrapper>
                 </ContentCard>
             </TrainerContainer>
