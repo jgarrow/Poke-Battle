@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { useScrollPosition } from "../hooks/useScrollPosition";
 import styled from "@emotion/styled";
-import { css } from "@emotion/core";
 
 import Image from "./poke-image";
 import PokemonCard from "./pokemon-card";
@@ -37,9 +37,16 @@ const Header = styled.header`
     top: 0;
     z-index: 5;
     background: white;
-    border-radius: 15px;
+    border-radius: 15px 15px 0 0;
     margin-top: 0;
     padding: 0 1.5rem;
+    box-shadow: ${props =>
+        props.scrolled ? "none" : "0px 10px 10px -10px lightgrey"};
+    transition: all 0.15s ease-in-out;
+`;
+
+const Title = styled.h1`
+    margin: 0 auto;
 `;
 
 const PartyWrapper = styled.div`
@@ -110,6 +117,19 @@ export default ({
     handleTransition,
 }) => {
     const [openInfoId, setOpenInfoId] = useState(null);
+    const [headerAtTop, setHeaderAtTop] = useState(true);
+    const pokePartySelection = useRef(null);
+
+    useScrollPosition(
+        ({ currPos }) => {
+            const atTop = currPos.y === 0 ? true : false;
+            setHeaderAtTop(atTop);
+        },
+        [],
+        pokePartySelection,
+        false,
+        100
+    );
 
     const handleInfoClick = pokemonId => {
         const monId = openInfoId === pokemonId ? null : pokemonId;
@@ -117,10 +137,10 @@ export default ({
     };
 
     return (
-        <PokemonSelection>
+        <PokemonSelection ref={pokePartySelection}>
             <PokemonContainer>
                 <ContentCard>
-                    <Header>
+                    <Header scrolled={headerAtTop}>
                         <Button
                             displayed={true}
                             onClick={() => {
@@ -129,13 +149,7 @@ export default ({
                         >
                             ← Back
                         </Button>
-                        <h1
-                            css={{
-                                margin: "0 auto",
-                            }}
-                        >
-                            Choose your party
-                        </h1>
+                        <Title>Choose your party</Title>
                         <Button
                             displayed={
                                 party.length === 3 ||

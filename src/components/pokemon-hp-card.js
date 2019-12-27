@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export default props => {
-    const [hp, setHp] = useState();
+    // const [hp, setHp] = useState();
 
     return (
         <div>

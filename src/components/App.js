@@ -9,7 +9,7 @@ import Welcome from "./welcome";
 import TrainerSelection from "./trainer";
 import PokemonSelection from "./pokemon";
 import ConfirmSelection from "./confirm-selections";
-import PokemonHpCard from "./pokemon-hp-card";
+// import PokemonHpCard from "./pokemon-hp-card";
 
 // import pokeball from "../images/pokeball.svg";
 
@@ -118,13 +118,13 @@ export default () => {
     const [partySelection, setPartySelection] = useState(0);
     const [party, setParty] = useState([]);
     const [partyOptions, setPartyOptions] = useState([]); // pokemon options for selected trainer
-    const [displayMoves, setDisplayMoves] = useState(false);
-    const [displayParty, setDisplayParty] = useState(false);
+    // const [displayMoves, setDisplayMoves] = useState(false);
+    // const [displayParty, setDisplayParty] = useState(false);
     const [altImage, setAltImage] = useState(false);
 
     const [opponent, setOpponent] = useState(null);
     const [oppParty, setOppParty] = useState([]);
-    const [oppPartyOptions, setOppPartyOptions] = useState([]);
+    // const [oppPartyOptions, setOppPartyOptions] = useState([]);
 
     const { data: trainerData, loading } = useQuery(TrainerQuery); // query from my hasura database
     const trainers = !loading ? trainerData.trainer : [];
@@ -137,7 +137,6 @@ export default () => {
 
     // "page" transitions
     const handleTransition = direction => {
-        console.log("In handleTransition: ", direction);
         if (direction === "next") {
             setComponentPosition(componentPosition - 100);
         } else if (direction === "previous") {
@@ -147,7 +146,6 @@ export default () => {
 
     // "page" transitions for ConfirmSelection to go back to trainer or party selections
     const handleConfirmTransitions = btn => {
-        console.log("In handleConfirmTransition: ", btn);
         if (btn === "trainer") {
             setComponentPosition(componentPosition + 200);
         } else if (btn === "party") {
@@ -156,8 +154,6 @@ export default () => {
     };
 
     const handleTrainerSelect = (trainerId, selectedTrainerObject, alt) => {
-        console.log("Selected trainer: ", selectedTrainer);
-        console.log("Trainer Id: ", trainerId);
         if (trainerId === null) {
             setSelectedTrainer(null);
             setAltImage(false);
@@ -171,20 +167,9 @@ export default () => {
             setParty([]);
             setPartySelection(0);
         }
-
-        // console.log("alt: ", alt);
-        // setSelectedTrainer(trainerId);
-        // setAltImage(alt);
-        // if (selectedTrainer !== null) {
-        //     console.log("Selected trainer: ", selectedTrainer);
-        //     setPartyOptions(selectedTrainerObject.pokemons);
-        //     setParty([]);
-        //     setPartySelection(0);
-        // }
     };
 
     const handlePokemonSelect = pokemon => {
-        console.log("Pokemon: ", pokemon);
         const tempParty = [...party];
         // if an element doesn't exist, .indexOf will return -1
         if (party.indexOf(pokemon) !== -1) {
@@ -220,45 +205,49 @@ export default () => {
         return Math.floor(Math.random() * Math.floor(max));
     };
 
-    const getRandomTrainer = () => {
-        const randomNum = getRandomIndex(trainers.length);
-        console.log("Random num: ", randomNum);
-        return trainers[randomNum];
-    };
-
-    const getRandomParty = partyOpts => {
-        const tempParty = [...oppParty];
-        for (let i = 0; i < partyOpts.length && i < 3; i++) {
-            let randomNum = Math.floor(
-                Math.random() * Math.floor(partyOpts.length)
-            );
-            // check for duplicates to make sure all pokemon in party are different
-            while (tempParty.includes(partyOpts[randomNum])) {
-                randomNum = Math.floor(
-                    Math.random() * Math.floor(partyOpts.length)
-                );
-            }
-
-            tempParty.push(partyOpts[randomNum]);
-        }
-        console.log("Opponent party: ", tempParty);
-    };
-
+    // get random opponent
     useEffect(() => {
         let newOpponent = {};
         let oppPokemonOptions = [];
+
+        const getRandomTrainer = () => {
+            const randomNum = getRandomIndex(trainers.length);
+            return trainers[randomNum];
+        };
+
+        const getRandomParty = partyOpts => {
+            const tempParty = [];
+            for (let i = 0; i < partyOpts.length && i < 3; i++) {
+                let randomNum = Math.floor(
+                    Math.random() * Math.floor(partyOpts.length)
+                );
+                // check for duplicates to make sure all pokemon in party are different
+                while (tempParty.includes(partyOpts[randomNum])) {
+                    randomNum = Math.floor(
+                        Math.random() * Math.floor(partyOpts.length)
+                    );
+                }
+
+                tempParty.push(partyOpts[randomNum]);
+            }
+            console.log("Opponent party: ", tempParty);
+            setOppParty(tempParty);
+        };
+
         if (trainers.length !== 0) {
             newOpponent = getRandomTrainer();
             oppPokemonOptions = newOpponent.pokemons;
+            getRandomParty(oppPokemonOptions);
+            console.log("Opponent: ", newOpponent);
         }
 
         setOpponent(newOpponent);
-        setOppPartyOptions(oppPokemonOptions);
-        getRandomParty(oppPokemonOptions);
     }, [trainers]);
 
-    opponent
-        ? console.log("Random opponent: ", opponent)
+    opponent && oppParty.length > 0
+        ? console.log(
+              `Random opponent: ${opponent}\n Random party: ${oppParty}`
+          )
         : console.log("No random opponent yet");
 
     return (

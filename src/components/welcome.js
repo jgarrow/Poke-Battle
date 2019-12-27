@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { css, keyframes } from "@emotion/core";
 
@@ -31,15 +31,15 @@ const shine = keyframes`
 const titleReveal = keyframes`
     0% {
         opacity: 0;
-        transform: scale(1);
+        font-size: 5rem;
     }
     40%, 80% {
         opacity: 1;
-        transform: scale(1.25);
+        font-size: 6rem;
     }
     100% {
         opacity: 1;
-        transform: scale(1);
+        font-size: 5rem;
     }
 `;
 

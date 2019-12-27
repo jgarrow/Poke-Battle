@@ -1,8 +1,6 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "@emotion/styled";
-import { css } from "@emotion/core";
+import { useScrollPosition } from "../hooks/useScrollPosition";
 
 import TrainerCard from "./trainer-card";
 
@@ -38,9 +36,16 @@ const Header = styled.header`
     top: 0;
     z-index: 5;
     background: white;
-    border-radius: 15px;
+    border-radius: 15px 15px 0 0;
     margin-top: 0;
     padding: 0 1.5rem;
+    box-shadow: ${props =>
+        props.scrolled ? "none" : "0px 10px 10px -10px lightgrey"};
+    transition: all 0.15s ease-in-out;
+`;
+
+const Title = styled.h1`
+    margin: 0 auto;
 `;
 
 const CardWrapper = styled.div`
@@ -73,11 +78,25 @@ const Button = styled.p`
 `;
 
 export default props => {
+    const [headerAtTop, setHeaderAtTop] = useState(true);
+    const trainerSelection = useRef(null);
+
+    useScrollPosition(
+        ({ currPos }) => {
+            const atTop = currPos.y === 0 ? true : false;
+            setHeaderAtTop(atTop);
+        },
+        [],
+        trainerSelection,
+        false,
+        100
+    );
+
     return (
-        <TrainerSelection>
+        <TrainerSelection ref={trainerSelection}>
             <TrainerContainer>
                 <ContentCard>
-                    <Header>
+                    <Header scrolled={headerAtTop}>
                         <Button
                             displayed={true}
                             onClick={() => {
@@ -86,13 +105,7 @@ export default props => {
                         >
                             ← Back
                         </Button>
-                        <h1
-                            css={{
-                                margin: "0 auto",
-                            }}
-                        >
-                            Choose your trainer
-                        </h1>
+                        <Title>Choose your trainer</Title>
                         <Button
                             displayed={props.selectedTrainer ? true : false}
                             onClick={() => {
