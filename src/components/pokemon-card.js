@@ -33,9 +33,10 @@ const PokemonCard = styled.div`
     margin: 0 auto;
     padding-top: 0.5rem;
     width: 250px;
-    height: fit-content;
+    height: ${props => (props.invisible ? "290px" : "400px")};
     cursor: pointer;
     position: relative;
+    transition: height 0.25s ease-in-out;
 `;
 
 const Icon = styled(GoInfo)`
@@ -119,6 +120,7 @@ export default ({
 }) => {
     return (
         <PokemonCard
+            invisible={!openInfo}
             onClick={() => {
                 if (handlePokemonSelect) {
                     handlePokemonSelect(pokemon);

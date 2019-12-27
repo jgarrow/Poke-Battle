@@ -5,7 +5,7 @@ import { css, keyframes } from "@emotion/core";
 const cardReveal = keyframes`
     0% {
         opacity: 0;
-        width: 532px;
+        width: 550px;
     }
     40%, 80% {
         opacity: 1;
@@ -13,7 +13,7 @@ const cardReveal = keyframes`
     }
     100% {
         opacity: 1;
-        width: 532px;
+        width: 550px;
     }
 `;
 
@@ -68,7 +68,7 @@ const WelcomeContainer = styled.div`
 const ContentCard = styled.div`
     box-sizing: border-box;
     background: white;
-    width: 532px;
+    width: 550px;
     padding: 30px;
     border-radius: 20px;
     box-shadow: 0px 0px 10px 0px gray;

@@ -11,7 +11,7 @@ const Image = ({ name }) => {
                         title
                         localFile {
                             childImageSharp {
-                                fluid {
+                                fluid(maxWidth: 150) {
                                     ...GatsbyImageSharpFluid
                                 }
                             }
@@ -22,9 +22,7 @@ const Image = ({ name }) => {
         }
     `);
 
-    const image = data.allPokeImagesYaml.edges.find(n =>
-        n.node.title === name
-    );
+    const image = data.allPokeImagesYaml.edges.find(n => n.node.title === name);
 
     return (
         <Img
