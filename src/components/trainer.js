@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import React from "react";
 import styled from "@emotion/styled";
 import { css } from "@emotion/core";
@@ -51,6 +53,7 @@ const CardWrapper = styled.div`
 `;
 
 const Button = styled.p`
+    visibility: ${props => (props.displayed === true ? "visible" : "hidden")};
     cursor: pointer;
     background: #81a4db;
     padding: 5px 10px;
@@ -76,6 +79,7 @@ export default props => {
                 <ContentCard>
                     <Header>
                         <Button
+                            displayed={true}
                             onClick={() => {
                                 props.handleTransition("previous");
                             }}
@@ -89,12 +93,7 @@ export default props => {
                         >
                             Choose your trainer
                         </h1>
-                        {/* Need to fix -- when going "back" to this page, should not be able to deselect trainer and press Next */}
                         <Button
-                            css={{
-                                visibility: props =>
-                                    props.displayed ? "visible" : "hidden",
-                            }}
                             displayed={props.selectedTrainer ? true : false}
                             onClick={() => {
                                 props.selectedTrainer

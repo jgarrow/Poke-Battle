@@ -54,6 +54,7 @@ const PartyWrapper = styled.div`
 
 const PartyCard = styled.div`
     background: ${props => (props.selected ? "#99CDFF" : "#D1E9FF")};
+    border: ${props => (props.selected ? "5px solid #ffcc03" : "none")};
     box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
     border-radius: 40px;
     margin: 0 auto;
@@ -82,6 +83,7 @@ const CardWrapper = styled.div`
 
 const Button = styled.p`
     cursor: pointer;
+    visibility: ${props => (props.displayed === true ? "visible" : "hidden")};
     background: #81a4db;
     padding: 5px 10px;
     color: black;
@@ -120,6 +122,7 @@ export default ({
                 <ContentCard>
                     <Header>
                         <Button
+                            displayed={true}
                             onClick={() => {
                                 handleTransition("previous");
                             }}
@@ -134,10 +137,6 @@ export default ({
                             Choose your party
                         </h1>
                         <Button
-                            css={{
-                                visibility: props =>
-                                    props.displayed ? "visible" : "hidden",
-                            }}
                             displayed={
                                 party.length === 3 ||
                                 party.length === partyOptions.length
