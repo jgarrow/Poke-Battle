@@ -156,12 +156,31 @@ export default () => {
     };
 
     const handleTrainerSelect = (trainerId, selectedTrainerObject, alt) => {
-        console.log("alt: ", alt);
-        setSelectedTrainer(trainerId);
-        setAltImage(alt); // for trainers that have different genders with different sprites
-        setPartyOptions(selectedTrainerObject.pokemons);
-        setParty([]);
-        setPartySelection(0);
+        console.log("Selected trainer: ", selectedTrainer);
+        console.log("Trainer Id: ", trainerId);
+        if (trainerId === null) {
+            setSelectedTrainer(null);
+            setAltImage(false);
+            setPartyOptions([]);
+            setParty([]);
+            setPartySelection(0);
+        } else {
+            setSelectedTrainer(trainerId);
+            setAltImage(alt); // for trainers that have different genders with different sprites
+            setPartyOptions(selectedTrainerObject.pokemons);
+            setParty([]);
+            setPartySelection(0);
+        }
+
+        // console.log("alt: ", alt);
+        // setSelectedTrainer(trainerId);
+        // setAltImage(alt);
+        // if (selectedTrainer !== null) {
+        //     console.log("Selected trainer: ", selectedTrainer);
+        //     setPartyOptions(selectedTrainerObject.pokemons);
+        //     setParty([]);
+        //     setPartySelection(0);
+        // }
     };
 
     const handlePokemonSelect = pokemon => {

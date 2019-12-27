@@ -131,7 +131,7 @@ export default ({
                                 margin: "0 auto",
                             }}
                         >
-                            Choose 3 Pokémon
+                            Choose your party
                         </h1>
                         <Button
                             css={{
