@@ -32,7 +32,7 @@ const Container = styled.div`
     height: 100vh;
     position: relative;
     overflow: hidden;
-    white-space: nowrap;
+
     background: repeating-linear-gradient(
         135deg,
         white 0%,
@@ -74,6 +74,8 @@ const Slides = styled.div`
     width: 100%;
     transform: ${props => css`translateX(${props.translateValue}%)`};
     transition: transform ease-out 0.45s;
+    display: grid;
+    grid-template-columns: repeat(4, 100vw);
 `;
 
 const TrainerQuery = gql`

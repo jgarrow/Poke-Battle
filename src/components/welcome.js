@@ -68,6 +68,7 @@ const WelcomeContainer = styled.div`
 
 const ContentCard = styled.div`
     box-sizing: border-box;
+    white-space: nowrap;
     background: white;
     width: 550px;
     padding: 30px;
