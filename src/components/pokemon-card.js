@@ -37,6 +37,12 @@ const PokemonCard = styled.div`
     cursor: pointer;
     position: relative;
     transition: height 0.25s ease-in-out;
+
+    @media (max-width: 750px) {
+        width: 140px;
+        height: ${props => (props.invisible ? "265px" : "415px")};
+        border-radius: 30px;
+    }
 `;
 
 const Icon = styled(GoInfo)`
@@ -44,6 +50,12 @@ const Icon = styled(GoInfo)`
     font-size: 1.75rem;
     right: 1.5rem;
     top: 1rem;
+    cursor: pointer;
+
+    @media (max-width: 750px) {
+        top: 0.75rem;
+        right: 1.2rem;
+    }
 `;
 
 const Name = styled.h2`
@@ -54,6 +66,12 @@ const ImageWrapper = styled.div`
     width: 150px;
     height: 150px;
     margin: 1rem auto 0;
+
+    @media (max-width: 750px) {
+        width: 125px;
+        height: 125px;
+        margin-top: 1.85rem;
+    }
 `;
 
 const TypeWrapper = styled.div`
@@ -61,8 +79,12 @@ const TypeWrapper = styled.div`
     margin: 0 auto;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: space-evenly;
+    justify-content: ${props => (props.twoTypes ? "space-between" : "center")};
     align-items: center;
+
+    @media (max-width: 750px) {
+        width: 90%;
+    }
 `;
 
 const Type = styled.p`
@@ -74,6 +96,11 @@ const Type = styled.p`
     align-items: center;
     color: white;
     background: ${props => typeBg[props.bg]};
+
+    @media (max-width: 750px) {
+        width: 60px;
+        margin-top: 0.5rem;
+    }
 `;
 
 const HiddenInfo = styled.div`
@@ -82,6 +109,10 @@ const HiddenInfo = styled.div`
     transition: all 0.2s ease-in-out;
     line-height: 1;
     margin-bottom: ${props => (props.invisible ? "0" : "1rem")};
+
+    @media (max-width: 750px) {
+        max-height: ${props => (props.invisible ? "0" : "140px")};
+    }
 `;
 
 const HpContainer = styled.div`
@@ -108,6 +139,26 @@ const MoveInfoContainer = styled.div`
 
     p {
         margin: 0.25rem 0;
+    }
+
+    @media (max-width: 750px) {
+        width: 90%;
+        grid-template-columns: repeat(2, minmax(auto, 50%));
+        grid-template-rows: none;
+    }
+`;
+
+const MoveName = styled.p`
+    @media (max-width: 750px) {
+        grid-column-start: span 2;
+        justify-self: center;
+        font-weight: 500;
+    }
+`;
+
+const MovePower = styled.p`
+    @media (max-width: 750px) {
+        justify-self: center;
     }
 `;
 
@@ -145,7 +196,7 @@ export default ({
                 />
             </ImageWrapper>
             <Name>{pokemon.name}</Name>
-            <TypeWrapper>
+            <TypeWrapper twoTypes={pokemon.types.length > 1}>
                 <Type bg={pokemon.types[0].type.name}>
                     {pokemon.types[0].type.name}
                 </Type>
@@ -161,16 +212,18 @@ export default ({
                     <p>{pokemon.hp}</p>
                 </HpContainer>
                 <MoveInfoContainer>
-                    {/* <HpLabel>HP</HpLabel>
-                    <Hp>{pokemon.hp}</Hp> */}
-                    <p>{pokemon.moves[0].move.name}</p>
-                    <p>{pokemon.moves[0].move.power}</p>
+                    <MoveName>{pokemon.moves[0].move.name}</MoveName>
+                    <MovePower>{pokemon.moves[0].move.power}</MovePower>
                     <Type bg={pokemon.moves[0].move.type.name}>
                         {pokemon.moves[0].move.type.name}
                     </Type>
                     {/* Some pokemon only have 1 move (like metapod) */}
-                    {pokemon.moves[1] && <p>{pokemon.moves[1].move.name}</p>}
-                    {pokemon.moves[1] && <p>{pokemon.moves[1].move.power}</p>}
+                    {pokemon.moves[1] && (
+                        <MoveName>{pokemon.moves[1].move.name}</MoveName>
+                    )}
+                    {pokemon.moves[1] && (
+                        <MovePower>{pokemon.moves[1].move.power}</MovePower>
+                    )}
                     {pokemon.moves[1] && (
                         <Type bg={pokemon.moves[1].move.type.name}>
                             {pokemon.moves[1].move.type.name}

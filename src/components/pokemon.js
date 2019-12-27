@@ -17,6 +17,10 @@ const PokemonSelection = styled.div`
 const PokemonContainer = styled.div`
     width: 80%;
     margin: 0 auto;
+
+    @media (max-width: 750px) {
+        width: 90%;
+    }
 `;
 
 const ContentCard = styled.div`
@@ -47,6 +51,12 @@ const Header = styled.header`
 
 const Title = styled.h1`
     margin: 0 auto;
+    text-align: center;
+
+    @media (max-width: 400px) {
+        font-size: 1.75rem;
+        margin: 0 15px;
+    }
 `;
 
 const PartyWrapper = styled.div`
@@ -57,6 +67,10 @@ const PartyWrapper = styled.div`
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 750px) {
+        width: 90%;
+    }
 `;
 
 const PartyCard = styled.div`
@@ -70,12 +84,25 @@ const PartyCard = styled.div`
     cursor: pointer;
     display: flex;
     align-items: center;
+
+    @media (max-width: 750px) {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+    }
 `;
 
 const ImageWrapper = styled.div`
     width: 100px;
     height: 100px;
     margin: 0 auto;
+
+    @media (max-width: 750px) {
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        padding: 5px;
+    }
 `;
 
 const CardWrapper = styled.div`
@@ -86,6 +113,11 @@ const CardWrapper = styled.div`
     text-align: center;
     padding: 15px;
     padding-top: 0;
+
+    @media (max-width: 750px) {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        grid-gap: 20px;
+    }
 `;
 
 const Button = styled.p`
@@ -97,7 +129,7 @@ const Button = styled.p`
     font-size: 1rem;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-    width: 80px;
+    width: 60px;
     text-align: center;
     transition: all 0.2s ease-in-out;
 
@@ -147,7 +179,7 @@ export default ({
                                 handleTransition("previous");
                             }}
                         >
-                            ← Back
+                            Back
                         </Button>
                         <Title>Choose your party</Title>
                         <Button
@@ -164,7 +196,7 @@ export default ({
                                     : alert("Select a party");
                             }}
                         >
-                            Next →
+                            Next
                         </Button>
                     </Header>
 

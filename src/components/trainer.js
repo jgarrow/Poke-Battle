@@ -14,7 +14,8 @@ const TrainerSelection = styled.div`
 `;
 
 const TrainerContainer = styled.div`
-    width: 80%;
+    width: 90%;
+    max-width: 960px;
     margin: 0 auto;
 `;
 
@@ -46,6 +47,12 @@ const Header = styled.header`
 
 const Title = styled.h1`
     margin: 0 auto;
+    text-align: center;
+
+    @media (max-width: 400px) {
+        font-size: 1.75rem;
+        margin: 0 15px;
+    }
 `;
 
 const CardWrapper = styled.div`
@@ -66,7 +73,7 @@ const Button = styled.p`
     font-size: 1rem;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-    width: 80px;
+    width: 60px;
     text-align: center;
     transition: all 0.2s ease-in-out;
 
@@ -103,7 +110,7 @@ export default props => {
                                 props.handleTransition("previous");
                             }}
                         >
-                            ← Back
+                            Back
                         </Button>
                         <Title>Choose your trainer</Title>
                         <Button
@@ -114,7 +121,7 @@ export default props => {
                                     : alert("Select a trainer");
                             }}
                         >
-                            Next →
+                            Next
                         </Button>
                     </Header>
                     <CardWrapper>
