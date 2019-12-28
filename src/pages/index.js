@@ -83,6 +83,8 @@ const Container = styled.div`
             white 18.5%,
             white 20%
         );
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         opacity: 0;
         animation: ${backgroundReveal} 1s forwards ease-in 3.85s;
     }
