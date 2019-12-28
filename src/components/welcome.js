@@ -2,21 +2,6 @@ import React from "react";
 import styled from "@emotion/styled";
 import { css, keyframes } from "@emotion/core";
 
-const cardReveal = keyframes`
-    0% {
-        opacity: 0;
-        width: 550px;
-    }
-    40%, 80% {
-        opacity: 1;
-        width: 660px;
-    }
-    100% {
-        opacity: 1;
-        width: 550px;
-    }
-`;
-
 // animation for Title
 const shine = keyframes`
     from {
@@ -35,6 +20,15 @@ const reveal = keyframes`
     }
     to {
         opacity: 1;
+    }
+`;
+
+const boxShadow = keyframes`
+    from {
+        box-shadow: none;
+    }
+    to {
+        box-shadow: 0px 0px 10px 0px gray;
     }
 `;
 
@@ -58,7 +52,7 @@ const ContentCard = styled.div`
     width: 550px;
     padding: 30px;
     border-radius: 20px;
-    box-shadow: 0px 0px 10px 0px gray;
+    box-shadow: none;
     display: flex;
     flex-flow: column;
     justify-content: center;
@@ -66,7 +60,7 @@ const ContentCard = styled.div`
     animation: ${props =>
         props
             ? css`
-                  ${cardReveal} 3.25s forwards ease-in;
+                  ${boxShadow} forwards 1s ease-in 3.85s;
               `
             : "none"};
 `;

@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { graphql, useStaticQuery } from "gatsby";
 import styled from "@emotion/styled";
-import { css } from "@emotion/core";
+import { css, keyframes } from "@emotion/core";
 
 import Welcome from "./welcome";
 import TrainerSelection from "./trainer";
@@ -27,45 +27,64 @@ require("typeface-heebo");
 
 // randomize opponent
 
+const backgroundReveal = keyframes`
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1
+    }
+`;
+
 const Container = styled.div`
     width: 100vw;
     height: 100vh;
     position: relative;
     overflow: hidden;
+    background: white;
 
-    background: repeating-linear-gradient(
-        135deg,
-        white 0%,
-        white 1%,
-        lightgray 1%,
-        lightgray 3%,
-        white 3%,
-        white 3.5%,
-        lightgray 3.5%,
-        lightgray 5%,
-        white 5%,
-        white 6%,
-        lightgray 6%,
-        lightgray 7%,
-        white 7%,
-        white 8%,
-        lightgray 8%,
-        lightgray 9%,
-        white 9%,
-        white 12%,
-        lightgray 12%,
-        lightgray 13%,
-        white 13%,
-        white 15%,
-        lightgray 15%,
-        lightgray 16%,
-        white 16%,
-        white 17%,
-        lightgray 17%,
-        lightgray 18.5%,
-        white 18.5%,
-        white 20%
-    );
+    &:before {
+        content: "";
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: repeating-linear-gradient(
+            135deg,
+            white 0%,
+            white 1%,
+            lightgray 1%,
+            lightgray 3%,
+            white 3%,
+            white 3.5%,
+            lightgray 3.5%,
+            lightgray 5%,
+            white 5%,
+            white 6%,
+            lightgray 6%,
+            lightgray 7%,
+            white 7%,
+            white 8%,
+            lightgray 8%,
+            lightgray 9%,
+            white 9%,
+            white 12%,
+            lightgray 12%,
+            lightgray 13%,
+            white 13%,
+            white 15%,
+            lightgray 15%,
+            lightgray 16%,
+            white 16%,
+            white 17%,
+            lightgray 17%,
+            lightgray 18.5%,
+            white 18.5%,
+            white 20%
+        );
+        opacity: 0;
+        animation: ${backgroundReveal} 1s forwards ease-in 3.85s;
+    }
 `;
 
 const Slides = styled.div`

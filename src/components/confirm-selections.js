@@ -151,7 +151,7 @@ const BattleButton = styled.div`
     height: 50px;
     text-align: center;
     margin: 1rem auto 0;
-    background: #81a4db;
+    background: #9ade8f;
     color: black;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 15px;
@@ -164,7 +164,7 @@ const BattleButton = styled.div`
 
     &:hover {
         color: white;
-        background: #356abc;
+        background: #7bb372;
         box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.25);
     }
 `;
