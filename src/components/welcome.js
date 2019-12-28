@@ -63,6 +63,20 @@ const ContentCard = styled.div`
                   ${boxShadow} forwards 1s ease-in 3.85s;
               `
             : "none"};
+
+    @media (max-width: 600px) {
+        width: 80%;
+        max-width: 500px;
+    }
+
+    @media (max-width: 400px) {
+        width: 90%;
+        max-width: 350px;
+    }
+
+    @media (max-width: 350px) {
+        width: 95%;
+    }
 `;
 
 const Title = styled.h1`
