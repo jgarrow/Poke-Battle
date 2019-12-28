@@ -49,7 +49,7 @@ const ContentCard = styled.div`
     box-sizing: border-box;
     white-space: nowrap;
     background: white;
-    width: 550px;
+    width: 600px;
     padding: 30px;
     border-radius: 20px;
     box-shadow: none;
@@ -200,6 +200,7 @@ const WelcomeWrapper = styled.div`
     flex-flow: column;
     justify-content: center;
     align-items: center;
+    flex-grow: 1;
 `;
 
 const Content = styled.div`

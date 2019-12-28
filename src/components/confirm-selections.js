@@ -7,7 +7,7 @@ import Image from "./poke-image";
 const ConfirmationWrapper = styled.div`
     width: 100vw;
     height: 100vh;
-    overflow: scroll;
+
     position: relative;
     display: inline-block;
     padding-bottom: 2rem;

@@ -7,7 +7,7 @@ import TrainerCard from "./trainer-card";
 const TrainerSelection = styled.div`
     width: 100vw;
     height: 100vh;
-    overflow: scroll;
+    max-height: 100vh;
     position: relative;
     display: inline-block;
     padding-bottom: 2rem;
@@ -15,16 +15,19 @@ const TrainerSelection = styled.div`
 
 const TrainerContainer = styled.div`
     width: 90%;
+    height: 100%;
     max-width: 960px;
     margin: 0 auto;
 `;
 
 const ContentCard = styled.div`
+    height: 100%;
     background: white;
     border-radius: 30px;
     box-shadow: 0px 0px 15px 0px lightgray;
     margin-top: 1rem;
-    padding-top: 1rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
 `;
 
 const Header = styled.header`
@@ -37,7 +40,7 @@ const Header = styled.header`
     top: 0;
     z-index: 5;
     background: white;
-    border-radius: 15px 15px 0 0;
+    border-radius: 30px 30px 0 0;
     margin-top: 0;
     padding: 0 1.5rem;
     box-shadow: ${props =>
