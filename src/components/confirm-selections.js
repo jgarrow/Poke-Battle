@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { Link } from "gatsby";
 
 import TrainerCard from "./trainer-card";
 import Image from "./poke-image";
@@ -146,7 +147,7 @@ const Button = styled.div`
     }
 `;
 
-const BattleButton = styled.div`
+const BattleButton = styled(Link)`
     width: 175px;
     height: 50px;
     text-align: center;
@@ -186,6 +187,8 @@ export default ({
     altImage, // boolean
     party,
     handleConfirmTransitions,
+    opponent,
+    oppParty
 }) => {
     const img = altImage
         ? trainerImages[selectedTrainer.alt_image]
@@ -242,10 +245,8 @@ export default ({
                 </ContentCard>
 
                 <BattleButton
-                    onClick={() => {
-                        console.log("Ready to battle!");
-                        // go to battle page
-                    }}
+                    to="/battle"
+                    state={{ trainerName, selectedTrainer, party, altImage, opponent, oppParty}}
                 >
                     Ready to battle!
                 </BattleButton>

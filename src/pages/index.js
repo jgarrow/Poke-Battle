@@ -308,6 +308,8 @@ export default () => {
                         altImage={altImage}
                         handleConfirmTransitions={handleConfirmTransitions}
                         setComponentPosition={setComponentPosition}
+                        opponent={opponent}
+                        oppParty={oppParty}
                     />
                 )}
             </Slides>
