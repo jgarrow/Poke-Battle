@@ -28,21 +28,6 @@ const shine = keyframes`
     }
 `;
 
-const titleReveal = keyframes`
-    0% {
-        opacity: 0;
-        font-size: 5rem;
-    }
-    40%, 80% {
-        opacity: 1;
-        font-size: 6rem;
-    }
-    100% {
-        opacity: 1;
-        font-size: 5rem;
-    }
-`;
-
 // animation for rest of content besides Title
 const reveal = keyframes`
     from {
@@ -104,11 +89,89 @@ const Title = styled.h1`
     border-radius: 10px;
     z-index: 100;
     animation: ${props =>
-        props
-            ? css`
-                  ${titleReveal} 3.25s forwards ease-in;
-              `
-            : "none"};
+        props ? "desktopTitleReveal 3.25s forwards ease-in" : "none"};
+
+    @keyframes desktopTitleReveal {
+        0% {
+            opacity: 0;
+            font-size: 5rem;
+        }
+        40%,
+        80% {
+            opacity: 1;
+            font-size: 6rem;
+        }
+        100% {
+            opacity: 1;
+            font-size: 5rem;
+        }
+    }
+
+    @media (max-width: 600px) {
+        font-size: 4rem;
+        animation: ${props =>
+            props ? "mediumTitleReveal 3.25s forwards ease-in" : "none"};
+
+        @keyframes mediumTitleReveal {
+            0% {
+                opacity: 0;
+                font-size: 4rem;
+            }
+            40%,
+            80% {
+                opacity: 1;
+                font-size: 5rem;
+            }
+            100% {
+                opacity: 1;
+                font-size: 4rem;
+            }
+        }
+    }
+
+    @media (max-width: 400px) {
+        font-size: 3rem;
+        animation: ${props =>
+            props ? "mobileTitleReveal 3.25s forwards ease-in" : "none"};
+
+        @keyframes mobileTitleReveal {
+            0% {
+                opacity: 0;
+                font-size: 3rem;
+            }
+            40%,
+            80% {
+                opacity: 1;
+                font-size: 4rem;
+            }
+            100% {
+                opacity: 1;
+                font-size: 3rem;
+            }
+        }
+    }
+
+    @media (max-width: 400px) {
+        font-size: 2.8rem;
+        animation: ${props =>
+            props ? "smallMobileTitleReveal 3.25s forwards ease-in" : "none"};
+
+        @keyframes smallMobileTitleReveal {
+            0% {
+                opacity: 0;
+                font-size: 2.8rem;
+            }
+            40%,
+            80% {
+                opacity: 1;
+                font-size: 3.25rem;
+            }
+            100% {
+                opacity: 1;
+                font-size: 2.8rem;
+            }
+        }
+    }
 
     &:before {
         border-radius: inherit;
