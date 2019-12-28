@@ -71,6 +71,7 @@ const PartyWrapper = styled.div`
     @media (max-width: 750px) {
         width: 90%;
     }
+
 `;
 
 const PartyCard = styled.div`
@@ -86,9 +87,14 @@ const PartyCard = styled.div`
     align-items: center;
 
     @media (max-width: 750px) {
+        width: 115px;
+        height: 115px;
+        border-radius: 20px;
+    }
+
+    @media (max-width: 530px) {
         width: 80px;
         height: 80px;
-        border-radius: 20px;
     }
 `;
 
@@ -101,6 +107,10 @@ const ImageWrapper = styled.div`
         width: 100%;
         height: auto;
         box-sizing: border-box;
+        padding: 10px;
+    }
+
+    @media (max-width: 530px) {
         padding: 5px;
     }
 `;
@@ -110,13 +120,19 @@ const CardWrapper = styled.div`
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-template-rows: auto;
     grid-gap: 30px;
+    justify-items: center;
     text-align: center;
     padding: 15px;
     padding-top: 0;
 
     @media (max-width: 750px) {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        grid-gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-gap: 10px;
+        padding: 20px;
+    }
+
+    @media (max-width: 390px) {
+        grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
     }
 `;
 

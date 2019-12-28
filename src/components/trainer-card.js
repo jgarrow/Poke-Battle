@@ -11,7 +11,31 @@ const Card = styled.div`
     width: 200px;
     cursor: pointer;
     white-space: normal;
+
+    @media (max-width: 750px) {
+        margin: 0;
+        width: 140px;
+        border-radius: 30px;
+    }
+
+    @media (max-width: 370px) {
+        width: 125px;
+    }
 `;
+
+const Name = styled.h3`
+    text-align: center;
+    @media (max-width: 750px) {
+        font-size: 1.25rem;
+    }
+`;
+
+// const Image = styled(Img)`
+//     @media (max-width: 750px) {
+//         width: 150px;
+//         height: 150px;
+//     }
+// `;
 
 export default ({
     trainer,
@@ -35,12 +59,12 @@ export default ({
             <div>
                 {image ? (
                     <Img
-                        fixed={image.childImageSharp.fixed}
+                        fluid={image.childImageSharp.fluid}
                         alt={trainer.name}
                     />
                 ) : null}
             </div>
-            <h3>{trainer.name}</h3>
+            <Name>{trainer.name}</Name>
         </Card>
     );
 };

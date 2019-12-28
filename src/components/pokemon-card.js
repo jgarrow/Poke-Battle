@@ -30,18 +30,25 @@ const PokemonCard = styled.div`
     background: ${props => (props.selected ? "#99CDFF" : "#D1E9FF")};
     box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
     border-radius: 40px;
-    margin: 0 auto;
-    padding-top: 0.5rem;
     width: 250px;
+    padding-top: 0.5rem;
     height: ${props => (props.invisible ? "290px" : "400px")};
     cursor: pointer;
     position: relative;
     transition: height 0.25s ease-in-out;
 
     @media (max-width: 750px) {
-        width: 140px;
+        min-width: 150px;
+        max-width: 250px;
+        width: 100%;
         height: ${props => (props.invisible ? "265px" : "415px")};
         border-radius: 30px;
+    }
+
+    @media (max-width: 370px) {
+        min-width: 125px;
+        height: ${props => (props.invisible ? "235px" : "390px")};
+        border-radius: 20px;
     }
 `;
 
@@ -60,6 +67,10 @@ const Icon = styled(GoInfo)`
 
 const Name = styled.h2`
     margin-bottom: 0;
+
+    @media (max-width: 750px) {
+        font-size: 1.25rem;
+    }
 `;
 
 const ImageWrapper = styled.div`
@@ -72,6 +83,11 @@ const ImageWrapper = styled.div`
         height: 125px;
         margin-top: 1.85rem;
     }
+
+    @media (max-width: 370px) {
+        width: 100px;
+        height: 100px;
+    }
 `;
 
 const TypeWrapper = styled.div`
@@ -79,11 +95,14 @@ const TypeWrapper = styled.div`
     margin: 0 auto;
     display: flex;
     flex-flow: row nowrap;
-    justify-content: ${props => (props.twoTypes ? "space-between" : "center")};
+    justify-content: ${props => (props.twoTypes ? "space-evenly" : "center")};
     align-items: center;
 
     @media (max-width: 750px) {
         width: 90%;
+    }
+    @media (max-width: 370px) {
+        width: 95%;
     }
 `;
 
@@ -100,6 +119,10 @@ const Type = styled.p`
     @media (max-width: 750px) {
         width: 60px;
         margin-top: 0.5rem;
+    }
+
+    @media (max-width: 370px) {
+        width: 55px;
     }
 `;
 

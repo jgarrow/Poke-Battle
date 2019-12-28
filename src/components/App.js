@@ -339,218 +339,218 @@ const trainerImagesQuery = graphql`
     query {
         aceTrainerFPic: file(relativePath: { eq: "cool_trainer_f.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         aceTrainerMPic: file(relativePath: { eq: "cool_trainer_m.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         beautyPic: file(relativePath: { eq: "beauty.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         birdKeeperPic: file(relativePath: { eq: "bird_keeper.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         blackbeltPic: file(relativePath: { eq: "blackbelt.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         bugCatcherPic: file(relativePath: { eq: "bug_catcher.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         burglarPic: file(relativePath: { eq: "burglar.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         camperPic: file(relativePath: { eq: "camper.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         channelerPic: file(relativePath: { eq: "channeler.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         engineerPic: file(relativePath: { eq: "engineer.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         fishermanPic: file(relativePath: { eq: "fisherman.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         gamerPic: file(relativePath: { eq: "gamer.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         gentlemanPic: file(relativePath: { eq: "gentleman.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         hikerPic: file(relativePath: { eq: "hiker.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         jugglerPic: file(relativePath: { eq: "juggler.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         lassPic: file(relativePath: { eq: "lass.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         picnickerPic: file(relativePath: { eq: "picnicker.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         pokeManiacPic: file(relativePath: { eq: "poke_maniac.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         psychicPic: file(relativePath: { eq: "psychic.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         punkGuyPic: file(relativePath: { eq: "punk_guy.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         rockerPic: file(relativePath: { eq: "rocker.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         roughneckPic: file(relativePath: { eq: "roughneck.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         sailorPic: file(relativePath: { eq: "sailor.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         scientistPic: file(relativePath: { eq: "scientist.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         superNerdPic: file(relativePath: { eq: "super_nerd.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         swimmerFPic: file(relativePath: { eq: "swimmer_f.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         swimmerMPic: file(relativePath: { eq: "swimmer.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         tamerPic: file(relativePath: { eq: "tamer.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         teamRocketGruntFPic: file(relativePath: { eq: "rocket_grunt_f.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         teamRocketGruntMPic: file(relativePath: { eq: "rocket_grunt_m.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }
         youngsterPic: file(relativePath: { eq: "youngster.png" }) {
             childImageSharp {
-                fixed(width: 200, height: 200) {
-                    ...GatsbyImageSharpFixed
+                fluid(maxWidth: 200) {
+                    ...GatsbyImageSharpFluid
                 }
             }
         }

@@ -59,9 +59,19 @@ const CardWrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     grid-gap: 30px;
+    justify-items: center;
     text-align: center;
     padding: 1rem;
     padding-top: 0;
+
+    @media (max-width: 750px) {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        grid-gap: 10px;
+    }
+
+    @media (max-width: 370px) {
+        grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+    }
 `;
 
 const Button = styled.p`
