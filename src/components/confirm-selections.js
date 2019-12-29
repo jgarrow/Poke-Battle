@@ -188,7 +188,7 @@ export default ({
     party,
     handleConfirmTransitions,
     opponent,
-    oppParty
+    oppParty,
 }) => {
     const img = altImage
         ? trainerImages[selectedTrainer.alt_image]
@@ -246,7 +246,15 @@ export default ({
 
                 <BattleButton
                     to="/battle"
-                    state={{ trainerName, selectedTrainer, party, altImage, opponent, oppParty}}
+                    state={{
+                        trainerImages,
+                        trainerName,
+                        selectedTrainer,
+                        party,
+                        altImage,
+                        opponent,
+                        oppParty,
+                    }}
                 >
                     Ready to battle!
                 </BattleButton>
