@@ -10,82 +10,61 @@ const BattleContainer = styled.div`
     margin: 0;
 `;
 
+// Need to tweak background, don't like current linear-gradient
 const Bg = styled.div`
-    margin: 0;
-    width: 100vw;
-    height: 100vh;
-    background: repeating-linear-gradient(
-        135deg,
-        white 0%,
-        white 1%,
-        lightgray 1%,
-        lightgray 3%,
-        white 3%,
-        white 3.5%,
-        lightgray 3.5%,
-        lightgray 5%,
-        white 5%,
-        white 6%,
-        lightgray 6%,
-        lightgray 7%,
-        white 7%,
-        white 8%,
-        lightgray 8%,
-        lightgray 9%,
-        white 9%,
-        white 12%,
-        lightgray 12%,
-        lightgray 13%,
-        white 13%,
-        white 15%,
-        lightgray 15%,
-        lightgray 16%,
-        white 16%,
-        white 17%,
-        lightgray 17%,
-        lightgray 18.5%,
-        white 18.5%,
-        white 20%
-    );
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-`;
-
-const PokeballContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
-    position: relative;
-    margin: 0;
-    background: transparent;
+    background: linear-gradient(
+        white 0%,
+        rgb(209, 233, 255) 2.5%,
+        white 4%,
+        rgb(209, 233, 255) 6.5%,
+        white 7.5%,
+        rgb(209, 233, 255) 9%,
+        white 11%,
+        rgb(209, 233, 255) 16.25%,
+        white 18%,
+        rgb(209, 233, 255) 25%,
+        white 40%,
+        white 60%,
+        rgb(209, 233, 255) 75%,
+        white 82.5%,
+        rgb(209, 233, 255) 88%,
+        white 92%,
+        rgb(209, 233, 255) 95%,
+        white 98%,
+        rgb(209, 233, 255) 100%
+    );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 `;
 
 const Pokeball = styled.div`
-    max-width: 276px;
-    max-height: 276px;
-    text-align: center;
-    transform: translateX(-100%);
-    animation: slide 3s forwards 1s;
+    width: 276px;
+    height: 276px;
     position: absolute;
-    margin: calc((100vh - 276px) / 2) 0;
+    opacity: 0;
+    animation: diminish 0.75s forwards linear 1s;
 
-    img {
-        animation: roll 3s forwards 1s;
-    }
-
-    @keyframes slide {
-        100% {
-            transform: translateX(100vw);
+    @keyframes diminish {
+        0% {
+            transform: scale(3);
+            opacity: 0;
         }
-    }
-
-    @keyframes roll {
+        50% {
+            opacity: 1;
+        }
         100% {
-            transform: rotate(360deg);
+            transform: scale(1);
+            opacity: 1;
         }
     }
 `;
 
-const Content = styled.section`
+const Content = styled.div`
     width: 100vw;
     height: 100vh;
     padding: 1rem 0;
@@ -93,11 +72,21 @@ const Content = styled.section`
     flex-flow: row nowrap;
     justify-content: space-evenly;
     align-items: center;
-    position: relative;
+    z-index: 1;
 `;
 
 const Title = styled.h1`
-    margin-top: 0;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards ease-in 2.75s;
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
 `;
 
 const Trainer = styled.div`
@@ -138,6 +127,7 @@ const TrainerImage = styled.div`
 const TrainerName = styled.h3`
     text-align: center;
     margin: 0;
+    max-width: 200px;
 `;
 
 const PartyBallContainer = styled.div`
@@ -171,70 +161,60 @@ export default ({ location }) => {
     return (
         <BattleContainer>
             <Bg>
-                <PokeballContainer>
-                    <Pokeball>
-                        <img
-                            src={pokeball}
-                            alt="Blue pokeball for transition to page"
-                        />
-                    </Pokeball>
+                <Pokeball>
+                    <img
+                        src={pokeball}
+                        alt="Blue pokeball for transition to page"
+                    />
+                </Pokeball>
 
-                    <Content>
-                        <Trainer isOpponent={false}>
-                            <TrainerImage>
-                                {trainerImage ? (
-                                    <Img
-                                        fluid={
-                                            trainerImage.childImageSharp.fluid
-                                        }
-                                        alt={trainerType}
-                                    />
-                                ) : null}
-                            </TrainerImage>
-                            <TrainerName>
-                                {trainerType} {trainerName}
-                            </TrainerName>
-                            <PartyBallContainer>
-                                {party.map(pokemon => (
-                                    // <p key={pokemon.id}>{pokemon.name}</p>
-                                    <PartyBall
-                                        key={pokemon.id}
-                                        src={pokeball}
-                                        alt="Blue pokeball"
-                                    />
-                                ))}
-                            </PartyBallContainer>
-                        </Trainer>
+                <Content>
+                    <Trainer isOpponent={false}>
+                        <TrainerImage>
+                            {trainerImage ? (
+                                <Img
+                                    fluid={trainerImage.childImageSharp.fluid}
+                                    alt={trainerType}
+                                />
+                            ) : null}
+                        </TrainerImage>
+                        <TrainerName>
+                            {trainerType} {trainerName}
+                        </TrainerName>
+                        <PartyBallContainer>
+                            {party.map(pokemon => (
+                                <PartyBall
+                                    key={pokemon.id}
+                                    src={pokeball}
+                                    alt="Blue pokeball"
+                                />
+                            ))}
+                        </PartyBallContainer>
+                    </Trainer>
 
-                        <Title>VS</Title>
+                    <Title>VS</Title>
 
-                        <Trainer isOpponent={true}>
-                            <TrainerImage>
-                                {opponentImage ? (
-                                    <Img
-                                        fluid={
-                                            opponentImage.childImageSharp.fluid
-                                        }
-                                        alt={opponent}
-                                    />
-                                ) : null}
-                            </TrainerImage>
-                            <TrainerName>{opponent} Alex</TrainerName>
-                            <PartyBallContainer>
-                                {oppParty.map(pokemon => (
-                                    // <p key={pokemon.pokemon.id}>
-                                    //     {pokemon.pokemon.name}
-                                    // </p>
-                                    <PartyBall
-                                        key={pokemon.pokemon.id}
-                                        src={pokeball}
-                                        alt="Blue pokeball"
-                                    />
-                                ))}
-                            </PartyBallContainer>
-                        </Trainer>
-                    </Content>
-                </PokeballContainer>
+                    <Trainer isOpponent={true}>
+                        <TrainerImage>
+                            {opponentImage ? (
+                                <Img
+                                    fluid={opponentImage.childImageSharp.fluid}
+                                    alt={opponent}
+                                />
+                            ) : null}
+                        </TrainerImage>
+                        <TrainerName>{opponent} Alex</TrainerName>
+                        <PartyBallContainer>
+                            {oppParty.map(pokemon => (
+                                <PartyBall
+                                    key={pokemon.pokemon.id}
+                                    src={pokeball}
+                                    alt="Blue pokeball"
+                                />
+                            ))}
+                        </PartyBallContainer>
+                    </Trainer>
+                </Content>
             </Bg>
         </BattleContainer>
     );
