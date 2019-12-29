@@ -146,6 +146,7 @@ const PartyBall = styled.img`
 export default ({ location }) => {
     const {
         trainerName,
+        altImage,
         party,
         oppParty,
         selectedTrainer,
@@ -153,6 +154,7 @@ export default ({ location }) => {
     } = location.state;
     const trainerType = selectedTrainer.name;
     const trainerImage = trainerImages[selectedTrainer.image];
+    const trainerAltImage = trainerImages[selectedTrainer.alt_image];
     const opponent = location.state.opponent.name;
     const opponentImage = trainerImages[location.state.opponent.image];
 
@@ -171,12 +173,19 @@ export default ({ location }) => {
                 <Content>
                     <Trainer isOpponent={false}>
                         <TrainerImage>
-                            {trainerImage ? (
+                            {altImage ? (
+                                <Img
+                                    fluid={
+                                        trainerAltImage.childImageSharp.fluid
+                                    }
+                                    alt={trainerType}
+                                />
+                            ) : (
                                 <Img
                                     fluid={trainerImage.childImageSharp.fluid}
                                     alt={trainerType}
                                 />
-                            ) : null}
+                            )}
                         </TrainerImage>
                         <TrainerName>
                             {trainerType} {trainerName}
