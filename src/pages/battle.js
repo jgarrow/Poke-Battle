@@ -137,6 +137,20 @@ const TrainerImage = styled.div`
 
 const TrainerName = styled.h3`
     text-align: center;
+    margin: 0;
+`;
+
+const PartyBallContainer = styled.div`
+    width: 70px;
+    height: 20px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+`;
+
+const PartyBall = styled.img`
+    width: 20px;
+    height: 20px;
 `;
 
 export default ({ location }) => {
@@ -166,7 +180,6 @@ export default ({ location }) => {
                     </Pokeball>
 
                     <Content>
-                        <Title>Battle Page</Title>
                         <Trainer isOpponent={false}>
                             <TrainerImage>
                                 {trainerImage ? (
@@ -181,10 +194,19 @@ export default ({ location }) => {
                             <TrainerName>
                                 {trainerType} {trainerName}
                             </TrainerName>
+                            <PartyBallContainer>
+                                {party.map(pokemon => (
+                                    // <p key={pokemon.id}>{pokemon.name}</p>
+                                    <PartyBall
+                                        key={pokemon.id}
+                                        src={pokeball}
+                                        alt="Blue pokeball"
+                                    />
+                                ))}
+                            </PartyBallContainer>
                         </Trainer>
-                        {party.map(pokemon => (
-                            <p key={pokemon.id}>{pokemon.name}</p>
-                        ))}
+
+                        <Title>VS</Title>
 
                         <Trainer isOpponent={true}>
                             <TrainerImage>
@@ -198,13 +220,19 @@ export default ({ location }) => {
                                 ) : null}
                             </TrainerImage>
                             <TrainerName>{opponent} Alex</TrainerName>
+                            <PartyBallContainer>
+                                {oppParty.map(pokemon => (
+                                    // <p key={pokemon.pokemon.id}>
+                                    //     {pokemon.pokemon.name}
+                                    // </p>
+                                    <PartyBall
+                                        key={pokemon.pokemon.id}
+                                        src={pokeball}
+                                        alt="Blue pokeball"
+                                    />
+                                ))}
+                            </PartyBallContainer>
                         </Trainer>
-
-                        {oppParty.map(pokemon => (
-                            <p key={pokemon.pokemon.id}>
-                                {pokemon.pokemon.name}
-                            </p>
-                        ))}
                     </Content>
                 </PokeballContainer>
             </Bg>
