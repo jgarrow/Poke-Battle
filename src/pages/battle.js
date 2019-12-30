@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import Img from "gatsby-image";
+import { css } from "@emotion/core";
 
 import pokeball from "../images/PokeballSVG.svg";
+import Image from "../components/poke-image";
 
 const BattleContainer = styled.div`
     width: 100vw;
@@ -158,6 +160,98 @@ const PartyBall = styled.img`
     height: 20px;
 `;
 
+const BattleBG = styled.div`
+    width: 100%;
+    height: 100%:
+    background: repeating-linear-gradient(
+        135deg,
+        white 0%,
+        white 1%,
+        lightgray 1%,
+        lightgray 3%,
+        white 3%,
+        white 3.5%,
+        lightgray 3.5%,
+        lightgray 5%,
+        white 5%,
+        white 6%,
+        lightgray 6%,
+        lightgray 7%,
+        white 7%,
+        white 8%,
+        lightgray 8%,
+        lightgray 9%,
+        white 9%,
+        white 12%,
+        lightgray 12%,
+        lightgray 13%,
+        white 13%,
+        white 15%,
+        lightgray 15%,
+        lightgray 16%,
+        white 16%,
+        white 17%,
+        lightgray 17%,
+        lightgray 18.5%,
+        white 18.5%,
+        white 20%
+    );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+`;
+
+const BattleContent = styled.section`
+    margin: 0 auto;
+    width: 80%;
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: 200px minmax(200px, 1fr) minmax(200px, 1fr) 200px;
+    grid-template-areas:
+        ".          .           oppMonCard      oppImage"
+        ".          .           oppMonImage     oppImage"
+        "p1Image    p1MonImage  .               ."
+        "p1Image    p1MonCard   moves           party";
+`;
+
+const HpCard = styled.div`
+    width: 100%;
+    height: 100px;
+    padding: 10px 15px;
+    grid-area: ${props => (props.isOpponent ? "oppMonCard" : "p1MonCard")};
+    justify-self: ${props => (props.isOpponent ? "flex-end" : "flex-start")};
+    background: #d1e9ff;
+    border-radius: 20px;
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
+
+    p {
+        margin: 0;
+    }
+`;
+
+const PokemonImgContainer = styled.div`
+    grid-area: ${props => (props.isOpponent ? "oppMonImage" : "p1MonImage")};
+    justify-self: ${props => (props.isOpponent ? "flex-end" : "flex-start")};
+    width: 100%;
+    max-width: 200px;
+    max-height: 200px;
+    transform: ${props =>
+        (props.facing_right && props.isOpponent) || // Facing right AND Opponent
+        (!props.facing_right && !props.isOpponent) // Facing left AND Player 1
+            ? "scaleX(-1)"
+            : "none"};
+`;
+
+const BattleCard = props => (
+    <HpCard isOpponent={props.isOpponent}>
+        <p>{props.name}</p>
+        <div>Party balls</div>
+        <div>HP bar</div>
+        <p>
+            {props.hp} / {props.totalHp}
+        </p>
+    </HpCard>
+);
+
 export default ({ location }) => {
     const {
         trainerName,
@@ -178,7 +272,7 @@ export default ({ location }) => {
     const getRandomOpponentImage = () => {
         const randomNum = Math.random();
 
-        if (randomNum > 0.5) {
+        if (randomNum >= 0.5) {
             return "female";
         } else if (randomNum < 0.5) {
             return "male";
@@ -223,7 +317,7 @@ export default ({ location }) => {
                             >
                                 <Img
                                     fluid={trainerImage.childImageSharp.fluid}
-                                    alt={opponent.name}
+                                    alt={trainerType}
                                 />
                             </TrainerImage>
                         )}
@@ -248,9 +342,7 @@ export default ({ location }) => {
                         {opponentGender === "male" &&
                         trainerImages[location.state.opponent.alt_image] ? (
                             <TrainerAltImage
-                                alt_facing_right={
-                                    selectedTrainer.alt_facing_right
-                                }
+                                alt_facing_right={opponent.alt_facing_right}
                                 isOpponent={true}
                             >
                                 <Img
@@ -259,7 +351,7 @@ export default ({ location }) => {
                                             location.state.opponent.alt_image
                                         ].childImageSharp.fluid
                                     }
-                                    alt={trainerType}
+                                    alt={opponent.name}
                                 />
                             </TrainerAltImage>
                         ) : (
@@ -291,13 +383,118 @@ export default ({ location }) => {
                     </Trainer>
                 </Content>
             </Bg>
+
+            <BattleBG>
+                <h1>
+                    {trainerType} {trainerName} VS {opponent.name} Alex
+                </h1>
+                <BattleContent>
+                    {/* Opponent Pokemon card */}
+                    <BattleCard
+                        isOpponent={true}
+                        name={oppParty[0].pokemon.name}
+                        hp={oppParty[0].pokemon.hp}
+                        totalHp={oppParty[0].pokemon.hp}
+                    />
+                    {/* Opponent trainer image */}
+                    {opponentGender === "male" &&
+                    trainerImages[location.state.opponent.alt_image] ? (
+                        <TrainerAltImage
+                            alt_facing_right={opponent.alt_facing_right}
+                            isOpponent={true}
+                            css={css`
+                                grid-area: oppImage;
+                                align-self: center;
+                            `}
+                        >
+                            <Img
+                                fluid={
+                                    trainerImages[
+                                        location.state.opponent.alt_image
+                                    ].childImageSharp.fluid
+                                }
+                                alt={opponent.name}
+                            />
+                        </TrainerAltImage>
+                    ) : (
+                        <TrainerImage
+                            facing_right={opponent.facing_right}
+                            isOpponent={true}
+                            css={css`
+                                grid-area: oppImage;
+                                align-self: center;
+                            `}
+                        >
+                            <Img
+                                fluid={
+                                    trainerImages[location.state.opponent.image]
+                                        .childImageSharp.fluid
+                                }
+                                alt={opponent.name}
+                            />
+                        </TrainerImage>
+                    )}
+
+                    {/* Opponent Pokemon */}
+                    <PokemonImgContainer
+                        facing_right={oppParty[0].pokemon.facing_right}
+                        isOpponent={true}
+                    >
+                        <Image name={oppParty[0].pokemon.name} />
+                    </PokemonImgContainer>
+
+                    {/* Player 1 Pokemon card */}
+                    <BattleCard
+                        isOpponent={false}
+                        name={party[0].name}
+                        hp={party[0].hp}
+                        totalHp={party[0].hp}
+                    />
+
+                    {/* Player 1 Pokemon image */}
+                    <PokemonImgContainer
+                        facing_right={party[0].facing_right}
+                        isOpponent={false}
+                    >
+                        <Image name={party[0].name} />
+                    </PokemonImgContainer>
+
+                    {/* Player 1 trainer image */}
+                    {opponentGender === "male" &&
+                    trainerImages[location.state.opponent.alt_image] ? (
+                        <TrainerAltImage
+                            alt_facing_right={selectedTrainer.alt_facing_right}
+                            isOpponent={false}
+                            css={css`
+                                grid-area: p1Image;
+                                align-self: center;
+                            `}
+                        >
+                            <Img
+                                fluid={trainerImage.childImageSharp.fluid}
+                                alt={trainerType}
+                            />
+                        </TrainerAltImage>
+                    ) : (
+                        <TrainerImage
+                            facing_right={selectedTrainer.facing_right}
+                            isOpponent={false}
+                            css={css`
+                                grid-area: p1Image;
+                                align-self: center;
+                            `}
+                        >
+                            <Img
+                                fluid={trainerImage.childImageSharp.fluid}
+                                alt={trainerType}
+                            />
+                        </TrainerImage>
+                    )}
+                </BattleContent>
+            </BattleBG>
         </BattleContainer>
     );
 };
-
-// for Trainer and Pokemon images, want to flip to face opponent
-// some images face left, some face right --> need to keep track of which way they're all facing so I know which ones to flip
-// maybe add column to database -- "facingRight" = true/false
 
 // STAB (same-type attack bonus) = +50% when move type matches pokemon type
 // strength of each type key AGAINST other types
