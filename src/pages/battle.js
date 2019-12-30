@@ -122,6 +122,21 @@ const Trainer = styled.div`
 const TrainerImage = styled.div`
     width: 200px;
     height: 200px;
+    transform: ${props =>
+        (props.facing_right && props.isOpponent) || // Facing right AND Opponent
+        (!props.facing_right && !props.isOpponent) // Facing left AND Player 1
+            ? "scaleX(-1)"
+            : "none"};
+`;
+
+const TrainerAltImage = styled.div`
+    width: 200px;
+    height: 200px;
+    transform: ${props =>
+        (props.alt_facing_right && props.isOpponent) || // Facing right AND Opponent
+        (!props.alt_facing_right && !props.isOpponent) // Facing left AND Player 1
+            ? "scaleX(-1)"
+            : "none"};
 `;
 
 const TrainerName = styled.h3`
@@ -155,13 +170,14 @@ export default ({ location }) => {
     const trainerType = selectedTrainer.name;
     const trainerImage = trainerImages[selectedTrainer.image];
     const trainerAltImage = trainerImages[selectedTrainer.alt_image];
-    const opponent = location.state.opponent.name;
+    const opponent = location.state.opponent;
     const opponentImage = trainerImages[location.state.opponent.image];
 
     console.log("selectedTrainer: ", location.state.selectedTrainer);
 
     return (
         <BattleContainer>
+            {/* For battle transition screen */}
             <Bg>
                 <Pokeball>
                     <img
@@ -172,21 +188,32 @@ export default ({ location }) => {
 
                 <Content>
                     <Trainer isOpponent={false}>
-                        <TrainerImage>
-                            {altImage ? (
+                        {altImage ? (
+                            <TrainerAltImage
+                                alt_facing_right={
+                                    selectedTrainer.alt_facing_right
+                                }
+                                isOpponent={false}
+                            >
                                 <Img
                                     fluid={
                                         trainerAltImage.childImageSharp.fluid
                                     }
                                     alt={trainerType}
                                 />
-                            ) : (
+                            </TrainerAltImage>
+                        ) : (
+                            <TrainerImage
+                                facing_right={selectedTrainer.facing_right}
+                                isOpponent={false}
+                            >
                                 <Img
                                     fluid={trainerImage.childImageSharp.fluid}
-                                    alt={trainerType}
+                                    alt={opponent.name}
                                 />
-                            )}
-                        </TrainerImage>
+                            </TrainerImage>
+                        )}
+
                         <TrainerName>
                             {trainerType} {trainerName}
                         </TrainerName>
@@ -204,15 +231,20 @@ export default ({ location }) => {
                     <Title>VS</Title>
 
                     <Trainer isOpponent={true}>
-                        <TrainerImage>
-                            {opponentImage ? (
+                        {/* <TrainerImage> */}
+                        {opponentImage ? (
+                            <TrainerImage
+                                facing_right={opponent.facing_right}
+                                isOpponent={true}
+                            >
                                 <Img
                                     fluid={opponentImage.childImageSharp.fluid}
-                                    alt={opponent}
+                                    alt={opponent.name}
                                 />
-                            ) : null}
-                        </TrainerImage>
-                        <TrainerName>{opponent} Alex</TrainerName>
+                            </TrainerImage>
+                        ) : null}
+                        {/* </TrainerImage> */}
+                        <TrainerName>{opponent.name} Alex</TrainerName>
                         <PartyBallContainer>
                             {oppParty.map(pokemon => (
                                 <PartyBall
@@ -228,6 +260,10 @@ export default ({ location }) => {
         </BattleContainer>
     );
 };
+
+// for Trainer and Pokemon images, want to flip to face opponent
+// some images face left, some face right --> need to keep track of which way they're all facing so I know which ones to flip
+// maybe add column to database -- "facingRight" = true/false
 
 // STAB (same-type attack bonus) = +50% when move type matches pokemon type
 // strength of each type key AGAINST other types

@@ -107,6 +107,8 @@ const TrainerQuery = gql`
             id
             image
             alt_image
+            facing_right
+            alt_facing_right
             pokemons(order_by: { pokemon: { pokedex_num: asc } }) {
                 pokemon {
                     id
@@ -118,6 +120,7 @@ const TrainerQuery = gql`
                         }
                     }
                     img
+                    facing_right
                     hp
                     moves {
                         move {
