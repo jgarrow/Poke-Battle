@@ -162,7 +162,7 @@ const PartyBall = styled.img`
 
 const BattleBG = styled.div`
     width: 100%;
-    height: 100%:
+    height: 100%;
     background: repeating-linear-gradient(
         135deg,
         white 0%,
@@ -205,6 +205,7 @@ const BattleContent = styled.section`
     width: 80%;
     max-width: 960px;
     display: grid;
+    grid-row-gap: 15px;
     grid-template-columns: 200px minmax(200px, 1fr) minmax(200px, 1fr) 200px;
     grid-template-areas:
         ".          .           oppMonCard      oppImage"
@@ -228,12 +229,16 @@ const HpCard = styled.div`
     }
 `;
 
+const HP = styled.p`
+    display: ${props => (props.isOpponent ? "none" : "inline")};
+`;
+
 const PokemonImgContainer = styled.div`
     grid-area: ${props => (props.isOpponent ? "oppMonImage" : "p1MonImage")};
     justify-self: ${props => (props.isOpponent ? "flex-end" : "flex-start")};
     width: 100%;
-    max-width: 200px;
-    max-height: 200px;
+    max-width: 150px;
+    max-height: 150px;
     transform: ${props =>
         (props.facing_right && props.isOpponent) || // Facing right AND Opponent
         (!props.facing_right && !props.isOpponent) // Facing left AND Player 1
@@ -241,14 +246,30 @@ const PokemonImgContainer = styled.div`
             : "none"};
 `;
 
+const MoveCard = styled.div`
+    width: 100%;
+    height: 50%;
+    background: #d1e9ff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
+`;
+
+const Moves = props => (
+    <MoveCard>
+        <p>{props.name}</p>
+        <p>{props.type}</p>
+        <p>{props.power}</p>
+    </MoveCard>
+);
+
 const BattleCard = props => (
     <HpCard isOpponent={props.isOpponent}>
         <p>{props.name}</p>
         <div>Party balls</div>
         <div>HP bar</div>
-        <p>
+        <HP isOpponent={props.isOpponent}>
             {props.hp} / {props.totalHp}
-        </p>
+        </HP>
     </HpCard>
 );
 
@@ -393,8 +414,8 @@ export default ({ location }) => {
                     <BattleCard
                         isOpponent={true}
                         name={oppParty[0].pokemon.name}
-                        hp={oppParty[0].pokemon.hp}
-                        totalHp={oppParty[0].pokemon.hp}
+                        // hp={oppParty[0].pokemon.hp}
+                        // totalHp={oppParty[0].pokemon.hp}
                     />
                     {/* Opponent trainer image */}
                     {opponentGender === "male" &&
@@ -490,6 +511,21 @@ export default ({ location }) => {
                             />
                         </TrainerImage>
                     )}
+
+                    <div
+                        css={css`
+                            grid-area: moves;
+                        `}
+                    >
+                        {party[0].moves.map((move, index) => (
+                            <Moves
+                                key={index}
+                                name={move.move.name}
+                                type={move.move.type.name}
+                                power={move.move.power}
+                            />
+                        ))}
+                    </div>
                 </BattleContent>
             </BattleBG>
         </BattleContainer>
