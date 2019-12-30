@@ -228,6 +228,7 @@ const BattleContent = styled.section`
     display: grid;
     grid-row-gap: 15px;
     grid-template-columns: 200px minmax(200px, 1fr) minmax(200px, 1fr) 200px;
+    grid-template-rows: 75px 150px 150px 115px;
     grid-template-areas:
         ".          .           oppMonCard      oppImage"
         ".          .           oppMonImage     oppImage"
@@ -236,8 +237,9 @@ const BattleContent = styled.section`
 `;
 
 const HpCard = styled.div`
+    align-self: ${props => (props.isOpponent ? "flex-end" : "flex-start")};
     width: 100%;
-    height: 100px;
+    height: 75px;
     padding: 10px 15px;
     grid-area: ${props => (props.isOpponent ? "oppMonCard" : "p1MonCard")};
     justify-self: ${props => (props.isOpponent ? "flex-end" : "flex-start")};
@@ -247,7 +249,14 @@ const HpCard = styled.div`
 
     p {
         margin: 0;
+        font-size: 1.15rem;
     }
+`;
+
+const Row = styled.div`
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
 `;
 
 const HP = styled.p`
@@ -268,16 +277,19 @@ const PokemonImgContainer = styled.div`
 `;
 
 const MovesContainer = styled.div`
+    height: 75px;
     grid-area: moves;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
 `;
 
 const MoveCard = styled.div`
     cursor: pointer;
-    width: 50%;
+    width: 75%;
+    min-width: 130px;
+    max-width: 150px;
     height: auto;
     max-height: 50px;
     background: ${props => typeBg[props.bg]};
@@ -293,18 +305,55 @@ const MoveCard = styled.div`
     }
 `;
 
+const PartyTitle = styled.h3`
+    cursor: pointer;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+`;
+
+const PartyMenu = styled.div`
+    display: ${props => (props.isPartyOpen ? "block" : "none")};
+`;
+
+const Party = styled.div`
+    grid-area: party;
+
+    p {
+        margin: 0;
+    }
+`;
+
 const Moves = props => (
     <MoveCard bg={props.bg}>
         <p>{props.name}</p>
-        {/* <p>{props.type}</p> */}
         <p>{props.power}</p>
     </MoveCard>
 );
 
 const BattleCard = props => (
     <HpCard isOpponent={props.isOpponent}>
-        <p>{props.name}</p>
-        <div>Party balls</div>
+        <Row>
+            <p>{props.name}</p>
+            <PartyBallContainer
+                css={css`
+                    margin: 0;
+                `}
+            >
+                {props.isOpponent ? props.party.map(pokemon => (
+                    <PartyBall
+                        key={pokemon.pokemon.id}
+                        src={pokeball}
+                        alt="Blue pokeball to represent a pokemon in the trainer's party"
+                    />
+                )) : props.party.map(pokemon => (
+                    <PartyBall
+                        key={pokemon.id}
+                        src={pokeball}
+                        alt="Blue pokeball to represent a pokemon in the trainer's party"
+                    />
+                ))}
+            </PartyBallContainer>
+        </Row>
         <div>HP bar</div>
         <HP isOpponent={props.isOpponent}>
             {props.hp} / {props.totalHp}
@@ -327,7 +376,12 @@ export default ({ location }) => {
     const opponent = location.state.opponent;
     const [opponentGender, setOpponentGender] = useState("");
 
+    const [isPartyOpen, setIsPartyOpen] = useState(false);
+
     console.log("selectedTrainer: ", location.state.selectedTrainer);
+
+    console.log("Party: ", party);
+    console.log("oppParty: ", oppParty);
 
     const getRandomOpponentImage = () => {
         const randomNum = Math.random();
@@ -388,9 +442,9 @@ export default ({ location }) => {
                         <PartyBallContainer>
                             {party.map(pokemon => (
                                 <PartyBall
-                                    key={pokemon.id}
+                                    key={`${pokemon.id}p1`}
                                     src={pokeball}
-                                    alt="Blue pokeball"
+                                    alt="Blue pokeball to represent a pokemon in the trainer's party"
                                 />
                             ))}
                         </PartyBallContainer>
@@ -434,9 +488,9 @@ export default ({ location }) => {
                         <PartyBallContainer>
                             {oppParty.map(pokemon => (
                                 <PartyBall
-                                    key={pokemon.pokemon.id}
+                                    key={`${pokemon.pokemon.id}opp`}
                                     src={pokeball}
-                                    alt="Blue pokeball"
+                                    alt="Blue pokeball to represent a pokemon in the trainer's party"
                                 />
                             ))}
                         </PartyBallContainer>
@@ -453,6 +507,7 @@ export default ({ location }) => {
                     <BattleCard
                         isOpponent={true}
                         name={oppParty[0].pokemon.name}
+                        party={oppParty}
                         // hp={oppParty[0].pokemon.hp}
                         // totalHp={oppParty[0].pokemon.hp}
                     />
@@ -507,6 +562,7 @@ export default ({ location }) => {
                     <BattleCard
                         isOpponent={false}
                         name={party[0].name}
+                        party={party}
                         hp={party[0].hp}
                         totalHp={party[0].hp}
                     />
@@ -561,6 +617,19 @@ export default ({ location }) => {
                             />
                         ))}
                     </MovesContainer>
+
+                    <Party>
+                        <PartyTitle
+                            onClick={() => setIsPartyOpen(!isPartyOpen)}
+                        >
+                            Party
+                        </PartyTitle>
+                        <PartyMenu isPartyOpen={isPartyOpen}>
+                            {party.map(pokemon => (
+                                <p key={pokemon.id}>{pokemon.name}</p>
+                            ))}
+                        </PartyMenu>
+                    </Party>
                 </BattleContent>
             </BattleBG>
         </BattleContainer>
