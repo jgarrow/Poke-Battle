@@ -6,6 +6,27 @@ import { css } from "@emotion/core";
 import pokeball from "../images/PokeballSVG.svg";
 import Image from "../components/poke-image";
 
+const typeBg = {
+    Normal: "#A4ACAF",
+    Fire: "#FD7D24",
+    Water: "#4592C4",
+    Electric: "#EED535",
+    Grass: "#9BCC90",
+    Ice: "#51C4E7",
+    Fighting: "#D56723",
+    Poison: "#B97FC9",
+    Ground: "linear-gradient(180deg, #F7DE3F 0%, #AB9842 100%)",
+    Flying: "linear-gradient(180deg, #3DC7EF 0%, #BDB9B8 100%)",
+    Psychic: "#F366B9",
+    Bug: "#729F3F",
+    Rock: "#A38C21",
+    Ghost: "#7B62A3",
+    Dragon: "linear-gradient(180deg, #53A4CF 0%, #F16E57 100%)",
+    Dark: "#707070",
+    Steel: "#9EB7B8",
+    Fairy: "#FDB9E9",
+};
+
 const BattleContainer = styled.div`
     width: 100vw;
     height: 100vh;
@@ -246,18 +267,36 @@ const PokemonImgContainer = styled.div`
             : "none"};
 `;
 
+const MovesContainer = styled.div`
+    grid-area: moves;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: space-evenly;
+`;
+
 const MoveCard = styled.div`
-    width: 100%;
-    height: 50%;
-    background: #d1e9ff;
+    cursor: pointer;
+    width: 50%;
+    height: auto;
+    max-height: 50px;
+    background: ${props => typeBg[props.bg]};
     border-radius: 15px;
     box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+
+    p {
+        margin: 5px 0;
+    }
 `;
 
 const Moves = props => (
-    <MoveCard>
+    <MoveCard bg={props.bg}>
         <p>{props.name}</p>
-        <p>{props.type}</p>
+        {/* <p>{props.type}</p> */}
         <p>{props.power}</p>
     </MoveCard>
 );
@@ -512,20 +551,16 @@ export default ({ location }) => {
                         </TrainerImage>
                     )}
 
-                    <div
-                        css={css`
-                            grid-area: moves;
-                        `}
-                    >
+                    <MovesContainer>
                         {party[0].moves.map((move, index) => (
                             <Moves
                                 key={index}
                                 name={move.move.name}
-                                type={move.move.type.name}
+                                bg={move.move.type.name}
                                 power={move.move.power}
                             />
                         ))}
-                    </div>
+                    </MovesContainer>
                 </BattleContent>
             </BattleBG>
         </BattleContainer>
