@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import Img from "gatsby-image";
 
@@ -171,9 +171,23 @@ export default ({ location }) => {
     const trainerImage = trainerImages[selectedTrainer.image];
     const trainerAltImage = trainerImages[selectedTrainer.alt_image];
     const opponent = location.state.opponent;
-    const opponentImage = trainerImages[location.state.opponent.image];
+    const [opponentGender, setOpponentGender] = useState("");
 
     console.log("selectedTrainer: ", location.state.selectedTrainer);
+
+    const getRandomOpponentImage = () => {
+        const randomNum = Math.random();
+
+        if (randomNum > 0.5) {
+            return "female";
+        } else if (randomNum < 0.5) {
+            return "male";
+        }
+    };
+
+    useEffect(() => {
+        setOpponentGender(getRandomOpponentImage);
+    }, []);
 
     return (
         <BattleContainer>
@@ -231,19 +245,39 @@ export default ({ location }) => {
                     <Title>VS</Title>
 
                     <Trainer isOpponent={true}>
-                        {/* <TrainerImage> */}
-                        {opponentImage ? (
+                        {opponentGender === "male" &&
+                        trainerImages[location.state.opponent.alt_image] ? (
+                            <TrainerAltImage
+                                alt_facing_right={
+                                    selectedTrainer.alt_facing_right
+                                }
+                                isOpponent={true}
+                            >
+                                <Img
+                                    fluid={
+                                        trainerImages[
+                                            location.state.opponent.alt_image
+                                        ].childImageSharp.fluid
+                                    }
+                                    alt={trainerType}
+                                />
+                            </TrainerAltImage>
+                        ) : (
                             <TrainerImage
                                 facing_right={opponent.facing_right}
                                 isOpponent={true}
                             >
                                 <Img
-                                    fluid={opponentImage.childImageSharp.fluid}
+                                    fluid={
+                                        trainerImages[
+                                            location.state.opponent.image
+                                        ].childImageSharp.fluid
+                                    }
                                     alt={opponent.name}
                                 />
                             </TrainerImage>
-                        ) : null}
-                        {/* </TrainerImage> */}
+                        )}
+
                         <TrainerName>{opponent.name} Alex</TrainerName>
                         <PartyBallContainer>
                             {oppParty.map(pokemon => (
