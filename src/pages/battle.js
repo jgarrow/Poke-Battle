@@ -5,8 +5,9 @@ import { css } from "@emotion/core";
 
 import pokeball from "../images/PokeballSVG.svg";
 import Image from "../components/poke-image";
+import ProgressBar from "../components/ProgressBar"
 
-let ProgressBar = require("react-progressbar.js");
+// let ProgressBar = require("react-progressbar.js");
 
 const typeBg = {
     Normal: "#A4ACAF",
@@ -333,7 +334,7 @@ const Moves = props => (
 );
 
 const BattleCard = props => {
-    let Line = ProgressBar.Line;
+    // let Line = ProgressBar.Line;
 
     // styles for HP progress bar
     let containerStyle = {
@@ -346,9 +347,9 @@ const BattleCard = props => {
     };
 
     console.log("current hp: ", props.currentHp);
-    console.log("total hp: ", props.hp);
+    console.log("total hp: ", props.totalHp);
 
-    console.log("progress percentage: ", props.currentHp / props.hp);
+    console.log("progress percentage: ", props.currentHp / props.totalHp);
 
     return (
         <HpCard isOpponent={props.isOpponent}>
@@ -359,30 +360,22 @@ const BattleCard = props => {
                         margin: 0;
                     `}
                 >
-                    {props.isOpponent
-                        ? props.party.map(pokemon => (
-                              <PartyBall
-                                  key={pokemon.pokemon.id}
-                                  src={pokeball}
-                                  alt="Blue pokeball to represent a pokemon in the trainer's party"
-                              />
-                          ))
-                        : props.party.map(pokemon => (
-                              <PartyBall
-                                  key={pokemon.id}
-                                  src={pokeball}
-                                  alt="Blue pokeball to represent a pokemon in the trainer's party"
-                              />
-                          ))}
+                    {props.party.map(pokemon => (
+                        <PartyBall
+                            key={pokemon.id}
+                            src={pokeball}
+                            alt="Blue pokeball to represent a pokemon in the trainer's party"
+                        />
+                    ))}
                 </PartyBallContainer>
             </Row>
             <div>HP bar</div>
-            {/* <Line
-                progress={props.currentHp / props.hp}
+            <ProgressBar.Line
+                progress={0.67}
                 options={options}
                 containerStyle={containerStyle}
-                containerClassName={".progressbar-container"}
-            /> */}
+                // containerClassName={".progressbar-container"}
+            />
             <HP isOpponent={props.isOpponent}>
                 {props.hp} / {props.totalHp}
             </HP>
@@ -406,10 +399,8 @@ export default ({ location }) => {
     const trainerAltImage = trainerImages[selectedTrainer.alt_image];
     const opponent = location.state.opponent;
     const [opponentGender, setOpponentGender] = useState("");
-    const [partyHp, setPartyHp] = useState({});
-    const [oppPartyHp, setOppPartyHp] = useState({});
-    const [currentMon, setCurrentMon] = useState(party[0]);
-    const [currentOppMon, setCurrentOppMon] = useState(oppParty[0].pokemon);
+    const [currentMonIndex, setCurrentMon] = useState(0);
+    const [currentOppMonIndex, setCurrentOppMon] = useState(0);
     const [isPartyOpen, setIsPartyOpen] = useState(false);
 
     const getRandomOpponentImage = () => {
@@ -424,21 +415,21 @@ export default ({ location }) => {
 
     // set initial hp of all pokemon as full
     useEffect(() => {
-        let trainerParty = party.map(pokemon => ({
-            totalHp: pokemon.hp,
-            ...pokemon,
-        }));
+        // let trainerParty = party.map(pokemon => ({
+        //     totalHp: pokemon.hp,
+        //     ...pokemon,
+        // }));
 
-        let enemyParty = oppParty.map(pokemon => ({
-            totalHp: pokemon.pokemon.hp,
-            ...pokemon.pokemon,
-        }));
+        // let enemyParty = oppParty.map(pokemon => ({
+        //     totalHp: pokemon.hp,
+        //     ...pokemon,
+        // }));
 
-        console.log("trainerParty: ", trainerParty);
-        console.log("enemyParty: ", enemyParty);
+        // console.log("trainerParty: ", trainerParty);
+        // console.log("enemyParty: ", enemyParty);
 
-        setParty(trainerParty);
-        setOppParty(enemyParty);
+        // setParty(trainerParty);
+        // setOppParty(enemyParty);
         setOpponentGender(getRandomOpponentImage);
     }, []);
 
@@ -533,7 +524,7 @@ export default ({ location }) => {
                         <PartyBallContainer>
                             {oppParty.map(pokemon => (
                                 <PartyBall
-                                    key={`${pokemon.pokemon.id}opp`}
+                                    key={`${pokemon.id}opp`}
                                     src={pokeball}
                                     alt="Blue pokeball to represent a pokemon in the trainer's party"
                                 />
@@ -551,10 +542,10 @@ export default ({ location }) => {
                     {/* Opponent Pokemon card */}
                     <BattleCard
                         isOpponent={true}
-                        name={currentOppMon.name}
+                        name={oppParty[currentOppMonIndex].name}
                         party={oppParty}
-                        currentHp={oppPartyHp[currentOppMon.name]}
-                        hp={currentOppMon.hp}
+                        currentHp={oppParty[currentOppMonIndex].hp}
+                        totalHp={oppParty[currentOppMonIndex].totalHp}
                     />
                     {/* Opponent trainer image */}
                     {opponentGender === "male" &&
@@ -597,28 +588,27 @@ export default ({ location }) => {
 
                     {/* Opponent Pokemon */}
                     <PokemonImgContainer
-                        facing_right={oppParty[0].pokemon.facing_right}
+                        facing_right={oppParty[currentOppMonIndex].facing_right}
                         isOpponent={true}
                     >
-                        <Image name={currentOppMon.name} />
+                        <Image name={oppParty[currentOppMonIndex].name} />
                     </PokemonImgContainer>
 
                     {/* Player 1 Pokemon card */}
                     <BattleCard
                         isOpponent={false}
-                        name={currentMon.name}
+                        name={party[currentMonIndex].name}
                         party={party}
-                        hp={currentMon.hp}
-                        totalHp={currentMon.hp}
-                        currentHp={partyHp[currentMon.hp]}
+                        totalHp={party[currentMonIndex].totalHp}
+                        currentHp={party[currentMonIndex].hp}
                     />
 
                     {/* Player 1 Pokemon image */}
                     <PokemonImgContainer
-                        facing_right={party[0].facing_right}
+                        facing_right={party[currentMonIndex].facing_right}
                         isOpponent={false}
                     >
-                        <Image name={currentMon.name} />
+                        <Image name={party[currentMonIndex].name} />
                     </PokemonImgContainer>
 
                     {/* Player 1 trainer image */}
@@ -654,7 +644,7 @@ export default ({ location }) => {
                     )}
 
                     <MovesContainer>
-                        {currentMon.moves.map((move, index) => (
+                        {party[currentMonIndex].moves.map((move, index) => (
                             <Moves
                                 key={index}
                                 name={move.move.name}

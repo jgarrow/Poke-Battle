@@ -255,7 +255,10 @@ export default ({
                             return (
                                 <PokemonCard
                                     key={pokemon.pokemon.id}
-                                    pokemon={pokemon.pokemon}
+                                    pokemon={{
+                                        totalHp: pokemon.pokemon.hp,
+                                        ...pokemon.pokemon,
+                                    }}
                                     openInfo={openInfoId === pokemon.pokemon.id}
                                     handlePokemonSelect={handlePokemonSelect}
                                     handleInfoClick={handleInfoClick}

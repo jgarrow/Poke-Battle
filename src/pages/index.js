@@ -139,19 +139,14 @@ const TrainerQuery = gql`
 
 export default () => {
     const [componentPosition, setComponentPosition] = useState(0);
-
     const [trainerName, setTrainerName] = useState("");
     const [selectedTrainer, setSelectedTrainer] = useState(null);
     const [partySelection, setPartySelection] = useState(0);
     const [party, setParty] = useState([]);
     const [partyOptions, setPartyOptions] = useState([]); // pokemon options for selected trainer
-    // const [displayMoves, setDisplayMoves] = useState(false);
-    // const [displayParty, setDisplayParty] = useState(false);
     const [altImage, setAltImage] = useState(false);
-
     const [opponent, setOpponent] = useState(null);
     const [oppParty, setOppParty] = useState([]);
-    // const [oppPartyOptions, setOppPartyOptions] = useState([]);
 
     const { data: trainerData, loading } = useQuery(TrainerQuery); // query from my hasura database
     const trainers = !loading ? trainerData.trainer : [];
@@ -244,20 +239,32 @@ export default () => {
 
         const getRandomParty = partyOpts => {
             const tempParty = [];
+            const tempPartyIds = [];
             for (let i = 0; i < partyOpts.length && i < 3; i++) {
-                let randomNum = Math.floor(
-                    Math.random() * Math.floor(partyOpts.length)
-                );
+                let randomNum = Math.floor(Math.random() * partyOpts.length);
                 // check for duplicates to make sure all pokemon in party are different
-                while (tempParty.includes(partyOpts[randomNum])) {
-                    randomNum = Math.floor(
-                        Math.random() * Math.floor(partyOpts.length)
-                    );
+                while (tempPartyIds.includes(partyOpts[randomNum].pokemon)) {
+                    randomNum = Math.floor(Math.random() * partyOpts.length);
                 }
 
-                tempParty.push(partyOpts[randomNum]);
+                tempParty.push({
+                    totalHp: partyOpts[randomNum].pokemon.hp,
+                    ...partyOpts[randomNum].pokemon,
+                });
+
+                tempPartyIds.push(partyOpts[randomNum].pokemon.id);
             }
             console.log("Opponent party: ", tempParty);
+
+            // let trainerParty = party.map(pokemon => ({
+            //     totalHp: pokemon.hp,
+            //     ...pokemon,
+            // }));
+
+            // console.log("trainerParty: ", trainerParty);
+
+            // setParty(trainerParty);
+
             setOppParty(tempParty);
         };
 
