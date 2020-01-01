@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import isEqual from "lodash/isEqual";
 import ProgressBar from "progressbar.js";
 
+// taken from https://github.com/kimmobrunfeldt/react-progressbar.js/issues/33#issuecomment-419690046
+
 class Shape extends Component {
     static defaultProps = {
         ShapeClass: null,

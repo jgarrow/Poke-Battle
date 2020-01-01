@@ -5,7 +5,7 @@ import { css } from "@emotion/core";
 
 import pokeball from "../images/PokeballSVG.svg";
 import Image from "../components/poke-image";
-import ProgressBar from "../components/ProgressBar"
+import ProgressBar from "../components/ProgressBar";
 
 // let ProgressBar = require("react-progressbar.js");
 
@@ -334,16 +334,19 @@ const Moves = props => (
 );
 
 const BattleCard = props => {
-    // let Line = ProgressBar.Line;
-
     // styles for HP progress bar
     let containerStyle = {
         width: "250px",
-        height: "5px",
+        height: "3px",
     };
 
     let options = {
-        strokeWidth: 2,
+        strokeWidth: 3,
+        color: "#2187E7",
+        trailColor: "#f4f4f4",
+        svgStyle: {
+            border: "1px solid #000000",
+        },
     };
 
     console.log("current hp: ", props.currentHp);
@@ -369,15 +372,13 @@ const BattleCard = props => {
                     ))}
                 </PartyBallContainer>
             </Row>
-            <div>HP bar</div>
             <ProgressBar.Line
-                progress={0.67}
+                progress={props.currentHp / props.totalHp}
                 options={options}
                 containerStyle={containerStyle}
-                // containerClassName={".progressbar-container"}
             />
             <HP isOpponent={props.isOpponent}>
-                {props.hp} / {props.totalHp}
+                {props.currentHp} / {props.totalHp}
             </HP>
         </HpCard>
     );
@@ -387,13 +388,13 @@ export default ({ location }) => {
     const {
         trainerName,
         altImage,
-        party: p1Party,
-        oppParty: opponentParty,
+        party,
+        oppParty,
         selectedTrainer,
         trainerImages,
     } = location.state;
-    const [party, setParty] = useState([...p1Party]);
-    const [oppParty, setOppParty] = useState([...opponentParty]);
+    // const [party, setParty] = useState([...p1Party]);
+    // const [oppParty, setOppParty] = useState([...opponentParty]);
     const trainerType = selectedTrainer.name;
     const trainerImage = trainerImages[selectedTrainer.image];
     const trainerAltImage = trainerImages[selectedTrainer.alt_image];
@@ -413,23 +414,8 @@ export default ({ location }) => {
         }
     };
 
-    // set initial hp of all pokemon as full
+    // if opponent trainer has 2 gender options, pick one randomly
     useEffect(() => {
-        // let trainerParty = party.map(pokemon => ({
-        //     totalHp: pokemon.hp,
-        //     ...pokemon,
-        // }));
-
-        // let enemyParty = oppParty.map(pokemon => ({
-        //     totalHp: pokemon.hp,
-        //     ...pokemon,
-        // }));
-
-        // console.log("trainerParty: ", trainerParty);
-        // console.log("enemyParty: ", enemyParty);
-
-        // setParty(trainerParty);
-        // setOppParty(enemyParty);
         setOpponentGender(getRandomOpponentImage);
     }, []);
 
