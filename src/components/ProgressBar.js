@@ -12,7 +12,7 @@ class Shape extends Component {
         text: null,
         initialAnimate: false,
         containerStyle: {},
-        containerClassName: ".progressbar-container",
+        containerClassName: "progressbar-container",
     };
 
     shape;
@@ -63,10 +63,10 @@ class Shape extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (!isEqual(this.props.options, prevProps.options)) {
-            this.destroy();
-            this.create(this.props, prevProps);
-        }
+        // if (!isEqual(this.props.options, prevProps.options)) {
+        //     this.destroy();
+        //     this.create(this.props, prevProps);
+        // }
         this.animateProgress(this.props.progress);
         this.setText(this.props.text);
     }

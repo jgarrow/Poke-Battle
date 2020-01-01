@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import Img from "gatsby-image";
@@ -334,6 +336,15 @@ const Move = props => (
 );
 
 const BattleCard = props => {
+    const hpRatio = props.currentHp / props.totalHp;
+    let currentColor = "#2187E7";
+
+    if (hpRatio <= 0.5 && hpRatio > 0.2) {
+        currentColor = "#FFE748";
+    } else if (hpRatio <= 0.2) {
+        currentColor = "#D11B1C";
+    }
+
     // styles for HP progress bar
     let containerStyle = {
         width: "250px",
@@ -342,7 +353,7 @@ const BattleCard = props => {
 
     let options = {
         strokeWidth: 3,
-        color: "#2187E7",
+        color: `${currentColor}`,
         trailColor: "#f4f4f4",
         svgStyle: {
             border: "1px solid #000000",
@@ -355,7 +366,14 @@ const BattleCard = props => {
     console.log("progress percentage: ", props.currentHp / props.totalHp);
 
     return (
-        <HpCard isOpponent={props.isOpponent}>
+        <HpCard
+            isOpponent={props.isOpponent}
+            css={{
+                "& .progressbar-container svg path:nth-of-type(2)": {
+                    stroke: `${currentColor}`,
+                },
+            }}
+        >
             <Row>
                 <p>{props.name}</p>
                 <PartyBallContainer
@@ -373,7 +391,7 @@ const BattleCard = props => {
                 </PartyBallContainer>
             </Row>
             <ProgressBar.Line
-                progress={props.currentHp / props.totalHp}
+                progress={hpRatio}
                 options={options}
                 containerStyle={containerStyle}
             />
@@ -775,7 +793,7 @@ export default ({ location }) => {
         attackingMonTypes,
         setDefendingParty
     ) => {
-        console.log("In handleAttack");
+        // console.log("In handleAttack");
 
         // need types of opponent and attacker to calculate type effectiveness
         let updatedParty = [...defendingParty];
@@ -785,16 +803,16 @@ export default ({ location }) => {
         let typeEffectiveness = 1;
         let stabBonus = 1;
 
-        console.log("Defending party before updating: ", updatedParty);
-        console.log("opponentTypes: ", opponentTypes);
-        console.log("attackerTypes: ", attackerTypes);
-        console.log("Attack move type: ", attackMoveType);
+        // console.log("Defending party before updating: ", updatedParty);
+        // console.log("opponentTypes: ", opponentTypes);
+        // console.log("attackerTypes: ", attackerTypes);
+        // console.log("Attack move type: ", attackMoveType);
 
         if (attackerTypes.includes(attackMoveType)) {
             stabBonus = 1.5; // STAB (same-type attack bonus) = +50% when move type matches pokemon type
         }
 
-        console.log("stabBonus after checking: ", stabBonus);
+        // console.log("stabBonus after checking: ", stabBonus);
 
         opponentTypes.forEach(type => {
             typeEffectiveness =
@@ -803,13 +821,17 @@ export default ({ location }) => {
 
         let damage = attackMove.power * typeEffectiveness * stabBonus;
 
-        console.log("Type effectiveness multiplier: ", typeEffectiveness);
-        console.log("Attack move base power: ", attackMove.power);
-        console.log("Damage: ", damage);
+        // console.log("Type effectiveness multiplier: ", typeEffectiveness);
+        // console.log("Attack move base power: ", attackMove.power);
+        // console.log("Damage: ", damage);
 
         currOpponent.hp -= damage;
 
-        console.log("Updated party: ", updatedParty);
+        if (currOpponent.hp < 0) {
+            currOpponent.hp = 0;
+        }
+
+        // console.log("Updated party: ", updatedParty);
 
         setDefendingParty(updatedParty);
     };
@@ -927,13 +949,16 @@ export default ({ location }) => {
                                 />
                             ))}
                         </PartyBallContainer>
-                        
                     </Trainer>
                 </Content>
             </Bg>
 
             <BattleBG>
-                <h1>
+                <h1
+                    css={css`
+                        text-align: center;
+                    `}
+                >
                     {trainerType} {trainerName} VS {opponent.name} Alex
                 </h1>
                 <BattleContent>
