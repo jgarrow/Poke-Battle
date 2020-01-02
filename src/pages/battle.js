@@ -418,8 +418,8 @@ export default ({ location }) => {
     const trainerAltImage = trainerImages[selectedTrainer.alt_image];
     const opponent = location.state.opponent;
     const [opponentGender, setOpponentGender] = useState("");
-    const [currentMonIndex, setCurrentMon] = useState(0);
-    const [currentOppMonIndex, setCurrentOppMon] = useState(0);
+    const [currentMonIndex, setCurrentMonIndex] = useState(0);
+    const [currentOppMonIndex, setCurrentOppMonIndex] = useState(0);
     const [isPartyOpen, setIsPartyOpen] = useState(false);
 
     // strength of each type key AGAINST other types
@@ -786,54 +786,90 @@ export default ({ location }) => {
         },
     };
 
-    const handleAttack = (
-        defendingParty,
-        currOpponent,
-        attackMove,
-        attackingMonTypes,
-        setDefendingParty
-    ) => {
-        // console.log("In handleAttack");
+    // returns random index for which move in the move array
+    const getRandomMove = () => {
+        const randomNum = Math.random();
 
-        // need types of opponent and attacker to calculate type effectiveness
-        let updatedParty = [...defendingParty];
-        const opponentTypes = currOpponent.types.map(type => type.type.name);
-        const attackerTypes = attackingMonTypes.map(type => type.type.name);
-        const attackMoveType = attackMove.type.name;
-        let typeEffectiveness = 1;
-        let stabBonus = 1;
+        if (randomNum >= 0.5) {
+            return 0;
+        } else if (randomNum < 0.5) {
+            return 1;
+        }
+    };
 
-        // console.log("Defending party before updating: ", updatedParty);
-        // console.log("opponentTypes: ", opponentTypes);
-        // console.log("attackerTypes: ", attackerTypes);
-        // console.log("Attack move type: ", attackMoveType);
+    const handleAttack = attackMoveIndex => {
+        // let attackingParty = isPlayerTurn ? [...party] : [...oppParty];
+        // let defendingParty = isPlayerTurn ? [...oppParty] : [...party];
+        // let attackerIndex = isPlayerTurn ? currentMonIndex : currentOppMonIndex;
+        // let defenderIndex = isPlayerTurn ? currentOppMonIndex : currentMonIndex;
+        // let currAttacker = attackingParty[attackerIndex];
+        // let currOpponent = defendingParty[defenderIndex];
+        // let attackerMonTypes = currAttacker.types.map(type => type.type.name);
+        // let defenderMonTypes = currOpponent.types.map(type => type.type.name);
+        // let move = currAttacker.moves[attackMoveIndex].move;
+        // let moveType = move.type.name;
 
-        if (attackerTypes.includes(attackMoveType)) {
-            stabBonus = 1.5; // STAB (same-type attack bonus) = +50% when move type matches pokemon type
+        let playerParty = [...party];
+        let opponentParty = [...oppParty];
+        let playerIndex = currentMonIndex;
+        let opponentIndex = currentOppMonIndex;
+        let playerMon = playerParty[currentMonIndex];
+        let opponentMon = opponentParty[currentOppMonIndex];
+        let playerMonTypes = playerMon.types.map(type => type.type.name);
+        let opponentMonTypes = opponentMon.types.map(type => type.type.name);
+        let playerMove = playerMon.moves[attackMoveIndex].move;
+        let opponentMove = opponentMon.moves[getRandomMove()].move;
+
+        const calculateDamage = (attackerTypes, defenderTypes, move) => {
+            let typeEffectiveness = 1;
+            let stabBonus = 1;
+            let moveType = move.type.name;
+            let movePower = move.power;
+
+            if (attackerTypes.includes(moveType)) {
+                stabBonus = 1.5; // STAB (same-type attack bonus) = +50% when move type matches pokemon type
+            }
+
+            defenderTypes.forEach(type => {
+                typeEffectiveness *= moveTypeEffectiveness[moveType][type];
+            });
+
+            let damage = movePower * typeEffectiveness * stabBonus;
+            return damage;
+        };
+
+        let playerDamageDealt = calculateDamage(
+            playerMonTypes,
+            opponentMonTypes,
+            playerMove
+        );
+        opponentMon.hp -= playerDamageDealt;
+
+        if (opponentMon.hp <= 0) {
+            opponentMon.hp = 0;
+            opponentIndex++;
         }
 
-        // console.log("stabBonus after checking: ", stabBonus);
-
-        opponentTypes.forEach(type => {
-            typeEffectiveness =
-                typeEffectiveness * moveTypeEffectiveness[attackMoveType][type];
-        });
-
-        let damage = attackMove.power * typeEffectiveness * stabBonus;
-
-        // console.log("Type effectiveness multiplier: ", typeEffectiveness);
-        // console.log("Attack move base power: ", attackMove.power);
-        // console.log("Damage: ", damage);
-
-        currOpponent.hp -= damage;
-
-        if (currOpponent.hp < 0) {
-            currOpponent.hp = 0;
+        if (opponentIndex === currentOppMonIndex) {
+            const timer = setTimeout(() => {
+                let opponentDamageDealt = calculateDamage(
+                    opponentMonTypes,
+                    playerMonTypes,
+                    opponentMove
+                );
+                playerMon.hp -= opponentDamageDealt;
+    
+                if (playerMon.hp <= 0) {
+                    playerMon.hp = 0;
+                    playerIndex++;
+                }
+            }, 2500)
         }
 
-        // console.log("Updated party: ", updatedParty);
-
-        setDefendingParty(updatedParty);
+        setOppParty(opponentParty);
+        setParty(playerParty);
+        setCurrentMonIndex(playerIndex);
+        setCurrentOppMonIndex(opponentIndex);
     };
 
     const getRandomOpponentImage = () => {
@@ -846,10 +882,33 @@ export default ({ location }) => {
         }
     };
 
+    // const opponentAttack = () => {
+    //     let oppMoveIndex = getRandomMove();
+
+    //     setParty(handleAttack(oppMoveIndex));
+    // };
+
     // if opponent trainer has 2 gender options, pick one randomly
     useEffect(() => {
         setOpponentGender(getRandomOpponentImage);
     }, []);
+
+    // useEffect(() => {
+    //     if (!isPlayerTurn) {
+    //         const opponentAttack = () => {
+    //             let oppMoveIndex = getRandomMove();
+
+    //             setParty(handleAttack(oppMoveIndex));
+    //         };
+    //         const timer = setTimeout(() => {
+    //             console.log("This will log after 2 seconds.");
+
+    //             opponentAttack();
+    //         }, 2000);
+
+    //         return () => clearTimeout(timer);
+    //     }
+    // }, [isPlayerTurn]);
 
     return (
         <BattleContainer>
@@ -1074,12 +1133,15 @@ export default ({ location }) => {
                                 bg={move.move.type.name}
                                 power={move.move.power}
                                 onClick={() =>
-                                    handleAttack(
-                                        oppParty,
-                                        oppParty[currentOppMonIndex],
-                                        move.move,
-                                        party[currentMonIndex].types,
-                                        setOppParty
+                                    setOppParty(
+                                        handleAttack(
+                                            index
+                                            // oppParty,
+                                            // oppParty[currentOppMonIndex],
+                                            // move.move,
+                                            // party[currentMonIndex].types
+                                            // setOppParty
+                                        )
                                     )
                                 }
                             />
