@@ -193,9 +193,11 @@ export default () => {
 
     const handlePokemonSelect = pokemon => {
         const tempParty = [...party];
+        const partyIds = tempParty.map(mon => mon.id);
+
         // if an element doesn't exist, .indexOf will return -1
-        if (party.indexOf(pokemon) !== -1) {
-            let index = party.indexOf(pokemon);
+        if (partyIds.indexOf(pokemon.id) !== -1) {
+            let index = partyIds.indexOf(pokemon.id);
             // shorthand for swapping --> a = 2, b = 3 but you want a = 3, b = 2 ==> [a, b] = [b, a]
             [tempParty[index], tempParty[partySelection]] = [
                 tempParty[partySelection],
@@ -243,7 +245,7 @@ export default () => {
             for (let i = 0; i < partyOpts.length && i < 3; i++) {
                 let randomNum = Math.floor(Math.random() * partyOpts.length);
                 // check for duplicates to make sure all pokemon in party are different
-                while (tempPartyIds.includes(partyOpts[randomNum].pokemon)) {
+                while (tempPartyIds.includes(partyOpts[randomNum].pokemon.id)) {
                     randomNum = Math.floor(Math.random() * partyOpts.length);
                 }
 
