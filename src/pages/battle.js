@@ -360,11 +360,6 @@ const BattleCard = props => {
         },
     };
 
-    console.log("current hp: ", props.currentHp);
-    console.log("total hp: ", props.totalHp);
-
-    console.log("progress percentage: ", props.currentHp / props.totalHp);
-
     return (
         <HpCard
             isOpponent={props.isOpponent}
@@ -797,7 +792,7 @@ export default ({ location }) => {
         }
     };
 
-    const handleAttack = attackMoveIndex => {
+    const handleAttack = async attackMoveIndex => {
         // let attackingParty = isPlayerTurn ? [...party] : [...oppParty];
         // let defendingParty = isPlayerTurn ? [...oppParty] : [...party];
         // let attackerIndex = isPlayerTurn ? currentMonIndex : currentOppMonIndex;
@@ -838,6 +833,8 @@ export default ({ location }) => {
             return damage;
         };
 
+        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
         let playerDamageDealt = calculateDamage(
             playerMonTypes,
             opponentMonTypes,
@@ -851,25 +848,39 @@ export default ({ location }) => {
         }
 
         if (opponentIndex === currentOppMonIndex) {
-            const timer = setTimeout(() => {
-                let opponentDamageDealt = calculateDamage(
-                    opponentMonTypes,
-                    playerMonTypes,
-                    opponentMove
-                );
-                playerMon.hp -= opponentDamageDealt;
-    
-                if (playerMon.hp <= 0) {
-                    playerMon.hp = 0;
-                    playerIndex++;
-                }
-            }, 2500)
+            // const timer = setTimeout(() => {
+            let opponentDamageDealt = calculateDamage(
+                opponentMonTypes,
+                playerMonTypes,
+                opponentMove
+            );
+            playerMon.hp -= opponentDamageDealt;
+
+            if (playerMon.hp <= 0) {
+                playerMon.hp = 0;
+                playerIndex++;
+            }
+            // }, 2500);
         }
 
+        console.log("Opponent party: ", opponentParty);
+        console.log("Player party: ", playerParty);
+
         setOppParty(opponentParty);
+        setCurrentOppMonIndex(opponentIndex);
+
+        console.log('oppPartyHp:', oppParty[currentOppMonIndex].hp, oppParty[currentOppMonIndex].totalHp);
+
+        console.log('partyHp:', party[currentMonIndex].hp, party[currentMonIndex].totalHp);
+
+        console.log('before');
+
+        await delay(2500);
+
+        console.log('after');
+
         setParty(playerParty);
         setCurrentMonIndex(playerIndex);
-        setCurrentOppMonIndex(opponentIndex);
     };
 
     const getRandomOpponentImage = () => {
@@ -1132,18 +1143,7 @@ export default ({ location }) => {
                                 name={move.move.name}
                                 bg={move.move.type.name}
                                 power={move.move.power}
-                                onClick={() =>
-                                    setOppParty(
-                                        handleAttack(
-                                            index
-                                            // oppParty,
-                                            // oppParty[currentOppMonIndex],
-                                            // move.move,
-                                            // party[currentMonIndex].types
-                                            // setOppParty
-                                        )
-                                    )
-                                }
+                                onClick={() => handleAttack(index)}
                             />
                         ))}
                     </MovesContainer>
