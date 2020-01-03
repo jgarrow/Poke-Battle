@@ -1,15 +1,13 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import Img from "gatsby-image";
 import { css } from "@emotion/core";
 
 import pokeball from "../images/PokeballSVG.svg";
 import Image from "../components/poke-image";
-import ProgressBar from "../components/ProgressBar";
-
-// let ProgressBar = require("react-progressbar.js");
+import { moveTypeEffectiveness } from "../data/moveTypeEffectiveness";
 
 const typeBg = {
     Normal: "#A4ACAF",
@@ -265,7 +263,7 @@ const Row = styled.div`
 `;
 
 const HpBarContainer = styled.div`
-    width: 250px;
+    width: 100%;
     height: 10px;
     background: white;
     border: 1px solid black;
@@ -274,10 +272,10 @@ const HpBarContainer = styled.div`
 
 const HpBar = styled.div`
     margin: 0 auto;
-    width: 100%;
     height: 100%;
     border: none;
     transition: width 1s ease-out;
+    transition-delay: ${({ delay }) => delay};
     position: absolute;
 `;
 
@@ -387,10 +385,13 @@ const BattleCard = props => {
                         background: ${currentColor};
                         width: ${props.hpWidth}%;
                     `}
+                    delay={!props.isOpponent ? `2s` : 0}
                 />
             </HpBarContainer>
             <HP isOpponent={props.isOpponent}>
-                {props.currentHp} / {props.totalHp}
+                {setTimeout(() => {
+                    return `${props.currentHp} / ${props.totalHp}`;
+                }, 2000)}
             </HP>
         </HpCard>
     );
@@ -405,6 +406,7 @@ export default ({ location }) => {
         selectedTrainer,
         trainerImages,
     } = location.state;
+    console.log("i am at the beginning of battle component");
     const [party, setParty] = useState([...p1Party]);
     const [oppParty, setOppParty] = useState([...opponentParty]);
     const trainerType = selectedTrainer.name;
@@ -419,368 +421,368 @@ export default ({ location }) => {
     const [hpOppWidth, setHpOppWidth] = useState(100);
 
     // strength of each type key AGAINST other types
-    const moveTypeEffectiveness = {
-        Normal: {
-            Normal: 1,
-            Fire: 1,
-            Water: 1,
-            Electric: 1,
-            Grass: 1,
-            Ice: 1,
-            Fighting: 1,
-            Poison: 1,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 1,
-            Bug: 1,
-            Rock: 0.5,
-            Ghost: 0,
-            Dragon: 1,
-            Dark: 1,
-            Steel: 0.5,
-            Fairy: 1,
-        },
-        Fire: {
-            Normal: 1,
-            Fire: 0.5,
-            Water: 0.5,
-            Electric: 1,
-            Grass: 2,
-            Ice: 2,
-            Fighting: 1,
-            Poison: 1,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 1,
-            Bug: 2,
-            Rock: 0.5,
-            Ghost: 1,
-            Dragon: 0.5,
-            Dark: 1,
-            Steel: 2,
-            Fairy: 1,
-        },
-        Water: {
-            Normal: 1,
-            Fire: 2,
-            Water: 0.5,
-            Electric: 1,
-            Grass: 0.5,
-            Ice: 1,
-            Fighting: 1,
-            Poison: 1,
-            Ground: 2,
-            Flying: 1,
-            Psychic: 1,
-            Bug: 1,
-            Rock: 2,
-            Ghost: 1,
-            Dragon: 0.5,
-            Dark: 1,
-            Steel: 1,
-            Fairy: 1,
-        },
-        Electric: {
-            Normal: 1,
-            Fire: 1,
-            Water: 2,
-            Electric: 0.5,
-            Grass: 0.5,
-            Ice: 1,
-            Fighting: 1,
-            Poison: 1,
-            Ground: 0,
-            Flying: 2,
-            Psychic: 1,
-            Bug: 1,
-            Rock: 1,
-            Ghost: 1,
-            Dragon: 0.5,
-            Dark: 1,
-            Steel: 1,
-            Fairy: 1,
-        },
-        Grass: {
-            Normal: 1,
-            Fire: 0.5,
-            Water: 2,
-            Electric: 1,
-            Grass: 0.5,
-            Ice: 1,
-            Fighting: 1,
-            Poison: 0.5,
-            Ground: 2,
-            Flying: 0.5,
-            Psychic: 1,
-            Bug: 0.5,
-            Rock: 2,
-            Ghost: 1,
-            Dragon: 0.5,
-            Dark: 1,
-            Steel: 0.5,
-            Fairy: 1,
-        },
-        Ice: {
-            Normal: 1,
-            Fire: 0.5,
-            Water: 0.5,
-            Electric: 1,
-            Grass: 2,
-            Ice: 0.5,
-            Fighting: 1,
-            Poison: 1,
-            Ground: 2,
-            Flying: 2,
-            Psychic: 1,
-            Bug: 1,
-            Rock: 1,
-            Ghost: 1,
-            Dragon: 2,
-            Dark: 1,
-            Steel: 0.5,
-            Fairy: 1,
-        },
-        Fighting: {
-            Normal: 2,
-            Fire: 1,
-            Water: 1,
-            Electric: 1,
-            Grass: 1,
-            Ice: 2,
-            Fighting: 1,
-            Poison: 0.5,
-            Ground: 1,
-            Flying: 0.5,
-            Psychic: 0.5,
-            Bug: 0.5,
-            Rock: 2,
-            Ghost: 0,
-            Dragon: 1,
-            Dark: 2,
-            Steel: 2,
-            Fairy: 0.5,
-        },
-        Poison: {
-            Normal: 1,
-            Fire: 1,
-            Water: 1,
-            Electric: 1,
-            Grass: 2,
-            Ice: 1,
-            Fighting: 1,
-            Poison: 0.5,
-            Ground: 0.5,
-            Flying: 1,
-            Psychic: 1,
-            Bug: 1,
-            Rock: 0.5,
-            Ghost: 0.5,
-            Dragon: 1,
-            Dark: 1,
-            Steel: 0,
-            Fairy: 2,
-        },
-        Ground: {
-            Normal: 1,
-            Fire: 2,
-            Water: 1,
-            Electric: 2,
-            Grass: 0.5,
-            Ice: 1,
-            Fighting: 1,
-            Poison: 2,
-            Ground: 1,
-            Flying: 0,
-            Psychic: 1,
-            Bug: 0.5,
-            Rock: 2,
-            Ghost: 1,
-            Dragon: 1,
-            Dark: 1,
-            Steel: 2,
-            Fairy: 1,
-        },
-        Flying: {
-            Normal: 1,
-            Fire: 1,
-            Water: 1,
-            Electric: 0.5,
-            Grass: 2,
-            Ice: 1,
-            Fighting: 2,
-            Poison: 1,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 1,
-            Bug: 2,
-            Rock: 0.5,
-            Ghost: 1,
-            Dragon: 1,
-            Dark: 1,
-            Steel: 0.5,
-            Fairy: 1,
-        },
-        Psychic: {
-            Normal: 1,
-            Fire: 1,
-            Water: 1,
-            Electric: 1,
-            Grass: 1,
-            Ice: 1,
-            Fighting: 2,
-            Poison: 2,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 0.5,
-            Bug: 1,
-            Rock: 1,
-            Ghost: 1,
-            Dragon: 1,
-            Dark: 0,
-            Steel: 0.5,
-            Fairy: 1,
-        },
-        Bug: {
-            Normal: 1,
-            Fire: 0.5,
-            Water: 1,
-            Electric: 1,
-            Grass: 2,
-            Ice: 1,
-            Fighting: 0.5,
-            Poison: 0.5,
-            Ground: 1,
-            Flying: 0.5,
-            Psychic: 2,
-            Bug: 1,
-            Rock: 1,
-            Ghost: 0.5,
-            Dragon: 1,
-            Dark: 2,
-            Steel: 0.5,
-            Fairy: 0.5,
-        },
-        Rock: {
-            Normal: 1,
-            Fire: 2,
-            Water: 1,
-            Electric: 1,
-            Grass: 1,
-            Ice: 2,
-            Fighting: 0.5,
-            Poison: 1,
-            Ground: 0.5,
-            Flying: 2,
-            Psychic: 1,
-            Bug: 2,
-            Rock: 1,
-            Ghost: 1,
-            Dragon: 1,
-            Dark: 1,
-            Steel: 0.5,
-            Fairy: 1,
-        },
-        Ghost: {
-            Normal: 0,
-            Fire: 1,
-            Water: 1,
-            Electric: 1,
-            Grass: 1,
-            Ice: 1,
-            Fighting: 1,
-            Poison: 1,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 2,
-            Bug: 1,
-            Rock: 1,
-            Ghost: 2,
-            Dragon: 1,
-            Dark: 0.5,
-            Steel: 1,
-            Fairy: 1,
-        },
-        Dragon: {
-            Normal: 1,
-            Fire: 1,
-            Water: 1,
-            Electric: 1,
-            Grass: 1,
-            Ice: 1,
-            Fighting: 1,
-            Poison: 1,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 1,
-            Bug: 1,
-            Rock: 1,
-            Ghost: 1,
-            Dragon: 2,
-            Dark: 1,
-            Steel: 0.5,
-            Fairy: 0,
-        },
-        Dark: {
-            Normal: 1,
-            Fire: 1,
-            Water: 1,
-            Electric: 1,
-            Grass: 1,
-            Ice: 1,
-            Fighting: 0.5,
-            Poison: 1,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 2,
-            Bug: 1,
-            Rock: 1,
-            Ghost: 2,
-            Dragon: 1,
-            Dark: 0.5,
-            Steel: 1,
-            Fairy: 0.5,
-        },
-        Steel: {
-            Normal: 1,
-            Fire: 0.5,
-            Water: 0.5,
-            Electric: 0.5,
-            Grass: 1,
-            Ice: 2,
-            Fighting: 1,
-            Poison: 1,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 1,
-            Bug: 1,
-            Rock: 2,
-            Ghost: 1,
-            Dragon: 1,
-            Dark: 1,
-            Steel: 0.5,
-            Fairy: 2,
-        },
-        Fairy: {
-            Normal: 1,
-            Fire: 0.5,
-            Water: 1,
-            Electric: 1,
-            Grass: 1,
-            Ice: 1,
-            Fighting: 2,
-            Poison: 0.5,
-            Ground: 1,
-            Flying: 1,
-            Psychic: 1,
-            Bug: 1,
-            Rock: 1,
-            Ghost: 1,
-            Dragon: 2,
-            Dark: 2,
-            Steel: 1,
-            Fairy: 0.5,
-        },
-    };
+    // const moveTypeEffectiveness = {
+    //     Normal: {
+    //         Normal: 1,
+    //         Fire: 1,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 1,
+    //         Ice: 1,
+    //         Fighting: 1,
+    //         Poison: 1,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 1,
+    //         Bug: 1,
+    //         Rock: 0.5,
+    //         Ghost: 0,
+    //         Dragon: 1,
+    //         Dark: 1,
+    //         Steel: 0.5,
+    //         Fairy: 1,
+    //     },
+    //     Fire: {
+    //         Normal: 1,
+    //         Fire: 0.5,
+    //         Water: 0.5,
+    //         Electric: 1,
+    //         Grass: 2,
+    //         Ice: 2,
+    //         Fighting: 1,
+    //         Poison: 1,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 1,
+    //         Bug: 2,
+    //         Rock: 0.5,
+    //         Ghost: 1,
+    //         Dragon: 0.5,
+    //         Dark: 1,
+    //         Steel: 2,
+    //         Fairy: 1,
+    //     },
+    //     Water: {
+    //         Normal: 1,
+    //         Fire: 2,
+    //         Water: 0.5,
+    //         Electric: 1,
+    //         Grass: 0.5,
+    //         Ice: 1,
+    //         Fighting: 1,
+    //         Poison: 1,
+    //         Ground: 2,
+    //         Flying: 1,
+    //         Psychic: 1,
+    //         Bug: 1,
+    //         Rock: 2,
+    //         Ghost: 1,
+    //         Dragon: 0.5,
+    //         Dark: 1,
+    //         Steel: 1,
+    //         Fairy: 1,
+    //     },
+    //     Electric: {
+    //         Normal: 1,
+    //         Fire: 1,
+    //         Water: 2,
+    //         Electric: 0.5,
+    //         Grass: 0.5,
+    //         Ice: 1,
+    //         Fighting: 1,
+    //         Poison: 1,
+    //         Ground: 0,
+    //         Flying: 2,
+    //         Psychic: 1,
+    //         Bug: 1,
+    //         Rock: 1,
+    //         Ghost: 1,
+    //         Dragon: 0.5,
+    //         Dark: 1,
+    //         Steel: 1,
+    //         Fairy: 1,
+    //     },
+    //     Grass: {
+    //         Normal: 1,
+    //         Fire: 0.5,
+    //         Water: 2,
+    //         Electric: 1,
+    //         Grass: 0.5,
+    //         Ice: 1,
+    //         Fighting: 1,
+    //         Poison: 0.5,
+    //         Ground: 2,
+    //         Flying: 0.5,
+    //         Psychic: 1,
+    //         Bug: 0.5,
+    //         Rock: 2,
+    //         Ghost: 1,
+    //         Dragon: 0.5,
+    //         Dark: 1,
+    //         Steel: 0.5,
+    //         Fairy: 1,
+    //     },
+    //     Ice: {
+    //         Normal: 1,
+    //         Fire: 0.5,
+    //         Water: 0.5,
+    //         Electric: 1,
+    //         Grass: 2,
+    //         Ice: 0.5,
+    //         Fighting: 1,
+    //         Poison: 1,
+    //         Ground: 2,
+    //         Flying: 2,
+    //         Psychic: 1,
+    //         Bug: 1,
+    //         Rock: 1,
+    //         Ghost: 1,
+    //         Dragon: 2,
+    //         Dark: 1,
+    //         Steel: 0.5,
+    //         Fairy: 1,
+    //     },
+    //     Fighting: {
+    //         Normal: 2,
+    //         Fire: 1,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 1,
+    //         Ice: 2,
+    //         Fighting: 1,
+    //         Poison: 0.5,
+    //         Ground: 1,
+    //         Flying: 0.5,
+    //         Psychic: 0.5,
+    //         Bug: 0.5,
+    //         Rock: 2,
+    //         Ghost: 0,
+    //         Dragon: 1,
+    //         Dark: 2,
+    //         Steel: 2,
+    //         Fairy: 0.5,
+    //     },
+    //     Poison: {
+    //         Normal: 1,
+    //         Fire: 1,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 2,
+    //         Ice: 1,
+    //         Fighting: 1,
+    //         Poison: 0.5,
+    //         Ground: 0.5,
+    //         Flying: 1,
+    //         Psychic: 1,
+    //         Bug: 1,
+    //         Rock: 0.5,
+    //         Ghost: 0.5,
+    //         Dragon: 1,
+    //         Dark: 1,
+    //         Steel: 0,
+    //         Fairy: 2,
+    //     },
+    //     Ground: {
+    //         Normal: 1,
+    //         Fire: 2,
+    //         Water: 1,
+    //         Electric: 2,
+    //         Grass: 0.5,
+    //         Ice: 1,
+    //         Fighting: 1,
+    //         Poison: 2,
+    //         Ground: 1,
+    //         Flying: 0,
+    //         Psychic: 1,
+    //         Bug: 0.5,
+    //         Rock: 2,
+    //         Ghost: 1,
+    //         Dragon: 1,
+    //         Dark: 1,
+    //         Steel: 2,
+    //         Fairy: 1,
+    //     },
+    //     Flying: {
+    //         Normal: 1,
+    //         Fire: 1,
+    //         Water: 1,
+    //         Electric: 0.5,
+    //         Grass: 2,
+    //         Ice: 1,
+    //         Fighting: 2,
+    //         Poison: 1,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 1,
+    //         Bug: 2,
+    //         Rock: 0.5,
+    //         Ghost: 1,
+    //         Dragon: 1,
+    //         Dark: 1,
+    //         Steel: 0.5,
+    //         Fairy: 1,
+    //     },
+    //     Psychic: {
+    //         Normal: 1,
+    //         Fire: 1,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 1,
+    //         Ice: 1,
+    //         Fighting: 2,
+    //         Poison: 2,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 0.5,
+    //         Bug: 1,
+    //         Rock: 1,
+    //         Ghost: 1,
+    //         Dragon: 1,
+    //         Dark: 0,
+    //         Steel: 0.5,
+    //         Fairy: 1,
+    //     },
+    //     Bug: {
+    //         Normal: 1,
+    //         Fire: 0.5,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 2,
+    //         Ice: 1,
+    //         Fighting: 0.5,
+    //         Poison: 0.5,
+    //         Ground: 1,
+    //         Flying: 0.5,
+    //         Psychic: 2,
+    //         Bug: 1,
+    //         Rock: 1,
+    //         Ghost: 0.5,
+    //         Dragon: 1,
+    //         Dark: 2,
+    //         Steel: 0.5,
+    //         Fairy: 0.5,
+    //     },
+    //     Rock: {
+    //         Normal: 1,
+    //         Fire: 2,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 1,
+    //         Ice: 2,
+    //         Fighting: 0.5,
+    //         Poison: 1,
+    //         Ground: 0.5,
+    //         Flying: 2,
+    //         Psychic: 1,
+    //         Bug: 2,
+    //         Rock: 1,
+    //         Ghost: 1,
+    //         Dragon: 1,
+    //         Dark: 1,
+    //         Steel: 0.5,
+    //         Fairy: 1,
+    //     },
+    //     Ghost: {
+    //         Normal: 0,
+    //         Fire: 1,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 1,
+    //         Ice: 1,
+    //         Fighting: 1,
+    //         Poison: 1,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 2,
+    //         Bug: 1,
+    //         Rock: 1,
+    //         Ghost: 2,
+    //         Dragon: 1,
+    //         Dark: 0.5,
+    //         Steel: 1,
+    //         Fairy: 1,
+    //     },
+    //     Dragon: {
+    //         Normal: 1,
+    //         Fire: 1,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 1,
+    //         Ice: 1,
+    //         Fighting: 1,
+    //         Poison: 1,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 1,
+    //         Bug: 1,
+    //         Rock: 1,
+    //         Ghost: 1,
+    //         Dragon: 2,
+    //         Dark: 1,
+    //         Steel: 0.5,
+    //         Fairy: 0,
+    //     },
+    //     Dark: {
+    //         Normal: 1,
+    //         Fire: 1,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 1,
+    //         Ice: 1,
+    //         Fighting: 0.5,
+    //         Poison: 1,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 2,
+    //         Bug: 1,
+    //         Rock: 1,
+    //         Ghost: 2,
+    //         Dragon: 1,
+    //         Dark: 0.5,
+    //         Steel: 1,
+    //         Fairy: 0.5,
+    //     },
+    //     Steel: {
+    //         Normal: 1,
+    //         Fire: 0.5,
+    //         Water: 0.5,
+    //         Electric: 0.5,
+    //         Grass: 1,
+    //         Ice: 2,
+    //         Fighting: 1,
+    //         Poison: 1,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 1,
+    //         Bug: 1,
+    //         Rock: 2,
+    //         Ghost: 1,
+    //         Dragon: 1,
+    //         Dark: 1,
+    //         Steel: 0.5,
+    //         Fairy: 2,
+    //     },
+    //     Fairy: {
+    //         Normal: 1,
+    //         Fire: 0.5,
+    //         Water: 1,
+    //         Electric: 1,
+    //         Grass: 1,
+    //         Ice: 1,
+    //         Fighting: 2,
+    //         Poison: 0.5,
+    //         Ground: 1,
+    //         Flying: 1,
+    //         Psychic: 1,
+    //         Bug: 1,
+    //         Rock: 1,
+    //         Ghost: 1,
+    //         Dragon: 2,
+    //         Dark: 2,
+    //         Steel: 1,
+    //         Fairy: 0.5,
+    //     },
+    // };
 
     // returns random index for which move in the move array
     const getRandomMove = () => {
@@ -793,18 +795,7 @@ export default ({ location }) => {
         }
     };
 
-    const handleAttack = async attackMoveIndex => {
-        // let attackingParty = isPlayerTurn ? [...party] : [...oppParty];
-        // let defendingParty = isPlayerTurn ? [...oppParty] : [...party];
-        // let attackerIndex = isPlayerTurn ? currentMonIndex : currentOppMonIndex;
-        // let defenderIndex = isPlayerTurn ? currentOppMonIndex : currentMonIndex;
-        // let currAttacker = attackingParty[attackerIndex];
-        // let currOpponent = defendingParty[defenderIndex];
-        // let attackerMonTypes = currAttacker.types.map(type => type.type.name);
-        // let defenderMonTypes = currOpponent.types.map(type => type.type.name);
-        // let move = currAttacker.moves[attackMoveIndex].move;
-        // let moveType = move.type.name;
-
+    const handleAttack = attackMoveIndex => {
         let playerParty = [...party];
         let opponentParty = [...oppParty];
         let playerIndex = currentMonIndex;
@@ -834,7 +825,9 @@ export default ({ location }) => {
             return damage;
         };
 
-        console.log("opponentMon.hp before being attacked: ", opponentMon.hp);
+        console.log(
+            `${opponentMon.name}'s HP before being attacked:  ${opponentMon.hp}`
+        );
 
         let playerDamageDealt = Math.floor(
             calculateDamage(playerMonTypes, opponentMonTypes, playerMove)
@@ -845,15 +838,23 @@ export default ({ location }) => {
 
         opponentMon.hp -= playerDamageDealt;
         let newOppWidth = (opponentMon.hp / opponentMon.totalHp) * 100;
-        setHpOppWidth(newOppWidth);
 
         if (opponentMon.hp <= 0) {
             opponentMon.hp = 0;
+            newOppWidth = 100;
             opponentIndex++;
         }
 
-        console.log("opponentMon.hp after being attacked: ", opponentMon.hp);
-        console.log("playerMon.hp before being attacked: ", playerMon.hp);
+        setHpOppWidth(newOppWidth);
+        setOppParty(opponentParty);
+        setCurrentOppMonIndex(opponentIndex);
+
+        console.log(
+            `${opponentMon.name}'s HP after being attacked:  ${opponentMon.hp}`
+        );
+        console.log(
+            `${playerMon.name}'s HP before being attacked:  ${playerMon.hp}`
+        );
 
         if (opponentIndex === currentOppMonIndex) {
             // const timer = setTimeout(() => {
@@ -866,16 +867,20 @@ export default ({ location }) => {
 
             playerMon.hp -= opponentDamageDealt;
             let newPlayerWidth = (playerMon.hp / playerMon.totalHp) * 100;
-            setHpPlayerWidth(newPlayerWidth);
 
             if (playerMon.hp <= 0) {
                 playerMon.hp = 0;
+                newPlayerWidth = 100;
                 playerIndex++;
             }
+
+            setHpPlayerWidth(newPlayerWidth);
             // }, 2500);
         }
 
-        console.log("playerMon.hp after being attacked: ", playerMon.hp);
+        console.log(
+            `${playerMon.name}'s HP before after attacked:  ${playerMon.hp}`
+        );
 
         console.log("Opponent party: ", opponentParty);
         console.log("Player party: ", playerParty);
