@@ -264,6 +264,23 @@ const Row = styled.div`
     justify-content: space-between;
 `;
 
+const HpBarContainer = styled.div`
+    width: 250px;
+    height: 10px;
+    background: white;
+    border: 1px solid black;
+    position: relative;
+`;
+
+const HpBar = styled.div`
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    border: none;
+    transition: width 1s ease-out;
+    position: absolute;
+`;
+
 const HP = styled.p`
     display: ${props => (props.isOpponent ? "none" : "inline")};
 `;
@@ -345,30 +362,9 @@ const BattleCard = props => {
         currentColor = "#D11B1C";
     }
 
-    // styles for HP progress bar
-    let containerStyle = {
-        width: "250px",
-        height: "3px",
-    };
-
-    let options = {
-        strokeWidth: 3,
-        color: `${currentColor}`,
-        trailColor: "#f4f4f4",
-        svgStyle: {
-            border: "1px solid #000000",
-        },
-    };
-
+    console.log("hpRatio in BattleCard: ", hpRatio);
     return (
-        <HpCard
-            isOpponent={props.isOpponent}
-            css={{
-                "& .progressbar-container svg path:nth-of-type(2)": {
-                    stroke: `${currentColor}`,
-                },
-            }}
-        >
+        <HpCard isOpponent={props.isOpponent}>
             <Row>
                 <p>{props.name}</p>
                 <PartyBallContainer
@@ -385,11 +381,14 @@ const BattleCard = props => {
                     ))}
                 </PartyBallContainer>
             </Row>
-            <ProgressBar.Line
-                progress={hpRatio}
-                options={options}
-                containerStyle={containerStyle}
-            />
+            <HpBarContainer>
+                <HpBar
+                    css={css`
+                        background: ${currentColor};
+                        width: ${props.hpWidth}%;
+                    `}
+                />
+            </HpBarContainer>
             <HP isOpponent={props.isOpponent}>
                 {props.currentHp} / {props.totalHp}
             </HP>
@@ -416,6 +415,8 @@ export default ({ location }) => {
     const [currentMonIndex, setCurrentMonIndex] = useState(0);
     const [currentOppMonIndex, setCurrentOppMonIndex] = useState(0);
     const [isPartyOpen, setIsPartyOpen] = useState(false);
+    const [hpPlayerWidth, setHpPlayerWidth] = useState(100);
+    const [hpOppWidth, setHpOppWidth] = useState(100);
 
     // strength of each type key AGAINST other types
     const moveTypeEffectiveness = {
@@ -833,28 +834,39 @@ export default ({ location }) => {
             return damage;
         };
 
-        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+        console.log("opponentMon.hp before being attacked: ", opponentMon.hp);
 
-        let playerDamageDealt = calculateDamage(
-            playerMonTypes,
-            opponentMonTypes,
-            playerMove
+        let playerDamageDealt = Math.floor(
+            calculateDamage(playerMonTypes, opponentMonTypes, playerMove)
         );
+        console.log(
+            `${playerMon.name} used ${playerMove.name}! ${opponentMon.name} took ${playerDamageDealt} damage.`
+        );
+
         opponentMon.hp -= playerDamageDealt;
+        let newOppWidth = (opponentMon.hp / opponentMon.totalHp) * 100;
+        setHpOppWidth(newOppWidth);
 
         if (opponentMon.hp <= 0) {
             opponentMon.hp = 0;
             opponentIndex++;
         }
 
+        console.log("opponentMon.hp after being attacked: ", opponentMon.hp);
+        console.log("playerMon.hp before being attacked: ", playerMon.hp);
+
         if (opponentIndex === currentOppMonIndex) {
             // const timer = setTimeout(() => {
-            let opponentDamageDealt = calculateDamage(
-                opponentMonTypes,
-                playerMonTypes,
-                opponentMove
+            let opponentDamageDealt = Math.floor(
+                calculateDamage(opponentMonTypes, playerMonTypes, opponentMove)
             );
+            console.log(
+                `${opponentMon.name} used ${opponentMove.name}! ${playerMon.name} took ${opponentDamageDealt} damage.`
+            );
+
             playerMon.hp -= opponentDamageDealt;
+            let newPlayerWidth = (playerMon.hp / playerMon.totalHp) * 100;
+            setHpPlayerWidth(newPlayerWidth);
 
             if (playerMon.hp <= 0) {
                 playerMon.hp = 0;
@@ -863,21 +875,18 @@ export default ({ location }) => {
             // }, 2500);
         }
 
+        console.log("playerMon.hp after being attacked: ", playerMon.hp);
+
         console.log("Opponent party: ", opponentParty);
         console.log("Player party: ", playerParty);
 
-        setOppParty(opponentParty);
-        setCurrentOppMonIndex(opponentIndex);
+        console.log(
+            `oppPartyHp: ${oppParty[currentOppMonIndex].hp} / ${oppParty[currentOppMonIndex].totalHp}`
+        );
 
-        console.log('oppPartyHp:', oppParty[currentOppMonIndex].hp, oppParty[currentOppMonIndex].totalHp);
-
-        console.log('partyHp:', party[currentMonIndex].hp, party[currentMonIndex].totalHp);
-
-        console.log('before');
-
-        await delay(2500);
-
-        console.log('after');
+        console.log(
+            `partyHp: ${party[currentMonIndex].hp} / ${party[currentMonIndex].totalHp}`
+        );
 
         setParty(playerParty);
         setCurrentMonIndex(playerIndex);
@@ -903,6 +912,10 @@ export default ({ location }) => {
     useEffect(() => {
         setOpponentGender(getRandomOpponentImage);
     }, []);
+
+    useEffect(() => {
+        console.log("oppParty changed: ", oppParty);
+    }, [oppParty]);
 
     // useEffect(() => {
     //     if (!isPlayerTurn) {
@@ -1039,6 +1052,7 @@ export default ({ location }) => {
                         party={oppParty}
                         currentHp={oppParty[currentOppMonIndex].hp}
                         totalHp={oppParty[currentOppMonIndex].totalHp}
+                        hpWidth={hpOppWidth}
                     />
                     {/* Opponent trainer image */}
                     {opponentGender === "male" &&
@@ -1094,6 +1108,7 @@ export default ({ location }) => {
                         party={party}
                         totalHp={party[currentMonIndex].totalHp}
                         currentHp={party[currentMonIndex].hp}
+                        hpWidth={hpPlayerWidth}
                     />
 
                     {/* Player 1 Pokemon image */}
