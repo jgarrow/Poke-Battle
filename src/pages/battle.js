@@ -275,7 +275,7 @@ const HpBar = styled.div`
     height: 100%;
     border: none;
     transition: width 1s ease-out;
-    transition-delay: ${({ delay }) => delay};
+    /* transition-delay: ${({ delay }) => delay}; */
     position: absolute;
 `;
 
@@ -306,6 +306,7 @@ const MovesContainer = styled.div`
 `;
 
 const MoveCard = styled.div`
+    pointer-events: ${({ disabled }) => disabled ? `none` : `initial` };
     cursor: pointer;
     width: 75%;
     min-width: 130px;
@@ -344,14 +345,14 @@ const Party = styled.div`
 `;
 
 const Move = props => (
-    <MoveCard bg={props.bg} onClick={props.onClick}>
+    <MoveCard {...props}>
         <p>{props.name}</p>
         <p>{props.power}</p>
     </MoveCard>
 );
 
 const BattleCard = props => {
-    const hpRatio = props.currentHp / props.totalHp;
+    const hpRatio = (props.currentHp / props.totalHp) * 100;
     let currentColor = "#2187E7";
 
     if (hpRatio <= 0.5 && hpRatio > 0.2) {
@@ -383,15 +384,15 @@ const BattleCard = props => {
                 <HpBar
                     css={css`
                         background: ${currentColor};
-                        width: ${props.hpWidth}%;
+                        width: ${hpRatio}%;
                     `}
-                    delay={!props.isOpponent ? `2s` : 0}
+                    // delay={!props.isOpponent ? `2s` : 0}
                 />
             </HpBarContainer>
             <HP isOpponent={props.isOpponent}>
-                {setTimeout(() => {
-                    return `${props.currentHp} / ${props.totalHp}`;
-                }, 2000)}
+                {/* {setTimeout(() => { */}
+                {props.currentHp} / {props.totalHp}
+                {/* }, 2000)} */}
             </HP>
         </HpCard>
     );
@@ -405,6 +406,7 @@ export default ({ location }) => {
         oppParty: opponentParty,
         selectedTrainer,
         trainerImages,
+        opponent,
     } = location.state;
     console.log("i am at the beginning of battle component");
     const [party, setParty] = useState([...p1Party]);
@@ -412,377 +414,11 @@ export default ({ location }) => {
     const trainerType = selectedTrainer.name;
     const trainerImage = trainerImages[selectedTrainer.image];
     const trainerAltImage = trainerImages[selectedTrainer.alt_image];
-    const opponent = location.state.opponent;
     const [opponentGender, setOpponentGender] = useState("");
     const [currentMonIndex, setCurrentMonIndex] = useState(0);
     const [currentOppMonIndex, setCurrentOppMonIndex] = useState(0);
     const [isPartyOpen, setIsPartyOpen] = useState(false);
-    const [hpPlayerWidth, setHpPlayerWidth] = useState(100);
-    const [hpOppWidth, setHpOppWidth] = useState(100);
-
-    // strength of each type key AGAINST other types
-    // const moveTypeEffectiveness = {
-    //     Normal: {
-    //         Normal: 1,
-    //         Fire: 1,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 1,
-    //         Ice: 1,
-    //         Fighting: 1,
-    //         Poison: 1,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 1,
-    //         Bug: 1,
-    //         Rock: 0.5,
-    //         Ghost: 0,
-    //         Dragon: 1,
-    //         Dark: 1,
-    //         Steel: 0.5,
-    //         Fairy: 1,
-    //     },
-    //     Fire: {
-    //         Normal: 1,
-    //         Fire: 0.5,
-    //         Water: 0.5,
-    //         Electric: 1,
-    //         Grass: 2,
-    //         Ice: 2,
-    //         Fighting: 1,
-    //         Poison: 1,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 1,
-    //         Bug: 2,
-    //         Rock: 0.5,
-    //         Ghost: 1,
-    //         Dragon: 0.5,
-    //         Dark: 1,
-    //         Steel: 2,
-    //         Fairy: 1,
-    //     },
-    //     Water: {
-    //         Normal: 1,
-    //         Fire: 2,
-    //         Water: 0.5,
-    //         Electric: 1,
-    //         Grass: 0.5,
-    //         Ice: 1,
-    //         Fighting: 1,
-    //         Poison: 1,
-    //         Ground: 2,
-    //         Flying: 1,
-    //         Psychic: 1,
-    //         Bug: 1,
-    //         Rock: 2,
-    //         Ghost: 1,
-    //         Dragon: 0.5,
-    //         Dark: 1,
-    //         Steel: 1,
-    //         Fairy: 1,
-    //     },
-    //     Electric: {
-    //         Normal: 1,
-    //         Fire: 1,
-    //         Water: 2,
-    //         Electric: 0.5,
-    //         Grass: 0.5,
-    //         Ice: 1,
-    //         Fighting: 1,
-    //         Poison: 1,
-    //         Ground: 0,
-    //         Flying: 2,
-    //         Psychic: 1,
-    //         Bug: 1,
-    //         Rock: 1,
-    //         Ghost: 1,
-    //         Dragon: 0.5,
-    //         Dark: 1,
-    //         Steel: 1,
-    //         Fairy: 1,
-    //     },
-    //     Grass: {
-    //         Normal: 1,
-    //         Fire: 0.5,
-    //         Water: 2,
-    //         Electric: 1,
-    //         Grass: 0.5,
-    //         Ice: 1,
-    //         Fighting: 1,
-    //         Poison: 0.5,
-    //         Ground: 2,
-    //         Flying: 0.5,
-    //         Psychic: 1,
-    //         Bug: 0.5,
-    //         Rock: 2,
-    //         Ghost: 1,
-    //         Dragon: 0.5,
-    //         Dark: 1,
-    //         Steel: 0.5,
-    //         Fairy: 1,
-    //     },
-    //     Ice: {
-    //         Normal: 1,
-    //         Fire: 0.5,
-    //         Water: 0.5,
-    //         Electric: 1,
-    //         Grass: 2,
-    //         Ice: 0.5,
-    //         Fighting: 1,
-    //         Poison: 1,
-    //         Ground: 2,
-    //         Flying: 2,
-    //         Psychic: 1,
-    //         Bug: 1,
-    //         Rock: 1,
-    //         Ghost: 1,
-    //         Dragon: 2,
-    //         Dark: 1,
-    //         Steel: 0.5,
-    //         Fairy: 1,
-    //     },
-    //     Fighting: {
-    //         Normal: 2,
-    //         Fire: 1,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 1,
-    //         Ice: 2,
-    //         Fighting: 1,
-    //         Poison: 0.5,
-    //         Ground: 1,
-    //         Flying: 0.5,
-    //         Psychic: 0.5,
-    //         Bug: 0.5,
-    //         Rock: 2,
-    //         Ghost: 0,
-    //         Dragon: 1,
-    //         Dark: 2,
-    //         Steel: 2,
-    //         Fairy: 0.5,
-    //     },
-    //     Poison: {
-    //         Normal: 1,
-    //         Fire: 1,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 2,
-    //         Ice: 1,
-    //         Fighting: 1,
-    //         Poison: 0.5,
-    //         Ground: 0.5,
-    //         Flying: 1,
-    //         Psychic: 1,
-    //         Bug: 1,
-    //         Rock: 0.5,
-    //         Ghost: 0.5,
-    //         Dragon: 1,
-    //         Dark: 1,
-    //         Steel: 0,
-    //         Fairy: 2,
-    //     },
-    //     Ground: {
-    //         Normal: 1,
-    //         Fire: 2,
-    //         Water: 1,
-    //         Electric: 2,
-    //         Grass: 0.5,
-    //         Ice: 1,
-    //         Fighting: 1,
-    //         Poison: 2,
-    //         Ground: 1,
-    //         Flying: 0,
-    //         Psychic: 1,
-    //         Bug: 0.5,
-    //         Rock: 2,
-    //         Ghost: 1,
-    //         Dragon: 1,
-    //         Dark: 1,
-    //         Steel: 2,
-    //         Fairy: 1,
-    //     },
-    //     Flying: {
-    //         Normal: 1,
-    //         Fire: 1,
-    //         Water: 1,
-    //         Electric: 0.5,
-    //         Grass: 2,
-    //         Ice: 1,
-    //         Fighting: 2,
-    //         Poison: 1,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 1,
-    //         Bug: 2,
-    //         Rock: 0.5,
-    //         Ghost: 1,
-    //         Dragon: 1,
-    //         Dark: 1,
-    //         Steel: 0.5,
-    //         Fairy: 1,
-    //     },
-    //     Psychic: {
-    //         Normal: 1,
-    //         Fire: 1,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 1,
-    //         Ice: 1,
-    //         Fighting: 2,
-    //         Poison: 2,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 0.5,
-    //         Bug: 1,
-    //         Rock: 1,
-    //         Ghost: 1,
-    //         Dragon: 1,
-    //         Dark: 0,
-    //         Steel: 0.5,
-    //         Fairy: 1,
-    //     },
-    //     Bug: {
-    //         Normal: 1,
-    //         Fire: 0.5,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 2,
-    //         Ice: 1,
-    //         Fighting: 0.5,
-    //         Poison: 0.5,
-    //         Ground: 1,
-    //         Flying: 0.5,
-    //         Psychic: 2,
-    //         Bug: 1,
-    //         Rock: 1,
-    //         Ghost: 0.5,
-    //         Dragon: 1,
-    //         Dark: 2,
-    //         Steel: 0.5,
-    //         Fairy: 0.5,
-    //     },
-    //     Rock: {
-    //         Normal: 1,
-    //         Fire: 2,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 1,
-    //         Ice: 2,
-    //         Fighting: 0.5,
-    //         Poison: 1,
-    //         Ground: 0.5,
-    //         Flying: 2,
-    //         Psychic: 1,
-    //         Bug: 2,
-    //         Rock: 1,
-    //         Ghost: 1,
-    //         Dragon: 1,
-    //         Dark: 1,
-    //         Steel: 0.5,
-    //         Fairy: 1,
-    //     },
-    //     Ghost: {
-    //         Normal: 0,
-    //         Fire: 1,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 1,
-    //         Ice: 1,
-    //         Fighting: 1,
-    //         Poison: 1,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 2,
-    //         Bug: 1,
-    //         Rock: 1,
-    //         Ghost: 2,
-    //         Dragon: 1,
-    //         Dark: 0.5,
-    //         Steel: 1,
-    //         Fairy: 1,
-    //     },
-    //     Dragon: {
-    //         Normal: 1,
-    //         Fire: 1,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 1,
-    //         Ice: 1,
-    //         Fighting: 1,
-    //         Poison: 1,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 1,
-    //         Bug: 1,
-    //         Rock: 1,
-    //         Ghost: 1,
-    //         Dragon: 2,
-    //         Dark: 1,
-    //         Steel: 0.5,
-    //         Fairy: 0,
-    //     },
-    //     Dark: {
-    //         Normal: 1,
-    //         Fire: 1,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 1,
-    //         Ice: 1,
-    //         Fighting: 0.5,
-    //         Poison: 1,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 2,
-    //         Bug: 1,
-    //         Rock: 1,
-    //         Ghost: 2,
-    //         Dragon: 1,
-    //         Dark: 0.5,
-    //         Steel: 1,
-    //         Fairy: 0.5,
-    //     },
-    //     Steel: {
-    //         Normal: 1,
-    //         Fire: 0.5,
-    //         Water: 0.5,
-    //         Electric: 0.5,
-    //         Grass: 1,
-    //         Ice: 2,
-    //         Fighting: 1,
-    //         Poison: 1,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 1,
-    //         Bug: 1,
-    //         Rock: 2,
-    //         Ghost: 1,
-    //         Dragon: 1,
-    //         Dark: 1,
-    //         Steel: 0.5,
-    //         Fairy: 2,
-    //     },
-    //     Fairy: {
-    //         Normal: 1,
-    //         Fire: 0.5,
-    //         Water: 1,
-    //         Electric: 1,
-    //         Grass: 1,
-    //         Ice: 1,
-    //         Fighting: 2,
-    //         Poison: 0.5,
-    //         Ground: 1,
-    //         Flying: 1,
-    //         Psychic: 1,
-    //         Bug: 1,
-    //         Rock: 1,
-    //         Ghost: 1,
-    //         Dragon: 2,
-    //         Dark: 2,
-    //         Steel: 1,
-    //         Fairy: 0.5,
-    //     },
-    // };
+    const [isAttacking, setIsAttacking] = useState(false);
 
     // returns random index for which move in the move array
     const getRandomMove = () => {
@@ -795,13 +431,13 @@ export default ({ location }) => {
         }
     };
 
-    const handleAttack = attackMoveIndex => {
+    const handleAttack = async attackMoveIndex => {
         let playerParty = [...party];
         let opponentParty = [...oppParty];
         let playerIndex = currentMonIndex;
         let opponentIndex = currentOppMonIndex;
-        let playerMon = playerParty[currentMonIndex];
-        let opponentMon = opponentParty[currentOppMonIndex];
+        let playerMon = { ...playerParty[currentMonIndex] };
+        let opponentMon = { ...opponentParty[currentOppMonIndex] };
         let playerMonTypes = playerMon.types.map(type => type.type.name);
         let opponentMonTypes = opponentMon.types.map(type => type.type.name);
         let playerMove = playerMon.moves[attackMoveIndex].move;
@@ -825,6 +461,8 @@ export default ({ location }) => {
             return damage;
         };
 
+        const delay = t => new Promise(resolve => setTimeout(resolve, t));
+
         console.log(
             `${opponentMon.name}'s HP before being attacked:  ${opponentMon.hp}`
         );
@@ -837,15 +475,13 @@ export default ({ location }) => {
         );
 
         opponentMon.hp -= playerDamageDealt;
-        let newOppWidth = (opponentMon.hp / opponentMon.totalHp) * 100;
+        opponentParty[currentOppMonIndex] = opponentMon;
 
         if (opponentMon.hp <= 0) {
             opponentMon.hp = 0;
-            newOppWidth = 100;
             opponentIndex++;
         }
 
-        setHpOppWidth(newOppWidth);
         setOppParty(opponentParty);
         setCurrentOppMonIndex(opponentIndex);
 
@@ -856,8 +492,8 @@ export default ({ location }) => {
             `${playerMon.name}'s HP before being attacked:  ${playerMon.hp}`
         );
 
+        // if opponent hasn't fainted yet, they get to attack
         if (opponentIndex === currentOppMonIndex) {
-            // const timer = setTimeout(() => {
             let opponentDamageDealt = Math.floor(
                 calculateDamage(opponentMonTypes, playerMonTypes, opponentMove)
             );
@@ -866,24 +502,22 @@ export default ({ location }) => {
             );
 
             playerMon.hp -= opponentDamageDealt;
-            let newPlayerWidth = (playerMon.hp / playerMon.totalHp) * 100;
+            playerParty[currentMonIndex] = playerMon;
 
             if (playerMon.hp <= 0) {
                 playerMon.hp = 0;
-                newPlayerWidth = 100;
                 playerIndex++;
             }
-
-            setHpPlayerWidth(newPlayerWidth);
-            // }, 2500);
+            await delay(2500);
         }
 
-        console.log(
-            `${playerMon.name}'s HP before after attacked:  ${playerMon.hp}`
-        );
+        setParty(playerParty);
+        setCurrentMonIndex(playerIndex);
+        setIsAttacking(false);
 
-        console.log("Opponent party: ", opponentParty);
-        console.log("Player party: ", playerParty);
+        console.log(
+            `${playerMon.name}'s HP after being attacked:  ${playerMon.hp}`
+        );
 
         console.log(
             `oppPartyHp: ${oppParty[currentOppMonIndex].hp} / ${oppParty[currentOppMonIndex].totalHp}`
@@ -892,9 +526,6 @@ export default ({ location }) => {
         console.log(
             `partyHp: ${party[currentMonIndex].hp} / ${party[currentMonIndex].totalHp}`
         );
-
-        setParty(playerParty);
-        setCurrentMonIndex(playerIndex);
     };
 
     const getRandomOpponentImage = () => {
@@ -1057,7 +688,6 @@ export default ({ location }) => {
                         party={oppParty}
                         currentHp={oppParty[currentOppMonIndex].hp}
                         totalHp={oppParty[currentOppMonIndex].totalHp}
-                        hpWidth={hpOppWidth}
                     />
                     {/* Opponent trainer image */}
                     {opponentGender === "male" &&
@@ -1113,7 +743,6 @@ export default ({ location }) => {
                         party={party}
                         totalHp={party[currentMonIndex].totalHp}
                         currentHp={party[currentMonIndex].hp}
-                        hpWidth={hpPlayerWidth}
                     />
 
                     {/* Player 1 Pokemon image */}
@@ -1163,7 +792,11 @@ export default ({ location }) => {
                                 name={move.move.name}
                                 bg={move.move.type.name}
                                 power={move.move.power}
-                                onClick={() => handleAttack(index)}
+                                disabled={isAttacking}
+                                onClick={() => {
+                                    setIsAttacking(true);
+                                    handleAttack(index);
+                                }}
                             />
                         ))}
                     </MovesContainer>
