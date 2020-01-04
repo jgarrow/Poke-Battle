@@ -437,7 +437,9 @@ export default ({ location }) => {
     const [currentOppMonIndex, setCurrentOppMonIndex] = useState(0);
     const [isPartyOpen, setIsPartyOpen] = useState(false);
     const [isAttacking, setIsAttacking] = useState(false);
-    const [dialogueText, setDialogueText] = useState("");
+    const [dialogueText, setDialogueText] = useState(
+        `Go ${party[currentMonIndex].name}! ${opponent.name} Alex sent out ${oppParty[currentOppMonIndex].name}!`
+    );
     const [isVisible, setIsVisible] = useState(false);
     const [isPlayerOne, setIsPlayerOne] = useState(false);
 
@@ -471,8 +473,6 @@ export default ({ location }) => {
             let moveType = move.type.name;
             let movePower = move.power;
 
-            console.log("move in calculateDamage: ", move.name);
-
             setIsPlayerOne(!isPlayerOne);
 
             if (attackerTypes.includes(moveType)) {
@@ -490,28 +490,19 @@ export default ({ location }) => {
         // want to delay so that opponent doesn't attack at the same time as player
         const delay = t => new Promise(resolve => setTimeout(resolve, t));
 
-        console.log("\n--------------------------------------\n");
-        console.log(
-            `${opponentMon.name}'s HP before being attacked:  ${opponentMon.hp}`
-        );
-
         let playerDamageDealt = Math.floor(
             calculateDamage(playerMonTypes, opponentMonTypes, playerMove)
         );
 
         dialogue = `${playerMon.name} used ${playerMove.name}!`;
         setDialogueText(dialogue);
-        console.log(
-            `${playerMon.name} used ${playerMove.name}! ${opponentMon.name} took ${playerDamageDealt} damage.`
-        );
 
         opponentMon.hp -= playerDamageDealt;
         opponentParty[currentOppMonIndex] = opponentMon;
 
         if (opponentMon.hp <= 0) {
             opponentMon.hp = 0;
-            dialogue += `
-            ${opponentMon.name} fainted!`;
+            dialogue += `\n${opponentMon.name} fainted!`;
             opponentIndex++;
         }
 
@@ -526,43 +517,41 @@ export default ({ location }) => {
         setDialogueText(dialogue);
         setCurrentOppMonIndex(opponentIndex);
 
-        console.log(
-            `${opponentMon.name}'s HP after being attacked:  ${opponentMon.hp}`
-        );
-        console.log("\n--------------------------------------\n");
-        console.log(
-            `${playerMon.name}'s HP before being attacked:  ${playerMon.hp}`
-        );
-
         // if opponent hasn't fainted yet, they get to attack
         if (opponentIndex === currentOppMonIndex) {
             let opponentDamageDealt = Math.floor(
                 calculateDamage(opponentMonTypes, playerMonTypes, opponentMove)
             );
-            console.log(
-                `${opponentMon.name} used ${opponentMove.name}! ${playerMon.name} took ${opponentDamageDealt} damage.`
-            );
+
             dialogue = `${opponentMon.name} used ${opponentMove.name}!`;
+            setDialogueText(dialogue);
+
             playerMon.hp -= opponentDamageDealt;
             playerParty[currentMonIndex] = playerMon;
-
-            if (playerMon.hp <= 0) {
-                playerMon.hp = 0;
-                playerIndex++;
-            }
-            await delay(1000);
         }
 
         setDialogueText(dialogue);
+
+        if (playerMon.hp <= 0) {
+            playerMon.hp = 0;
+            dialogue += `\n${playerMon.name} fainted!`;
+            playerIndex++;
+        }
+        setDialogueText(dialogue);
+
+        if (playerMon.hp <= 0) {
+            dialogue = `Go ${playerParty[playerIndex].name}!`;
+        }
+
         setParty(playerParty);
+        await delay(1500);
+        setDialogueText(dialogue);
         setCurrentMonIndex(playerIndex);
+        await delay(1000);
+        dialogue = "";
+        setDialogueText(dialogue);
         setIsAttacking(false);
         setIsPlayerOne(false);
-
-        console.log(
-            `${playerMon.name}'s HP after being attacked:  ${playerMon.hp}`
-        );
-        console.log("\n--------------------------------------\n");
     };
 
     const getRandomOpponentImage = () => {
@@ -578,6 +567,11 @@ export default ({ location }) => {
     // if opponent trainer has 2 gender options, pick one randomly
     useEffect(() => {
         setOpponentGender(getRandomOpponentImage);
+
+        // Delay to give time to read initial render dialogue text before resetting it
+        setTimeout(() => {
+            setDialogueText("");
+        }, 1500);
     }, []);
 
     return (
