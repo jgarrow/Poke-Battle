@@ -7,12 +7,13 @@ import { css } from "@emotion/core";
 
 import pokeball from "../images/PokeballSVG.svg";
 import Image from "../components/poke-image";
-import BattleTransition, {
+import BattleTransition from "../components/BattleTransition";
+import {
     TrainerImage,
     TrainerAltImage,
     PartyBallContainer,
     PartyBall,
-} from "../components/BattleTransition";
+} from "../components/BattleTransitionTrainer";
 import { moveTypeEffectiveness } from "../data/moveTypeEffectiveness";
 
 const typeBg = {
@@ -423,7 +424,7 @@ export default ({ location }) => {
     };
 
     useEffect(() => {
-        setOpponentGender(getRandomOpponentImage);
+        setOpponentGender(getRandomOpponentImage());
 
         // Delay to give time to read initial render dialogue text before resetting it
         setTimeout(() => {
