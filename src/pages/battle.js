@@ -235,7 +235,7 @@ const BattleContent = styled.section`
     grid-template-areas:
         ".          .           oppMonCard      oppImage"
         ".          .           oppMonImage     oppImage"
-        "p1Image    p1MonImage  .               ."
+        "p1Image    p1MonImage  dialogue        dialogue"
         "p1Image    p1MonCard   moves           party";
 `;
 
@@ -296,6 +296,16 @@ const PokemonImgContainer = styled.div`
             : "none"};
 `;
 
+const Dialogue = styled.div`
+    grid-area: dialogue;
+    visibility: ${props => (props.isVisible ? "visible" : "hidden")};
+    width: 100%;
+    height: 100%;
+    background: white;
+    box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+`;
+
 const MovesContainer = styled.div`
     height: 75px;
     grid-area: moves;
@@ -306,7 +316,7 @@ const MovesContainer = styled.div`
 `;
 
 const MoveCard = styled.div`
-    pointer-events: ${({ disabled }) => disabled ? `none` : `initial` };
+    pointer-events: ${({ disabled }) => (disabled ? `none` : `initial`)};
     cursor: pointer;
     width: 75%;
     min-width: 130px;
@@ -344,6 +354,14 @@ const Party = styled.div`
     }
 `;
 
+const DialogueBox = props => {
+    return (
+        <Dialogue>
+            <p>{props.dialogueText}</p>
+        </Dialogue>
+    );
+};
+
 const Move = props => (
     <MoveCard {...props}>
         <p>{props.name}</p>
@@ -353,15 +371,14 @@ const Move = props => (
 
 const BattleCard = props => {
     const hpRatio = (props.currentHp / props.totalHp) * 100;
-    let currentColor = "#2187E7";
+    let currentColor = "#2187E7"; // blue for > 1/2 hp
 
-    if (hpRatio <= 0.5 && hpRatio > 0.2) {
-        currentColor = "#FFE748";
-    } else if (hpRatio <= 0.2) {
-        currentColor = "#D11B1C";
+    if (hpRatio <= 50 && hpRatio > 20) {
+        currentColor = "#FFE748"; // yellow for < 1/2 hp
+    } else if (hpRatio <= 20) {
+        currentColor = "#D11B1C"; // red for < 1/5 hp
     }
 
-    console.log("hpRatio in BattleCard: ", hpRatio);
     return (
         <HpCard isOpponent={props.isOpponent}>
             <Row>
@@ -386,13 +403,10 @@ const BattleCard = props => {
                         background: ${currentColor};
                         width: ${hpRatio}%;
                     `}
-                    // delay={!props.isOpponent ? `2s` : 0}
                 />
             </HpBarContainer>
             <HP isOpponent={props.isOpponent}>
-                {/* {setTimeout(() => { */}
                 {props.currentHp} / {props.totalHp}
-                {/* }, 2000)} */}
             </HP>
         </HpCard>
     );
@@ -408,7 +422,6 @@ export default ({ location }) => {
         trainerImages,
         opponent,
     } = location.state;
-    console.log("i am at the beginning of battle component");
     const [party, setParty] = useState([...p1Party]);
     const [oppParty, setOppParty] = useState([...opponentParty]);
     const trainerType = selectedTrainer.name;
@@ -419,6 +432,9 @@ export default ({ location }) => {
     const [currentOppMonIndex, setCurrentOppMonIndex] = useState(0);
     const [isPartyOpen, setIsPartyOpen] = useState(false);
     const [isAttacking, setIsAttacking] = useState(false);
+    const [dialogueText, setDialogueText] = useState("");
+    const [isVisible, setIsVisible] = useState(false);
+    const [isPlayerOne, setIsPlayerOne] = useState(false);
 
     // returns random index for which move in the move array
     const getRandomMove = () => {
@@ -442,12 +458,17 @@ export default ({ location }) => {
         let opponentMonTypes = opponentMon.types.map(type => type.type.name);
         let playerMove = playerMon.moves[attackMoveIndex].move;
         let opponentMove = opponentMon.moves[getRandomMove()].move;
+        let dialogue = "";
 
         const calculateDamage = (attackerTypes, defenderTypes, move) => {
             let typeEffectiveness = 1;
             let stabBonus = 1;
             let moveType = move.type.name;
             let movePower = move.power;
+
+            console.log("move in calculateDamage: ", move.name);
+
+            setIsPlayerOne(!isPlayerOne);
 
             if (attackerTypes.includes(moveType)) {
                 stabBonus = 1.5; // STAB (same-type attack bonus) = +50% when move type matches pokemon type
@@ -461,8 +482,10 @@ export default ({ location }) => {
             return damage;
         };
 
+        // want to delay so that opponent doesn't attack at the same time as player
         const delay = t => new Promise(resolve => setTimeout(resolve, t));
 
+        console.log("\n--------------------------------------\n");
         console.log(
             `${opponentMon.name}'s HP before being attacked:  ${opponentMon.hp}`
         );
@@ -470,6 +493,9 @@ export default ({ location }) => {
         let playerDamageDealt = Math.floor(
             calculateDamage(playerMonTypes, opponentMonTypes, playerMove)
         );
+
+        dialogue = `${playerMon.name} used ${playerMove.name}!`;
+        setDialogueText(dialogue);
         console.log(
             `${playerMon.name} used ${playerMove.name}! ${opponentMon.name} took ${playerDamageDealt} damage.`
         );
@@ -488,6 +514,7 @@ export default ({ location }) => {
         console.log(
             `${opponentMon.name}'s HP after being attacked:  ${opponentMon.hp}`
         );
+        console.log("\n--------------------------------------\n");
         console.log(
             `${playerMon.name}'s HP before being attacked:  ${playerMon.hp}`
         );
@@ -500,7 +527,7 @@ export default ({ location }) => {
             console.log(
                 `${opponentMon.name} used ${opponentMove.name}! ${playerMon.name} took ${opponentDamageDealt} damage.`
             );
-
+            dialogue = `${opponentMon.name} used ${opponentMove.name}!`;
             playerMon.hp -= opponentDamageDealt;
             playerParty[currentMonIndex] = playerMon;
 
@@ -509,23 +536,20 @@ export default ({ location }) => {
                 playerIndex++;
             }
             await delay(2500);
+        } else {
+            dialogue = `${opponentMon.name} fainted!`;
         }
 
+        setDialogueText(dialogue);
         setParty(playerParty);
         setCurrentMonIndex(playerIndex);
         setIsAttacking(false);
+        setIsPlayerOne(false);
 
         console.log(
             `${playerMon.name}'s HP after being attacked:  ${playerMon.hp}`
         );
-
-        console.log(
-            `oppPartyHp: ${oppParty[currentOppMonIndex].hp} / ${oppParty[currentOppMonIndex].totalHp}`
-        );
-
-        console.log(
-            `partyHp: ${party[currentMonIndex].hp} / ${party[currentMonIndex].totalHp}`
-        );
+        console.log("\n--------------------------------------\n");
     };
 
     const getRandomOpponentImage = () => {
@@ -538,37 +562,10 @@ export default ({ location }) => {
         }
     };
 
-    // const opponentAttack = () => {
-    //     let oppMoveIndex = getRandomMove();
-
-    //     setParty(handleAttack(oppMoveIndex));
-    // };
-
     // if opponent trainer has 2 gender options, pick one randomly
     useEffect(() => {
         setOpponentGender(getRandomOpponentImage);
     }, []);
-
-    useEffect(() => {
-        console.log("oppParty changed: ", oppParty);
-    }, [oppParty]);
-
-    // useEffect(() => {
-    //     if (!isPlayerTurn) {
-    //         const opponentAttack = () => {
-    //             let oppMoveIndex = getRandomMove();
-
-    //             setParty(handleAttack(oppMoveIndex));
-    //         };
-    //         const timer = setTimeout(() => {
-    //             console.log("This will log after 2 seconds.");
-
-    //             opponentAttack();
-    //         }, 2000);
-
-    //         return () => clearTimeout(timer);
-    //     }
-    // }, [isPlayerTurn]);
 
     return (
         <BattleContainer>
@@ -752,6 +749,12 @@ export default ({ location }) => {
                     >
                         <Image name={party[currentMonIndex].name} />
                     </PokemonImgContainer>
+
+                    <DialogueBox
+                        isPlayerOne={isPlayerOne}
+                        dialogueText={dialogueText}
+                        isVisible={isVisible}
+                    />
 
                     {/* Player 1 trainer image */}
                     {opponentGender === "male" &&
