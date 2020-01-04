@@ -298,12 +298,17 @@ const PokemonImgContainer = styled.div`
 
 const Dialogue = styled.div`
     grid-area: dialogue;
-    visibility: ${props => (props.isVisible ? "visible" : "hidden")};
+
     width: 100%;
+    max-width: 300px;
     height: 100%;
+    max-height: 75px;
     background: white;
     box-shadow: 0px 4px 11px rgba(0, 0, 0, 0.25);
     border-radius: 15px;
+    padding: 0 15px;
+    justify-self: flex-end;
+    align-self: center;
 `;
 
 const MovesContainer = styled.div`
@@ -505,10 +510,20 @@ export default ({ location }) => {
 
         if (opponentMon.hp <= 0) {
             opponentMon.hp = 0;
+            dialogue += `
+            ${opponentMon.name} fainted!`;
             opponentIndex++;
         }
 
+        setDialogueText(dialogue);
+
+        if (opponentMon.hp <= 0) {
+            dialogue = `${opponent.name} Alex sent out ${opponentParty[opponentIndex].name}!`;
+        }
+
         setOppParty(opponentParty);
+        await delay(1500);
+        setDialogueText(dialogue);
         setCurrentOppMonIndex(opponentIndex);
 
         console.log(
@@ -535,9 +550,7 @@ export default ({ location }) => {
                 playerMon.hp = 0;
                 playerIndex++;
             }
-            await delay(2500);
-        } else {
-            dialogue = `${opponentMon.name} fainted!`;
+            await delay(1000);
         }
 
         setDialogueText(dialogue);
