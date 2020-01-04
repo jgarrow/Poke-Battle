@@ -7,6 +7,12 @@ import { css } from "@emotion/core";
 
 import pokeball from "../images/PokeballSVG.svg";
 import Image from "../components/poke-image";
+import BattleTransition, {
+    TrainerImage,
+    TrainerAltImage,
+    PartyBallContainer,
+    PartyBall,
+} from "../components/BattleTransition";
 import { moveTypeEffectiveness } from "../data/moveTypeEffectiveness";
 
 const typeBg = {
@@ -34,154 +40,6 @@ const BattleContainer = styled.div`
     width: 100vw;
     height: 100vh;
     margin: 0;
-`;
-
-// Need to tweak background, don't like current linear-gradient
-const Bg = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        white 0%,
-        rgb(209, 233, 255) 2.5%,
-        white 4%,
-        rgb(209, 233, 255) 6.5%,
-        white 7.5%,
-        rgb(209, 233, 255) 9%,
-        white 11%,
-        rgb(209, 233, 255) 16.25%,
-        white 18%,
-        rgb(209, 233, 255) 25%,
-        white 40%,
-        white 60%,
-        rgb(209, 233, 255) 75%,
-        white 82.5%,
-        rgb(209, 233, 255) 88%,
-        white 92%,
-        rgb(209, 233, 255) 95%,
-        white 98%,
-        rgb(209, 233, 255) 100%
-    );
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-`;
-
-const Pokeball = styled.div`
-    width: 276px;
-    height: 276px;
-    position: absolute;
-    opacity: 0;
-    animation: diminish 0.75s forwards linear 1s;
-
-    @keyframes diminish {
-        0% {
-            transform: scale(3);
-            opacity: 0;
-        }
-        50% {
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-`;
-
-const Content = styled.div`
-    width: 100vw;
-    height: 100vh;
-    padding: 1rem 0;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
-    align-items: center;
-    z-index: 1;
-`;
-
-const Title = styled.h1`
-    opacity: 0;
-    animation: fadeIn 0.5s forwards ease-in 2.75s;
-
-    @keyframes fadeIn {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
-`;
-
-const Trainer = styled.div`
-    text-align: center;
-    position: relative;
-    align-self: ${props => (props.isOpponent ? "flex-start" : "flex-end")};
-    left: ${props => (props.isOpponent ? "unset" : "-100%")};
-    right: ${props => (props.isOpponent ? "-100%" : "unset")};
-    animation: ${props =>
-        props.isOpponent
-            ? "slideLeft 1s forwards linear 1.75s"
-            : "slideRight 1s forwards linear 1.75s"};
-
-    @keyframes slideRight {
-        0% {
-            left: -100%;
-        }
-        100% {
-            left: 0;
-        }
-    }
-
-    @keyframes slideLeft {
-        0% {
-            right: -100%;
-        }
-        100% {
-            right: 0;
-        }
-    }
-`;
-
-const TrainerImage = styled.div`
-    width: 200px;
-    height: 200px;
-    transform: ${props =>
-        (props.facing_right && props.isOpponent) || // Facing right AND Opponent
-        (!props.facing_right && !props.isOpponent) // Facing left AND Player 1
-            ? "scaleX(-1)"
-            : "none"};
-`;
-
-const TrainerAltImage = styled.div`
-    width: 200px;
-    height: 200px;
-    transform: ${props =>
-        (props.alt_facing_right && props.isOpponent) || // Facing right AND Opponent
-        (!props.alt_facing_right && !props.isOpponent) // Facing left AND Player 1
-            ? "scaleX(-1)"
-            : "none"};
-`;
-
-const TrainerName = styled.h3`
-    text-align: center;
-    margin: 0;
-    max-width: 200px;
-`;
-
-const PartyBallContainer = styled.div`
-    width: 70px;
-    height: 20px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-`;
-
-const PartyBall = styled.img`
-    width: 20px;
-    height: 20px;
 `;
 
 const BattleBG = styled.div`
@@ -298,7 +156,6 @@ const PokemonImgContainer = styled.div`
 
 const Dialogue = styled.div`
     grid-area: dialogue;
-
     width: 100%;
     max-width: 300px;
     height: 100%;
@@ -432,6 +289,8 @@ export default ({ location }) => {
     const trainerType = selectedTrainer.name;
     const trainerImage = trainerImages[selectedTrainer.image];
     const trainerAltImage = trainerImages[selectedTrainer.alt_image];
+    const opponentImage = trainerImages[location.state.opponent.image];
+    const opponentAltImage = trainerImages[location.state.opponent.alt_image];
     const [opponentGender, setOpponentGender] = useState("");
     const [currentMonIndex, setCurrentMonIndex] = useState(0);
     const [currentOppMonIndex, setCurrentOppMonIndex] = useState(0);
@@ -440,10 +299,9 @@ export default ({ location }) => {
     const [dialogueText, setDialogueText] = useState(
         `Go ${party[currentMonIndex].name}! ${opponent.name} Alex sent out ${oppParty[currentOppMonIndex].name}!`
     );
-    const [isVisible, setIsVisible] = useState(false);
-    const [isPlayerOne, setIsPlayerOne] = useState(false);
 
     // returns random index for which move in the move array
+    // used in handleAttack
     const getRandomMove = () => {
         const randomNum = Math.random();
 
@@ -454,6 +312,8 @@ export default ({ location }) => {
         }
     };
 
+    // State needed: party, oppParty, currentMonIndex, currentOppMonIndex, setDialogueText, setParty, setOppParty, setCurrentMonIndex, setCurrentOppMonIndex, setIsAttacking
+    // other variables/functions needed: moveTypeEffectiveness, getRandomMove()
     const handleAttack = async attackMoveIndex => {
         let playerParty = [...party];
         let opponentParty = [...oppParty];
@@ -472,8 +332,6 @@ export default ({ location }) => {
             let stabBonus = 1;
             let moveType = move.type.name;
             let movePower = move.power;
-
-            setIsPlayerOne(!isPlayerOne);
 
             if (attackerTypes.includes(moveType)) {
                 stabBonus = 1.5; // STAB (same-type attack bonus) = +50% when move type matches pokemon type
@@ -551,9 +409,9 @@ export default ({ location }) => {
         dialogue = "";
         setDialogueText(dialogue);
         setIsAttacking(false);
-        setIsPlayerOne(false);
     };
 
+    // if opponent trainer has 2 gender options, pick one randomly
     const getRandomOpponentImage = () => {
         const randomNum = Math.random();
 
@@ -564,7 +422,6 @@ export default ({ location }) => {
         }
     };
 
-    // if opponent trainer has 2 gender options, pick one randomly
     useEffect(() => {
         setOpponentGender(getRandomOpponentImage);
 
@@ -577,104 +434,20 @@ export default ({ location }) => {
     return (
         <BattleContainer>
             {/* For battle transition screen */}
-            <Bg>
-                <Pokeball>
-                    <img
-                        src={pokeball}
-                        alt="Blue pokeball for transition to page"
-                    />
-                </Pokeball>
-
-                <Content>
-                    <Trainer isOpponent={false}>
-                        {altImage ? (
-                            <TrainerAltImage
-                                alt_facing_right={
-                                    selectedTrainer.alt_facing_right
-                                }
-                                isOpponent={false}
-                            >
-                                <Img
-                                    fluid={
-                                        trainerAltImage.childImageSharp.fluid
-                                    }
-                                    alt={trainerType}
-                                />
-                            </TrainerAltImage>
-                        ) : (
-                            <TrainerImage
-                                facing_right={selectedTrainer.facing_right}
-                                isOpponent={false}
-                            >
-                                <Img
-                                    fluid={trainerImage.childImageSharp.fluid}
-                                    alt={trainerType}
-                                />
-                            </TrainerImage>
-                        )}
-
-                        <TrainerName>
-                            {trainerType} {trainerName}
-                        </TrainerName>
-                        <PartyBallContainer>
-                            {party.map(pokemon => (
-                                <PartyBall
-                                    key={`${pokemon.id}p1`}
-                                    src={pokeball}
-                                    alt="Blue pokeball to represent a pokemon in the trainer's party"
-                                />
-                            ))}
-                        </PartyBallContainer>
-                    </Trainer>
-
-                    <Title>VS</Title>
-
-                    <Trainer isOpponent={true}>
-                        {opponentGender === "male" &&
-                        trainerImages[location.state.opponent.alt_image] ? (
-                            <TrainerAltImage
-                                alt_facing_right={opponent.alt_facing_right}
-                                isOpponent={true}
-                            >
-                                <Img
-                                    fluid={
-                                        trainerImages[
-                                            location.state.opponent.alt_image
-                                        ].childImageSharp.fluid
-                                    }
-                                    alt={opponent.name}
-                                />
-                            </TrainerAltImage>
-                        ) : (
-                            <TrainerImage
-                                facing_right={opponent.facing_right}
-                                isOpponent={true}
-                            >
-                                <Img
-                                    fluid={
-                                        trainerImages[
-                                            location.state.opponent.image
-                                        ].childImageSharp.fluid
-                                    }
-                                    alt={opponent.name}
-                                />
-                            </TrainerImage>
-                        )}
-
-                        <TrainerName>{opponent.name} Alex</TrainerName>
-
-                        <PartyBallContainer>
-                            {oppParty.map(pokemon => (
-                                <PartyBall
-                                    key={`${pokemon.id}opp`}
-                                    src={pokeball}
-                                    alt="Blue pokeball to represent a pokemon in the trainer's party"
-                                />
-                            ))}
-                        </PartyBallContainer>
-                    </Trainer>
-                </Content>
-            </Bg>
+            <BattleTransition
+                altImage={altImage}
+                selectedTrainer={selectedTrainer}
+                trainerType={trainerType}
+                trainerName={trainerName}
+                trainerImage={trainerImage}
+                trainerAltImage={trainerAltImage}
+                party={party}
+                opponentGender={opponentGender}
+                opponentImage={opponentImage}
+                opponentAltImage={opponentAltImage}
+                opponent={opponent}
+                oppParty={oppParty}
+            />
 
             <BattleBG>
                 <h1
@@ -757,11 +530,7 @@ export default ({ location }) => {
                         <Image name={party[currentMonIndex].name} />
                     </PokemonImgContainer>
 
-                    <DialogueBox
-                        isPlayerOne={isPlayerOne}
-                        dialogueText={dialogueText}
-                        isVisible={isVisible}
-                    />
+                    <DialogueBox dialogueText={dialogueText} />
 
                     {/* Player 1 trainer image */}
                     {opponentGender === "male" &&
